@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
+import { BrandMark } from '@/components/layouts/AppLogo';
 import { useStrings } from '@/constants/strings';
 import { AppChromeControls } from '@/components/ui/AppChromeControls';
 
@@ -66,19 +67,7 @@ export function AuthLogoBlock({
 }) {
   return (
     <div className="flex flex-col items-center text-center">
-      <div
-        className="mb-4 shadow-[var(--shadow-m-glow)]"
-        style={{ borderRadius: 24 }}
-      >
-        <div
-          className="flex size-20 items-center justify-center bg-gradient-to-br from-[var(--color-m-primary)] to-[#8B5CF6]"
-          style={{ borderRadius: 24 }}
-        >
-          <span className="text-[40px] leading-none" role="img" aria-hidden>
-            🎓
-          </span>
-        </div>
-      </div>
+      <BrandMark size="lg" className="mb-4 h-16 max-w-[4.5rem] sm:h-20 sm:max-w-[5.5rem]" />
       <h1
         className="text-[36px] font-extrabold tracking-tight text-[var(--color-m-text)]"
         style={{ letterSpacing: -1 }}

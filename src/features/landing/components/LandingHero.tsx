@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Users,
   Video,
+  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useLandingLanguage } from '@/features/landing/lib/landing-context';
@@ -139,13 +140,17 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                     <p className="text-sm text-[var(--color-m-text-muted)]">{t('hero.grade7')}</p>
                   </div>
 
-                  <div className="flex items-center gap-3 pt-2">
-                    <div className="flex size-12 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-m-primary)] via-[var(--color-m-secondary)] to-[var(--color-m-accent)] text-sm font-bold text-white shadow-lg">
-                      EK
+                  <div className="flex min-w-0 items-center gap-3 pt-2">
+                    <div className="landing-mentor-avatar" aria-hidden>
+                      <User strokeWidth={2.25} />
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-[var(--color-m-text)]">{t('hero.mentorLabel')}</p>
-                      <p className="text-xs text-[var(--color-m-text-muted)]">{t('hero.mentorUni')}</p>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-[var(--color-m-text)]">
+                        {t('hero.mentorLabel')}
+                      </p>
+                      <p className="truncate text-xs text-[var(--color-m-text-muted)]">
+                        {t('hero.mentorUni')}
+                      </p>
                     </div>
                   </div>
 

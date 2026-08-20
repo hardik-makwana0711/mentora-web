@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
+import { BrandMark } from '@/components/layouts/AppLogo';
 import { useLandingLanguage } from '@/features/landing/lib/landing-context';
 import { useStrings } from '@/constants/strings';
 import { landing } from '@/features/landing/lib/styles';
@@ -21,11 +22,13 @@ export function LandingFooter() {
       <div className={`${landing.container} py-16`}>
         <div className="grid gap-10 md:grid-cols-2">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="space-y-6">
-            <Link to="/" className="group flex items-center gap-3" aria-label={t('nav.brandAria')}>
-              <span className="flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-m-primary)] to-[var(--color-m-gradient-end)] text-2xl font-bold text-white shadow-[var(--shadow-m-glow)]">
-                M
-              </span>
-              <span className="text-2xl font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)]">
+            <Link
+              to="/"
+              className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
+              aria-label={t('nav.brandAria')}
+            >
+              <BrandMark size="lg" />
+              <span className="truncate text-xl font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)] sm:text-2xl">
                 {tr.appName}
               </span>
             </Link>

@@ -61,6 +61,9 @@
   --shadow-m-card: 0 4px 24px rgba(0, 0, 0, 0.35);
   --shadow-m-glow: 0 8px 32px rgba(108, 92, 231, 0.22);
   --shadow-m-tab: 0 8px 20px rgba(108, 92, 231, 0.4);
+  --color-m-avatar-bg: linear-gradient(135deg, #8b7cf8 0%, #5a4bd6 100%);
+  --color-m-avatar-fg: #ffffff;
+  --color-m-avatar-ring: #2a2840;
 }
 
 /* ─── Light theme (mobile LightTheme parity) ─── */
@@ -99,6 +102,9 @@
   --shadow-m-card: 0 4px 24px rgba(15, 23, 42, 0.08);
   --shadow-m-glow: 0 8px 32px rgba(30, 58, 138, 0.12);
   --shadow-m-tab: 0 8px 20px rgba(30, 58, 138, 0.15);
+  --color-m-avatar-bg: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 55%, #93c5fd 100%);
+  --color-m-avatar-fg: #0d1b3d;
+  --color-m-avatar-ring: #1e3a8a;
 }
 
 @layer base {
@@ -114,6 +120,28 @@
 }
 
 @layer components {
+  .landing-mentor-avatar {
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border-radius: 9999px;
+    border: 1.5px solid var(--color-m-avatar-ring);
+    background: var(--color-m-avatar-bg);
+    color: var(--color-m-avatar-fg);
+    box-shadow: var(--shadow-m-card);
+  }
+
+  .landing-mentor-avatar svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex-shrink: 0;
+  }
+
   .app-surface-gradient {
     background:
       radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-m-primary) 14%, transparent), transparent),
