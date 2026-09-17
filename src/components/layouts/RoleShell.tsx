@@ -1,28 +1,12 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useState, type ComponentType } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { LogoutConfirmModal } from '@/features/profile/components/LogoutConfirmModal';
 import { profileService } from '@/services/profile.service';
 import { qk } from '@/constants/query-keys';
-import {
-  Bell,
-  BookOpen,
-  Calendar,
-  Coins,
-  Compass,
-  Inbox,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  MessageSquare,
-  UserRound,
-  Wallet,
-  Search,
-  Heart,
-  FileText,
-} from 'lucide-react';
+import { Bell, LogOut, Menu, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useStrings, type Strings } from '@/constants/strings';
+import { useStrings } from '@/constants/strings';
 import { useAuthStore } from '@/app/store/authStore';
 import { Drawer } from '@/components/ui/Drawer';
 import { AppLogo } from '@/components/layouts/AppLogo';
@@ -31,6 +15,8 @@ import { ProfileMenuDropdown } from '@/components/layouts/ProfileMenuDropdown';
 import { getDateFnsLocale } from '@/lib/date-locale';
 import { cn } from '@/lib/utils';
 import { useUnreadMessageTotal } from '@/features/messages/hooks/useUnreadMessageTotal';
+import { useMentorVerificationGate } from '@/features/mentor-verification/hooks/useMentorVerificationGate';
+import type { NavItem } from '@/components/layouts/nav-config';
 
 function formatUnreadBadge(count: number): string {
   return count > 9 ? '9+' : String(count);
@@ -42,12 +28,16 @@ function SidebarNavLink({
   unreadTotal,
   unreadBadgeAria,
   onNavigate,
+  locked,
+  lockedAria,
 }: {
   item: NavItem;
   label: string;
   unreadTotal: number;
   unreadBadgeAria: (count: number) => string;
   onNavigate?: () => void;
+  locked?: boolean;
+  lockedAria?: string;
 }) {
   const showBadge = item.labelKey === 'navMessages' && unreadTotal > 0;
   return (
@@ -59,7 +49,12 @@ function SidebarNavLink({
     >
       <item.icon aria-hidden />
       <span className="min-w-0 flex-1 truncate">{label}</span>
-      {showBadge ? (
+      {locked ? (
+        <Lock
+          className="ml-auto size-3.5 shrink-0 text-[var(--color-m-warning)]"
+          aria-label={lockedAria}
+        />
+      ) : showBadge ? (
         <span
           className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-m-primary)] text-[10px] font-bold text-[var(--color-m-text)]"
           aria-label={unreadBadgeAria(unreadTotal)}
@@ -70,33 +65,6 @@ function SidebarNavLink({
     </NavLink>
   );
 }
-
-export type NavLabelKey = Extract<
-  keyof Strings,
-  | 'navPanel'
-  | 'navFindMentor'
-  | 'navFavorites'
-  | 'navMyClasses'
-  | 'navMessages'
-  | 'navPurse'
-  | 'navProfile'
-  | 'navNotifications'
-  | 'navDashboard'
-  | 'navMyListings'
-  | 'navAvailability'
-  | 'navEarnings'
-  | 'navMyStudents'
-  | 'navMaterials'
-  | 'navMentorDiscovery'
-  | 'myMentorRequests'
-  | 'mentorContactRequests'
->;
-
-export type NavItem = {
-  to: string;
-  labelKey: NavLabelKey;
-  icon: ComponentType<{ className?: string }>;
-};
 
 function navClass(active: boolean) {
   return cn('app-sidebar-nav-link', active && 'app-sidebar-nav-link--active');
@@ -121,6 +89,7 @@ export function RoleShell({
   const hasMessagesNav = navItems.some((item) => item.labelKey === 'navMessages');
   const unreadQuery = useUnreadMessageTotal(hasMessagesNav);
   const unreadTotal = unreadQuery.data ?? 0;
+  const { isRestricted: mentorRestricted } = useMentorVerificationGate();
 
   const unreadBadgeAria = (count: number) =>
     tr.messagesUnreadBadge.replace('{{count}}', String(count));
@@ -156,9 +125,14 @@ export function RoleShell({
   return (
     <div className="min-h-dvh bg-[var(--color-m-bg)]">
       <div className="flex min-h-dvh w-full">
-        <aside className="app-sidebar sticky top-0 hidden h-dvh w-[272px] shrink-0 flex-col border-r px-5 py-7 md:flex">
-          <AppLogo className="mb-10 px-1" />
-          <nav className="flex flex-1 flex-col gap-2" aria-label={tr.mainMenuAria}>
+        <aside className="app-sidebar sticky top-0 hidden h-dvh w-[272px] shrink-0 flex-col border-r md:flex">
+          <div className="flex shrink-0 items-center border-b border-[var(--color-m-card-border)] px-5 py-3">
+            <AppLogo />
+          </div>
+          <nav
+            className="min-h-0 flex-1 overflow-y-auto app-scroll-area flex flex-col gap-2 px-5 py-6"
+            aria-label={tr.mainMenuAria}
+          >
             {navItems.map((item) => (
               <SidebarNavLink
                 key={item.to}
@@ -166,13 +140,15 @@ export function RoleShell({
                 label={tr[item.labelKey]}
                 unreadTotal={unreadTotal}
                 unreadBadgeAria={unreadBadgeAria}
+                locked={item.gated && mentorRestricted}
+                lockedAria={tr.navLockedAria}
               />
             ))}
           </nav>
           <button
             type="button"
             onClick={() => setLogoutOpen(true)}
-            className="mt-6 flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium text-[var(--color-m-error)] hover:bg-[var(--color-m-hover-overlay)]"
+            className="mx-5 mb-6 flex shrink-0 items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium text-[var(--color-m-error)] hover:bg-[var(--color-m-hover-overlay)]"
           >
             <LogOut className="size-5" aria-hidden />
             {tr.logout}
@@ -238,7 +214,11 @@ export function RoleShell({
           style={{ borderRadius: 28 }}
         >
           {mobileNavItems.slice(0, 5).map((item) => (
-            <NavLink key={item.to} to={item.to} className="relative flex min-h-[58px] min-w-0 flex-1 flex-col items-center justify-end pt-2">
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className="relative flex min-h-[58px] min-w-0 flex-1 flex-col items-center justify-end pt-2"
+            >
               {({ isActive }) => (
                 <>
                   <span
@@ -248,7 +228,10 @@ export function RoleShell({
                     )}
                   >
                     <item.icon
-                      className={cn('size-[22px] shrink-0', isActive ? 'text-[var(--color-m-text)]' : 'text-[var(--color-m-text-muted)]')}
+                      className={cn(
+                        'size-[22px] shrink-0',
+                        isActive ? 'text-[var(--color-m-text)]' : 'text-[var(--color-m-text-muted)]'
+                      )}
                       aria-hidden
                     />
                     {item.labelKey === 'navMessages' && unreadTotal > 0 ? (
@@ -263,7 +246,9 @@ export function RoleShell({
                   <span
                     className={cn(
                       'mt-1 line-clamp-1 max-w-full px-0.5 text-center text-[10px] tracking-[0.3px]',
-                      isActive ? 'font-bold text-[var(--color-m-primary-light)]' : 'font-medium text-[var(--color-m-text-muted)]'
+                      isActive
+                        ? 'font-bold text-[var(--color-m-primary-light)]'
+                        : 'font-medium text-[var(--color-m-text-muted)]'
                     )}
                   >
                     {tr[item.labelKey]}
@@ -285,6 +270,8 @@ export function RoleShell({
               unreadTotal={unreadTotal}
               unreadBadgeAria={unreadBadgeAria}
               onNavigate={() => setMenuOpen(false)}
+              locked={item.gated && mentorRestricted}
+              lockedAria={tr.navLockedAria}
             />
           ))}
           <button
@@ -307,44 +294,3 @@ export function RoleShell({
     </div>
   );
 }
-
-export const parentNav: NavItem[] = [
-  { to: '/parent/dashboard', labelKey: 'navDashboard', icon: LayoutDashboard },
-  { to: '/parent/mentor-discovery', labelKey: 'navMentorDiscovery', icon: Compass },
-  { to: '/parent/search', labelKey: 'navFindMentor', icon: Search },
-  { to: '/parent/my-mentor-requests', labelKey: 'myMentorRequests', icon: Inbox },
-  { to: '/parent/students', labelKey: 'navMyStudents', icon: UserRound },
-  { to: '/parent/favourites', labelKey: 'navFavorites', icon: Heart },
-  { to: '/parent/lessons', labelKey: 'navMyClasses', icon: Calendar },
-  { to: '/parent/materials', labelKey: 'navMaterials', icon: BookOpen },
-  { to: '/parent/messages', labelKey: 'navMessages', icon: MessageSquare },
-  { to: '/parent/wallet', labelKey: 'navPurse', icon: Wallet },
-  { to: '/parent/profile', labelKey: 'navProfile', icon: UserRound },
-  { to: '/parent/notifications', labelKey: 'navNotifications', icon: Bell },
-];
-
-export const studentNav: NavItem[] = [
-  { to: '/student/dashboard', labelKey: 'navDashboard', icon: LayoutDashboard },
-  { to: '/student/mentor-discovery', labelKey: 'navMentorDiscovery', icon: Compass },
-  { to: '/student/search', labelKey: 'navFindMentor', icon: Search },
-  { to: '/student/my-mentor-requests', labelKey: 'myMentorRequests', icon: Inbox },
-  { to: '/student/favourites', labelKey: 'navFavorites', icon: Heart },
-  { to: '/student/lessons', labelKey: 'navMyClasses', icon: Calendar },
-  { to: '/student/materials', labelKey: 'navMaterials', icon: BookOpen },
-  { to: '/student/messages', labelKey: 'navMessages', icon: MessageSquare },
-  { to: '/student/profile', labelKey: 'navProfile', icon: UserRound },
-  { to: '/student/notifications', labelKey: 'navNotifications', icon: Bell },
-];
-
-export const mentorNav: NavItem[] = [
-  { to: '/mentor/dashboard', labelKey: 'navDashboard', icon: LayoutDashboard },
-  { to: '/mentor/contact-requests', labelKey: 'mentorContactRequests', icon: Inbox },
-  { to: '/mentor/listings', labelKey: 'navMyListings', icon: FileText },
-  { to: '/mentor/lessons', labelKey: 'navMyClasses', icon: Calendar },
-  { to: '/mentor/materials', labelKey: 'navMaterials', icon: BookOpen },
-  { to: '/mentor/messages', labelKey: 'navMessages', icon: MessageSquare },
-  { to: '/mentor/availability', labelKey: 'navAvailability', icon: Calendar },
-  { to: '/mentor/earnings', labelKey: 'navEarnings', icon: Coins },
-  { to: '/mentor/profile', labelKey: 'navProfile', icon: UserRound },
-  { to: '/mentor/notifications', labelKey: 'navNotifications', icon: Bell },
-];

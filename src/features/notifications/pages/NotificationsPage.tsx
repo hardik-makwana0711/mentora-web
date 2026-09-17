@@ -33,17 +33,28 @@ function isAssignmentNotification(n: NotificationRow): boolean {
   return Boolean(n.type && ASSIGNMENT_NOTIFICATION_TYPES.has(n.type));
 }
 
+const DISCOVERY_NOTIFICATION_TYPES = new Set([
+  'mentor_contact_request_created',
+  'mentor_contact_request_submitted',
+  'mentor_contact_request_accepted',
+  'mentor_contact_request_rejected',
+  'mentor_profile_approved',
+  'mentor_profile_rejected',
+  'mentor_photo_approved',
+  'mentor_photo_rejected',
+  'mentor_video_approved',
+  'mentor_video_rejected',
+  'mentor_review_approved',
+  'mentor_review_rejected',
+  'mentor_success_story_approved',
+  'mentor_success_story_rejected',
+  'teacher_reference_submitted',
+  'teacher_reference_approved',
+]);
+
 function isClickableNotification(n: NotificationRow): boolean {
   if (n.type === 'message_notification' || isAssignmentNotification(n)) return true;
-  const discoveryTypes = new Set([
-    'mentor_contact_request_created',
-    'mentor_contact_request_submitted',
-    'mentor_contact_request_accepted',
-    'mentor_contact_request_rejected',
-    'mentor_profile_approved',
-    'mentor_profile_rejected',
-  ]);
-  return Boolean(n.type && discoveryTypes.has(n.type));
+  return Boolean(n.type && DISCOVERY_NOTIFICATION_TYPES.has(n.type));
 }
 
 export default function NotificationsPage() {
@@ -95,26 +106,9 @@ export default function NotificationsPage() {
       return;
     }
 
-    const discoveryTypes = new Set([
-      'mentor_contact_request_created',
-      'mentor_contact_request_submitted',
-      'mentor_contact_request_accepted',
-      'mentor_contact_request_rejected',
-      'mentor_profile_approved',
-      'mentor_profile_rejected',
-      'mentor_photo_approved',
-      'mentor_photo_rejected',
-      'mentor_video_approved',
-      'mentor_video_rejected',
-      'mentor_review_approved',
-      'mentor_review_rejected',
-      'mentor_success_story_approved',
-      'mentor_success_story_rejected',
-    ]);
-
-    if (n.type && discoveryTypes.has(n.type)) {
+    if (n.type && DISCOVERY_NOTIFICATION_TYPES.has(n.type)) {
       if (n.type === 'mentor_contact_request_created' && role === 'mentor') {
-        navigate(`${roleBase}/contact-requests`);
+        navigate(`${roleBase}/messages`);
         return;
       }
       if (
@@ -123,14 +117,27 @@ export default function NotificationsPage() {
           n.type === 'mentor_contact_request_rejected') &&
         (role === 'parent' || role === 'student')
       ) {
-        navigate(`${roleBase}/my-mentor-requests`);
+        navigate(`${roleBase}/messages`);
         return;
       }
       if (
-        (n.type === 'mentor_profile_approved' || n.type === 'mentor_profile_rejected') &&
+        (n.type === 'mentor_profile_approved' ||
+          n.type === 'mentor_profile_rejected' ||
+          n.type === 'mentor_photo_approved' ||
+          n.type === 'mentor_photo_rejected' ||
+          n.type === 'mentor_video_approved' ||
+          n.type === 'mentor_video_rejected' ||
+          n.type === 'mentor_review_approved' ||
+          n.type === 'mentor_review_rejected' ||
+          n.type === 'mentor_success_story_approved' ||
+          n.type === 'mentor_success_story_rejected') &&
         role === 'mentor'
       ) {
         navigate(`${roleBase}/profile/edit`);
+        return;
+      }
+      if (n.type === 'teacher_reference_submitted' && role === 'mentor') {
+        navigate(`${roleBase}/references`);
         return;
       }
     }
@@ -153,7 +160,12 @@ export default function NotificationsPage() {
       <PageHeader
         title={tr.notifications}
         actions={
-          <Button type="button" variant="secondary" isLoading={markAll.isPending} onClick={() => markAll.mutate()}>
+          <Button
+            type="button"
+            variant="secondary"
+            isLoading={markAll.isPending}
+            onClick={() => markAll.mutate()}
+          >
             {tr.markAllNotificationsRead}
           </Button>
         }
@@ -177,7 +189,9 @@ export default function NotificationsPage() {
                       className={cn(
                         'transition-colors',
                         isRead ? 'opacity-60' : '',
-                        isClickable ? 'cursor-pointer hover:border-[var(--color-brand-primary)]/50' : ''
+                        isClickable
+                          ? 'cursor-pointer hover:border-[var(--color-brand-primary)]/50'
+                          : ''
                       )}
                       onClick={isClickable ? () => handleNotificationClick(n) : undefined}
                     >

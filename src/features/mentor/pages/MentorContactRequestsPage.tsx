@@ -1,37 +1,61 @@
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PageContainer } from '@/components/layouts/PageContainer';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Badge } from '@/components/ui/Badge';
 import { ReasonModal } from '@/features/admin/components/ReasonModal';
+import { ContactRequestCard } from '@/features/mentor/components/contact-requests/ContactRequestCard';
+import {
+  ContactRequestControls,
+  type ContactRequestSort,
+} from '@/features/mentor/components/contact-requests/ContactRequestControls';
+import { ContactRequestDetailDrawer } from '@/features/mentor/components/contact-requests/ContactRequestDetailDrawer';
+import { ContactRequestStatusTabs } from '@/features/mentor/components/contact-requests/ContactRequestStatusTabs';
+import { ContactRequestSummaryCards } from '@/features/mentor/components/contact-requests/ContactRequestSummaryCards';
+import {
+  useMentorContactRequestsCount,
+  useMentorContactRequestsList,
+} from '@/features/mentor/hooks/useMentorContactRequestsList';
 import { contactRequestsService } from '@/services/contact-requests.service';
-import { qk } from '@/constants/query-keys';
 import { useStrings } from '@/constants/strings';
-import { getDateFnsLocale } from '@/lib/date-locale';
-import type { ContactRequest } from '@/types/contact-requests';
+import type { ContactRequestStatus } from '@/types/contact-requests';
 
 export default function MentorContactRequestsPage() {
   const tr = useStrings();
   const qc = useQueryClient();
-  const [rejectId, setRejectId] = useState<string | null>(null);
 
-  const query = useQuery({
-    queryKey: qk.mentorContactRequests({}),
-    queryFn: () => contactRequestsService.listMentorIncoming({ limit: 50 }),
-  });
+  const [activeTab, setActiveTab] = useState<'all' | ContactRequestStatus>('all');
+  const hasSetInitialTab = useRef(false);
+  const pendingCountQuery = useMentorContactRequestsCount('pending');
+
+  useEffect(() => {
+    if (hasSetInitialTab.current) return;
+    if (pendingCountQuery.data === undefined) return;
+    hasSetInitialTab.current = true;
+    setActiveTab(pendingCountQuery.data > 0 ? 'pending' : 'all');
+  }, [pendingCountQuery.data]);
+
+  const [search, setSearch] = useState('');
+  const [subject, setSubject] = useState('');
+  const [grade, setGrade] = useState('');
+  const [sort, setSort] = useState<ContactRequestSort>('newest');
+
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
+  const [decliningRequestId, setDecliningRequestId] = useState<string | null>(null);
+
+  const listQuery = useMentorContactRequestsList(activeTab);
+
+  const invalidateAll = () => qc.invalidateQueries({ queryKey: ['contact-requests', 'mentor'] });
 
   const acceptMutation = useMutation({
     mutationFn: (id: string) => contactRequestsService.accept(id),
     onSuccess: () => {
       toast.success(tr.requestAccepted);
-      void qc.invalidateQueries({ queryKey: qk.mentorContactRequests({}) });
+      void invalidateAll();
     },
     onError: () => toast.error(tr.actionFailed),
   });
@@ -41,76 +65,131 @@ export default function MentorContactRequestsPage() {
       contactRequestsService.reject(id, message),
     onSuccess: () => {
       toast.success(tr.requestRejected);
-      setRejectId(null);
-      void qc.invalidateQueries({ queryKey: qk.mentorContactRequests({}) });
+      setDecliningRequestId(null);
+      void invalidateAll();
     },
     onError: () => toast.error(tr.actionFailed),
   });
 
-  const locale = getDateFnsLocale();
-
-  const renderCard = (item: ContactRequest) => (
-    <Card key={item.id} className="p-5">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h3 className="font-semibold text-[var(--color-m-text)]">
-            {item.requester?.name ?? tr.roleStudent}
-            {item.student ? ` (${item.student.name})` : ''}
-          </h3>
-          <p className="text-sm text-[var(--color-m-text-muted)]">
-            {item.subject ?? tr.notProvided} · {item.gradeLevel ?? '—'}
-          </p>
-        </div>
-        <Badge variant={item.status === 'pending' ? 'warning' : 'info'}>{item.status}</Badge>
-      </div>
-      {item.message ? (
-        <p className="mt-3 text-sm text-[var(--color-m-text-secondary)]">{item.message}</p>
-      ) : null}
-      <p className="mt-2 text-xs text-[var(--color-m-text-muted)]">
-        {format(new Date(item.createdAt), 'PPp', { locale })}
-      </p>
-      {item.status === 'pending' ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            isLoading={acceptMutation.isPending}
-            onClick={() => acceptMutation.mutate(item.id)}
-          >
-            {tr.acceptRequest}
-          </Button>
-          <Button type="button" variant="ghost" size="sm" onClick={() => setRejectId(item.id)}>
-            {tr.rejectRequestBtn}
-          </Button>
-        </div>
-      ) : null}
-    </Card>
+  const allLoadedItems = useMemo(
+    () => listQuery.data?.pages.flatMap((p) => p.items) ?? [],
+    [listQuery.data]
   );
+
+  const filteredItems = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let items = allLoadedItems.filter((r) => {
+      if (subject && r.subject !== subject) return false;
+      if (grade && r.gradeLevel !== grade) return false;
+      if (q) {
+        const studentName = r.student?.name ?? r.requester?.name ?? '';
+        const parentName = r.student ? (r.requester?.name ?? '') : '';
+        const haystack = `${studentName} ${parentName}`.toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+    items = [...items].sort((a, b) => {
+      const diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return sort === 'newest' ? -diff : diff;
+    });
+    return items;
+  }, [allLoadedItems, search, subject, grade, sort]);
+
+  const selectedRequest = allLoadedItems.find((r) => r.id === selectedRequestId) ?? null;
+  const decliningRequest = allLoadedItems.find((r) => r.id === decliningRequestId) ?? null;
+
+  const isFiltered = Boolean(search.trim() || subject || grade);
+  const emptyTitle = isFiltered
+    ? tr.contactRequestsEmptyFilteredTitle
+    : activeTab === 'pending'
+      ? tr.contactRequestsEmptyPendingTitle
+      : activeTab === 'all'
+        ? tr.contactRequestsEmptyAllTitle
+        : tr.contactRequestsEmptyStatusTitle;
+  const emptyBody = isFiltered
+    ? tr.contactRequestsEmptyFilteredBody
+    : activeTab === 'pending'
+      ? tr.contactRequestsEmptyPendingBody
+      : activeTab === 'all'
+        ? tr.contactRequestsEmptyAllBody
+        : tr.contactRequestsEmptyStatusBody;
 
   return (
     <PageContainer>
       <PageHeader title={tr.mentorContactRequests} description={tr.mentorContactRequestsSubtitle} />
 
-      {query.isPending ? (
-        <div className="flex justify-center py-12">
-          <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
-        </div>
-      ) : query.isError ? (
-        <ErrorState title={tr.loadError} onRetry={() => void query.refetch()} />
-      ) : !query.data?.items.length ? (
-        <EmptyState title={tr.noIncomingRequests} />
-      ) : (
-        <div className="space-y-4">{query.data.items.map(renderCard)}</div>
-      )}
+      <div className="mt-6 flex flex-col gap-5">
+        <ContactRequestSummaryCards />
+
+        <ContactRequestStatusTabs value={activeTab} onChange={setActiveTab} />
+
+        <ContactRequestControls
+          items={allLoadedItems}
+          search={search}
+          onSearchChange={setSearch}
+          subject={subject}
+          onSubjectChange={setSubject}
+          grade={grade}
+          onGradeChange={setGrade}
+          sort={sort}
+          onSortChange={setSort}
+        />
+
+        {listQuery.isPending ? (
+          <div className="flex justify-center py-12">
+            <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
+          </div>
+        ) : listQuery.isError ? (
+          <ErrorState title={tr.loadError} onRetry={() => void listQuery.refetch()} />
+        ) : filteredItems.length === 0 ? (
+          <EmptyState title={emptyTitle} description={emptyBody} />
+        ) : (
+          <div className="space-y-3">
+            {filteredItems.map((request) => (
+              <ContactRequestCard
+                key={request.id}
+                request={request}
+                onViewDetails={() => setSelectedRequestId(request.id)}
+                onAccept={() => acceptMutation.mutate(request.id)}
+                onDecline={() => setDecliningRequestId(request.id)}
+                isAccepting={acceptMutation.isPending && acceptMutation.variables === request.id}
+              />
+            ))}
+
+            {listQuery.hasNextPage ? (
+              <div className="flex justify-center pt-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  isLoading={listQuery.isFetchingNextPage}
+                  onClick={() => void listQuery.fetchNextPage()}
+                >
+                  {tr.loadMore}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        )}
+      </div>
+
+      <ContactRequestDetailDrawer
+        request={selectedRequest}
+        open={Boolean(selectedRequest)}
+        onClose={() => setSelectedRequestId(null)}
+        onAccept={() => selectedRequest && acceptMutation.mutate(selectedRequest.id)}
+        onDecline={() => selectedRequest && setDecliningRequestId(selectedRequest.id)}
+        isAccepting={acceptMutation.isPending && acceptMutation.variables === selectedRequest?.id}
+      />
 
       <ReasonModal
-        open={Boolean(rejectId)}
+        open={Boolean(decliningRequest)}
         title={tr.rejectRequest}
         confirmLabel={tr.rejectRequestBtn}
-        onClose={() => setRejectId(null)}
+        onClose={() => setDecliningRequestId(null)}
         onConfirm={(reason) => {
-          if (rejectId) rejectMutation.mutate({ id: rejectId, message: reason });
+          if (decliningRequest) rejectMutation.mutate({ id: decliningRequest.id, message: reason });
         }}
         loading={rejectMutation.isPending}
       />

@@ -7,11 +7,11 @@ import type { DiscoveryFilters, DiscoveryMentorCard } from '@/types/discovery';
 function hasActiveDiscoveryFilters(filters: DiscoveryFilters): boolean {
   return Boolean(
     filters.subject ||
-      filters.exam_type ||
-      filters.grade_level ||
-      filters.teaching_format ||
-      filters.min_rating ||
-      filters.tags
+    filters.exam_type ||
+    filters.grade_level ||
+    filters.teaching_format ||
+    filters.min_rating ||
+    filters.tags
   );
 }
 
@@ -31,7 +31,11 @@ export function useDiscoveryFeed(filters: DiscoveryFilters) {
       const res = await discoveryService.getFeed({ ...filters, page: 1, limit: 10 });
 
       if (res.items.length === 0 && !filters.include_seen && !hasActiveDiscoveryFilters(filters)) {
-        const recommended = await discoveryService.getRecommended({ ...filters, page: 1, limit: 10 });
+        const recommended = await discoveryService.getRecommended({
+          ...filters,
+          page: 1,
+          limit: 10,
+        });
         if (recommended.items.length > 0) {
           setStack(recommended.items);
           return { ...recommended, source: 'recommended' as const };
@@ -71,13 +75,14 @@ export function useDiscoveryFeed(filters: DiscoveryFilters) {
         const ids = new Set(prev.map((m) => m.mentor_id));
         return [...prev, ...res.items.filter((m) => !ids.has(m.mentor_id))];
       });
-      qc.setQueryData(qk.discoveryFeed({ ...filters, stackKey: filtersKey }), (old: typeof query.data) =>
-        old ? { ...old, pagination: res.pagination } : old
+      qc.setQueryData(
+        qk.discoveryFeed({ ...filters, stackKey: filtersKey }),
+        (old: typeof query.data) => (old ? { ...old, pagination: res.pagination } : old)
       );
     } finally {
       loadingMoreRef.current = false;
     }
-  }, [filters, filtersKey, qc, query.data]);
+  }, [filters, filtersKey, qc, query]);
 
   const resetFeed = useCallback(() => {
     pageRef.current = 1;

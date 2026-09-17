@@ -15,13 +15,15 @@ import { ModerationStatusBadge } from '@/features/admin/components/ModerationSta
 import { adminService } from '@/services/admin.service';
 import { qk } from '@/constants/query-keys';
 import { useStrings } from '@/constants/strings';
+import { formatLessonFormat } from '@/features/listings/lib/listing-labels';
 import type { AdminListingListItem, ListingModerationStatus } from '@/types/admin';
 
 export default function AdminListingsPage() {
   const tr = useStrings();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') ?? '1');
-  const moderationStatus = (searchParams.get('moderationStatus') as ListingModerationStatus | null) ?? undefined;
+  const moderationStatus =
+    (searchParams.get('moderationStatus') as ListingModerationStatus | null) ?? undefined;
 
   const filters = useMemo(
     () => ({ page, limit: 20, moderationStatus, search: searchParams.get('search') ?? undefined }),
@@ -70,7 +72,10 @@ export default function AdminListingsPage() {
           defaultValue={searchParams.get('search') ?? ''}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              updateParams({ search: (e.target as HTMLInputElement).value.trim() || undefined, page: '1' });
+              updateParams({
+                search: (e.target as HTMLInputElement).value.trim() || undefined,
+                page: '1',
+              });
             }
           }}
         />
@@ -100,12 +105,14 @@ export default function AdminListingsPage() {
           {
             key: 'format',
             header: tr.adminColLessonFormat,
-            render: (row) => row.lesson_format,
+            render: (row) => formatLessonFormat(row.lesson_format),
           },
           {
             key: 'moderation',
             header: tr.adminColModerationStatus,
-            render: (row) => <ModerationStatusBadge status={row.listing_moderation_status} kind="listing" />,
+            render: (row) => (
+              <ModerationStatusBadge status={row.listing_moderation_status} kind="listing" />
+            ),
           },
           {
             key: 'availability',
@@ -116,7 +123,9 @@ export default function AdminListingsPage() {
             key: 'submitted',
             header: tr.adminColSubmitted,
             render: (row) =>
-              row.submitted_for_review_at ? format(new Date(row.submitted_for_review_at), 'PP') : '—',
+              row.submitted_for_review_at
+                ? format(new Date(row.submitted_for_review_at), 'PP')
+                : '—',
           },
           {
             key: 'actions',
@@ -133,7 +142,10 @@ export default function AdminListingsPage() {
         ]}
       />
 
-      <AdminPagination pagination={query.data.pagination} onPageChange={(p) => updateParams({ page: String(p) })} />
+      <AdminPagination
+        pagination={query.data.pagination}
+        onPageChange={(p) => updateParams({ page: String(p) })}
+      />
     </PageContainer>
   );
 }

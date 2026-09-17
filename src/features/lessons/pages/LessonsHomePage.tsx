@@ -76,7 +76,10 @@ export default function LessonsHomePage() {
 
   const studentsWithGrade = useMemo(() => {
     const grades = new Map(
-      (profileQ.data?.parent_profile?.linked_students ?? []).map((s) => [s.id, s.grade_level ?? null])
+      (profileQ.data?.parent_profile?.linked_students ?? []).map((s) => [
+        s.id,
+        s.grade_level ?? null,
+      ])
     );
     return (linkedStudents ?? []).map((s) => ({
       student_id: s.student_id,
@@ -149,13 +152,14 @@ export default function LessonsHomePage() {
 
   const handleMessage = (session: LessonCalendarSession) => {
     const params = new URLSearchParams();
-    const recipientId = lessonRole === 'mentor' ? session.student_id : session.mentor_id;
-    if (recipientId) params.set('participantId', recipientId);
-    navigate(`${roleBase}/messages${params.toString() ? `?${params}` : ''}`);
+    params.set('lessonId', session.lesson_id);
+    if (session.student_id) params.set('studentId', session.student_id);
+    if (session.mentor_id) params.set('mentorId', session.mentor_id);
+    if (lessonRole === 'parent' && user?.id) params.set('parentId', user.id);
+    navigate(`${roleBase}/messages?${params}`);
   };
 
-  const showStudentFilter =
-    lessonRole === 'parent' && studentsWithGrade.length > 1;
+  const showStudentFilter = lessonRole === 'parent' && studentsWithGrade.length > 1;
 
   const setActiveTab = (next: string) => {
     const params = new URLSearchParams(searchParams);
@@ -176,7 +180,11 @@ export default function LessonsHomePage() {
       <PageHeader
         title={tr.lessons}
         description={
-          lessonRole === 'mentor' ? tr.lessonsPageDescriptionMentor : tr.lessonsPageDescription
+          lessonRole === 'mentor'
+            ? tr.lessonsPageDescriptionMentor
+            : lessonRole === 'student'
+              ? tr.lessonsPageDescriptionStudent
+              : tr.lessonsPageDescription
         }
       />
 

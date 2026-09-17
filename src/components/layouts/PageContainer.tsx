@@ -6,6 +6,7 @@ const widthClass = {
   full: 'w-full max-w-none',
   content: 'mx-auto w-full max-w-6xl',
   form: 'mx-auto w-full max-w-2xl',
+  profile: 'mx-auto w-full max-w-[1280px]',
 } as const;
 
 export type PageWidth = keyof typeof widthClass;

@@ -88,18 +88,13 @@ export function MentorOverviewStats({
       key: 'payout',
       label: tr.dashboardStatAvailablePayout,
       value: formatWalletMoney(availablePayout, currency),
-      href: `${roleBase}/earnings`,
+      href: `${roleBase}/wallet`,
       icon: Wallet,
     });
   }
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5',
-        className
-      )}
-    >
+    <div className={cn('grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5', className)}>
       {cards.map((card) => {
         const Icon = card.icon;
         const interactive = Boolean(card.href);

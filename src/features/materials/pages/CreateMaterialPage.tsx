@@ -120,7 +120,9 @@ export default function CreateMaterialPage() {
                       : 'border-[var(--color-m-card-border)] text-[var(--color-m-text-muted)] hover:text-[var(--color-m-text)]'
                   )}
                 >
-                  {nextType === 'assignment' ? tr.materialTypeAssignment : tr.materialTypeCourseResource}
+                  {nextType === 'assignment'
+                    ? tr.materialTypeAssignment
+                    : tr.materialTypeCourseResource}
                 </button>
               ))}
             </div>
@@ -158,7 +160,7 @@ export default function CreateMaterialPage() {
           />
         </Card>
 
-        <Card className="h-fit p-6 lg:sticky lg:top-6">
+        <Card className="h-fit p-6 lg:sticky lg:top-20">
           <AssignedStudentsPicker
             students={students}
             selectedIds={assignedStudentIds}

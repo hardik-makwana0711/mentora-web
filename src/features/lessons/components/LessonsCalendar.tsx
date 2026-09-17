@@ -31,11 +31,16 @@ export function LessonsCalendar({ sessionDates, selectedDate, onSelectDate }: Pr
   const tr = useStrings();
   const { t } = useTranslation();
   const dateLocale = getDateFnsLocale();
+  // dateLocale.code drives getDateFnsLocale() inside getWeekDays, invisible to static analysis — must stay to refresh names on language change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const weekdays = useMemo(() => getWeekDays().map((d) => d.short), [dateLocale.code]);
 
   const [viewMonth, setViewMonth] = useState(() => parseISO(`${selectedDate}T12:00:00`));
 
-  const marked = useMemo(() => new Set(sessionDates.map((d) => calendarDateKey(d))), [sessionDates]);
+  const marked = useMemo(
+    () => new Set(sessionDates.map((d) => calendarDateKey(d))),
+    [sessionDates]
+  );
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(viewMonth), { weekStartsOn: 1 });
@@ -102,7 +107,9 @@ export function LessonsCalendar({ sessionDates, selectedDate, onSelectDate }: Pr
               className={cn(
                 'relative flex h-10 w-full items-center justify-center rounded-xl text-sm font-medium transition',
                 !inMonth && 'text-[var(--color-m-text-disabled)]',
-                inMonth && !isSelected && 'text-[var(--color-m-text)] hover:bg-[var(--color-m-surface-light)]',
+                inMonth &&
+                  !isSelected &&
+                  'text-[var(--color-m-text)] hover:bg-[var(--color-m-surface-light)]',
                 today && !isSelected && 'ring-1 ring-[var(--color-m-primary)]/40',
                 isSelected &&
                   'bg-[var(--color-m-primary)] text-white shadow-[var(--shadow-m-glow)] hover:bg-[var(--color-m-primary)]'

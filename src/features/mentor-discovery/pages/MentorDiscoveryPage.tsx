@@ -102,7 +102,7 @@ export default function MentorDiscoveryPage() {
       <PageHeader title={tr.discoveryPageTitle} description={tr.discoveryPageSubtitle} />
 
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-start">
-        <aside className="w-full shrink-0 space-y-4 lg:sticky lg:top-4 lg:w-72 xl:w-80">
+        <aside className="w-full shrink-0 space-y-4 lg:sticky lg:top-20 lg:w-72 xl:w-80">
           <DiscoveryFilterSidebar
             filters={filters}
             onChange={setFilters}
@@ -210,7 +210,7 @@ export default function MentorDiscoveryPage() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  navigate(`${roleBase}/mentors/${likePrompt}?request=trial`);
+                  navigate(`${roleBase}/mentors/${likePrompt}`);
                   setLikePrompt(null);
                 }}
               >

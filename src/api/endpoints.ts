@@ -88,7 +88,8 @@ export const endpoints = {
     payoutMethods: '/api/v1/mentor-wallet/me/payout-methods',
     payoutMethod: (id: string) => `/api/v1/mentor-wallet/me/payout-methods/${id}`,
     payoutMethodDefault: (id: string) => `/api/v1/mentor-wallet/me/payout-methods/${id}/default`,
-    payoutMethodDeactivate: (id: string) => `/api/v1/mentor-wallet/me/payout-methods/${id}/deactivate`,
+    payoutMethodDeactivate: (id: string) =>
+      `/api/v1/mentor-wallet/me/payout-methods/${id}/deactivate`,
     payoutRequest: (id: string) => `/api/v1/mentor-wallet/me/payout-requests/${id}`,
   },
   mentor: {
@@ -119,6 +120,13 @@ export const endpoints = {
     availability: (mentorId: string) => `/api/v1/mentors/${mentorId}/availability`,
     availabilitySummary: (mentorId: string) => `/api/v1/mentors/${mentorId}/availability-summary`,
     pricingSummary: (mentorId: string) => `/api/v1/mentors/${mentorId}/pricing-summary`,
+    updatePricing: '/api/v1/mentors/me/pricing',
+  },
+  mentorProfileMedia: {
+    photos: '/api/v1/mentor/profile/media/photos',
+    photosUpload: '/api/v1/mentor/profile/media/photos/upload',
+    photo: (photoId: string) => `/api/v1/mentor/profile/media/photos/${photoId}`,
+    introVideo: '/api/v1/mentor/profile/media/intro-video',
   },
   mentorDiscovery: {
     feed: '/api/v1/mentor-discovery',
@@ -127,6 +135,15 @@ export const endpoints = {
     like: (mentorId: string) => `/api/v1/mentor-discovery/${mentorId}/like`,
     dislike: (mentorId: string) => `/api/v1/mentor-discovery/${mentorId}/dislike`,
     save: (mentorId: string) => `/api/v1/mentor-discovery/${mentorId}/save`,
+  },
+  references: {
+    submit: '/api/v1/teacher-references',
+    mine: '/api/v1/my/teacher-references',
+    mentorInbox: '/api/v1/mentor/me/references',
+    mentorUpdateStatus: (referenceId: string) =>
+      `/api/v1/mentor/me/references/${referenceId}/status`,
+    publicForMentor: (mentorId: string) => `/api/v1/mentors/${mentorId}/references`,
+    publicSummaryForMentor: (mentorId: string) => `/api/v1/mentors/${mentorId}/references/summary`,
   },
   mentorContactRequests: {
     list: '/api/v1/mentor-contact-requests/me',
@@ -142,7 +159,8 @@ export const endpoints = {
     create: '/api/v1/reports',
     adminList: '/api/v1/admin/reports',
     adminDetail: (reportId: string) => `/api/v1/admin/reports/${reportId}`,
-    adminMarkUnderReview: (reportId: string) => `/api/v1/admin/reports/${reportId}/mark-under-review`,
+    adminMarkUnderReview: (reportId: string) =>
+      `/api/v1/admin/reports/${reportId}/mark-under-review`,
     adminResolve: (reportId: string) => `/api/v1/admin/reports/${reportId}/resolve`,
     adminDismiss: (reportId: string) => `/api/v1/admin/reports/${reportId}/dismiss`,
   },
@@ -178,7 +196,8 @@ export const endpoints = {
   },
   marketing: {
     sponsoredCards: '/api/v1/marketing/sponsored-cards',
-    impression: (campaignId: string) => `/api/v1/marketing/sponsored-cards/${campaignId}/impression`,
+    impression: (campaignId: string) =>
+      `/api/v1/marketing/sponsored-cards/${campaignId}/impression`,
     click: (campaignId: string) => `/api/v1/marketing/sponsored-cards/${campaignId}/click`,
   },
   admin: {
@@ -199,7 +218,8 @@ export const endpoints = {
       list: '/api/v1/admin/mentor-profiles',
       detail: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}`,
       approve: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}/approve`,
-      requestChanges: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}/request-changes`,
+      requestChanges: (mentorId: string) =>
+        `/api/v1/admin/mentor-profiles/${mentorId}/request-changes`,
       reject: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}/reject`,
       hide: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}/hide`,
       restore: (mentorId: string) => `/api/v1/admin/mentor-profiles/${mentorId}/restore`,

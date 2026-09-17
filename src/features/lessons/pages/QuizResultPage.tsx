@@ -7,7 +7,8 @@ import { Spinner } from '@/components/ui/Spinner';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { qk } from '@/constants/query-keys';
 import { useStrings } from '@/constants/strings';
-import { fetchAiQuizResult, fetchAiQuizStudent } from '@/services/lesson-ai.service';
+import { fetchAiQuizResult } from '@/services/lesson-ai.service';
+import { fetchSessionDetail } from '@/services/lessons.service';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { QuizQuestionReview } from '@/features/lessons/components/ai/QuizQuestionReview';
 
@@ -18,13 +19,15 @@ export default function QuizResultPage() {
   const roleBase = useRoleBase();
   const reportPath = `${roleBase}/lessons/session/${sessionId}/report`;
 
-  const studentQ = useQuery({
-    queryKey: sessionId ? qk.aiQuizStudent(sessionId) : ['ai', 'quiz', 'student', 'none'],
-    queryFn: () => fetchAiQuizStudent(sessionId!),
+  // Session detail is reachable by student, parent, and mentor alike (unlike the
+  // student-only /ai-quiz/student endpoint), so it's the reliable source for the quiz id.
+  const detailQ = useQuery({
+    queryKey: sessionId ? qk.sessionDetail(sessionId) : ['sessions', 'none'],
+    queryFn: () => fetchSessionDetail(sessionId!),
     enabled: Boolean(sessionId),
   });
 
-  const quizId = studentQ.data?.quizId ?? null;
+  const quizId = detailQ.data?.ai_quiz_id ?? null;
 
   const resultQ = useQuery({
     queryKey: quizId ? qk.aiQuizResult(quizId) : ['ai', 'quiz', 'result', 'none'],
@@ -36,7 +39,7 @@ export default function QuizResultPage() {
     return <ErrorState title={tr.invalidSession} onRetry={() => navigate(`${roleBase}/lessons`)} />;
   }
 
-  if (studentQ.isPending || resultQ.isPending) {
+  if (detailQ.isPending || (Boolean(quizId) && resultQ.isPending)) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
@@ -44,11 +47,12 @@ export default function QuizResultPage() {
     );
   }
 
-  if (studentQ.isError || resultQ.isError || !resultQ.data) {
+  if (!quizId || detailQ.isError || resultQ.isError || !resultQ.data) {
+    const onRetry = quizId ? () => void resultQ.refetch() : () => void detailQ.refetch();
     return (
       <PageContainer>
         <BackLink to={reportPath}>{tr.back}</BackLink>
-        <ErrorState title={tr.resultNotAvailable} onRetry={() => void resultQ.refetch()} />
+        <ErrorState title={tr.resultNotAvailable} onRetry={onRetry} />
       </PageContainer>
     );
   }
@@ -69,7 +73,9 @@ export default function QuizResultPage() {
         </div>
         <div className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
           <p className="text-xs text-[var(--color-text-muted)]">{tr.percentage}</p>
-          <p className="mt-1 text-2xl font-semibold text-[var(--color-m-text)]">{r.percentage ?? 0}%</p>
+          <p className="mt-1 text-2xl font-semibold text-[var(--color-m-text)]">
+            {r.percentage ?? 0}%
+          </p>
         </div>
       </div>
 

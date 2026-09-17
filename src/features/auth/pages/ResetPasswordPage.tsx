@@ -7,11 +7,15 @@ import { useTranslation } from 'react-i18next';
 import { useStrings } from '@/constants/strings';
 import { authService } from '@/services/auth.service';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { isResetPasswordFailedError } from '@/lib/auth-errors';
 import { createResetPasswordSchema, type ResetPasswordForm } from '@/validations/auth.schemas';
 import { shouldNavigateToLoginAfterReset } from '@/types/auth-password-reset';
-import { AuthCard, AuthLogoBlock, AuthScreenChrome } from '@/features/auth/components/AuthScreenChrome';
+import {
+  AuthCard,
+  AuthLogoBlock,
+  AuthScreenChrome,
+} from '@/features/auth/components/AuthScreenChrome';
 
 type LocationState = {
   reset_token?: string;
@@ -21,6 +25,8 @@ export default function ResetPasswordPage() {
   const tr = useStrings();
   const { i18n: i18nInstance } = useTranslation();
   const locale = i18nInstance.resolvedLanguage ?? i18nInstance.language;
+  // `locale` drives i18n.t() inside createResetPasswordSchema, invisible to static analysis — must stay to refresh messages on language change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const resetPasswordSchema = useMemo(() => createResetPasswordSchema(), [locale]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,8 +57,7 @@ export default function ResetPasswordPage() {
       });
 
       if (shouldNavigateToLoginAfterReset(result)) {
-        queueMicrotask(() => toast.success(result.message || tr.resetPasswordSuccess));
-        navigate('/login', { replace: true });
+        navigate('/reset-password/success', { replace: true });
         return;
       }
 
@@ -75,20 +80,22 @@ export default function ResetPasswordPage() {
     <AuthScreenChrome
       card={
         <AuthCard>
-          <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">{tr.resetPasswordTitle}</h2>
-          <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">{tr.resetPasswordSubtitle}</p>
+          <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">
+            {tr.resetPasswordTitle}
+          </h2>
+          <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">
+            {tr.resetPasswordSubtitle}
+          </p>
           <form onSubmit={onSubmit} noValidate>
-            <Input
+            <PasswordInput
               label={tr.newPassword}
-              type="password"
               autoComplete="new-password"
               placeholder={tr.passwordPlaceholder}
               {...register('new_password')}
               error={errors.new_password?.message}
             />
-            <Input
+            <PasswordInput
               label={tr.confirmNewPassword}
-              type="password"
               autoComplete="new-password"
               placeholder={tr.passwordPlaceholder}
               {...register('confirm_new_password')}
@@ -99,7 +106,10 @@ export default function ResetPasswordPage() {
             </Button>
           </form>
           <p className="mt-6 text-center text-[15px]">
-            <Link className="font-semibold text-[var(--color-m-primary)] hover:underline" to="/login">
+            <Link
+              className="font-semibold text-[var(--color-m-primary)] hover:underline"
+              to="/login"
+            >
               {tr.backToLogin}
             </Link>
           </p>

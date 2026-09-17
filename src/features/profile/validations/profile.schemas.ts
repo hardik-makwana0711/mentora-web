@@ -15,8 +15,17 @@ export function createParentProfileFormSchema() {
           const digits = v.replace(/\D/g, '');
           return digits.length >= 10 && digits.length <= 15;
         },
-        { message: i18n.t('validationPhoneInvalid') },
+        { message: i18n.t('validationPhoneInvalid') }
       ),
+    dateOfBirth: z
+      .string()
+      .optional()
+      .refine((s) => {
+        if (!s?.trim()) return true;
+        const d = new Date(s + 'T12:00:00');
+        if (Number.isNaN(d.getTime())) return false;
+        return d.getTime() < Date.now();
+      }, i18n.t('validationDateOfBirthPast')),
   });
 }
 
@@ -25,6 +34,27 @@ export function createMentorProfileFormSchema() {
     firstName: z.string().trim().min(1, i18n.t('validationFirstNameRequired')).max(50),
     lastName: z.string().trim().min(1, i18n.t('validationLastNameRequired')).max(50),
     bio: z.string().trim().max(500, i18n.t('validationBioMaxLength')),
+    phone: z
+      .string()
+      .trim()
+      .max(20)
+      .refine(
+        (v) => {
+          if (!v) return true;
+          const digits = v.replace(/\D/g, '');
+          return digits.length >= 10 && digits.length <= 15;
+        },
+        { message: i18n.t('validationPhoneInvalid') }
+      ),
+    dateOfBirth: z
+      .string()
+      .optional()
+      .refine((s) => {
+        if (!s?.trim()) return true;
+        const d = new Date(s + 'T12:00:00');
+        if (Number.isNaN(d.getTime())) return false;
+        return d.getTime() < Date.now();
+      }, i18n.t('validationDateOfBirthPast')),
   });
 }
 

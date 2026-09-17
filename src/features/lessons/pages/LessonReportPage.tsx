@@ -105,13 +105,14 @@ export default function LessonReportPage() {
         transcriptStatus === 'NOT_SCHEDULED' ||
         summaryStatus === 'pending');
 
-    const quizLabel = !quizStatus || quizStatus === 'quiz_not_generated' || quizStatus === 'draft'
-      ? tr.reportStatusQuizNotAssigned
-      : quizStatus === 'published' || quizStatus === 'generated'
-        ? tr.reportStatusQuizAssigned
-        : quizStatus === 'submitted'
-          ? tr.reportStatusQuizCompleted
-          : tr.reportStatusQuizNotAssigned;
+    const quizLabel =
+      !quizStatus || quizStatus === 'quiz_not_generated' || quizStatus === 'draft'
+        ? tr.reportStatusQuizNotAssigned
+        : quizStatus === 'published' || quizStatus === 'generated'
+          ? tr.reportStatusQuizAssigned
+          : quizStatus === 'submitted'
+            ? tr.reportStatusQuizCompleted
+            : tr.reportStatusQuizNotAssigned;
 
     const summaryLabel = planned
       ? tr.reportStatusSummaryPending
@@ -136,17 +137,19 @@ export default function LessonReportPage() {
         | 'pending'
         | 'warn'
         | 'danger',
-      quizKind: (quizStatus === 'submitted' ? 'ok' : quizStatus === 'published' ? 'warn' : 'pending') as
-        | 'ok'
-        | 'pending'
-        | 'warn'
-        | 'danger',
+      quizKind: (quizStatus === 'submitted'
+        ? 'ok'
+        : quizStatus === 'published'
+          ? 'warn'
+          : 'pending') as 'ok' | 'pending' | 'warn' | 'danger',
       noteKind: (hasNote ? 'ok' : 'pending') as 'ok' | 'pending' | 'warn' | 'danger',
-      lessonKind: (completed ? 'ok' : planned ? 'pending' : status === 'cancelled' ? 'danger' : 'pending') as
-        | 'ok'
-        | 'pending'
-        | 'warn'
-        | 'danger',
+      lessonKind: (completed
+        ? 'ok'
+        : planned
+          ? 'pending'
+          : status === 'cancelled'
+            ? 'danger'
+            : 'pending') as 'ok' | 'pending' | 'warn' | 'danger',
     };
   }, [d, transcriptStatus, tr]);
 
@@ -172,9 +175,7 @@ export default function LessonReportPage() {
   }
 
   const subject = formatLessonServiceName(d.subject_name);
-  const peopleLine = isMentor
-    ? d.student_name
-    : `${d.student_name} · ${d.mentor_name}`;
+  const peopleLine = isMentor ? d.student_name : `${d.student_name} · ${d.mentor_name}`;
 
   return (
     <PageContainer width="content" className="max-w-7xl">
@@ -209,7 +210,9 @@ export default function LessonReportPage() {
 
       {reportMeta.planned ? (
         <div className="mb-6 rounded-xl border border-[var(--color-m-primary)]/25 bg-[var(--color-m-primary)]/10 px-4 py-3">
-          <p className="text-sm font-semibold text-[var(--color-m-text)]">{tr.reportPlannedBannerTitle}</p>
+          <p className="text-sm font-semibold text-[var(--color-m-text)]">
+            {tr.reportPlannedBannerTitle}
+          </p>
           <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">
             {tr.reportPlannedBannerDescription}
           </p>
@@ -284,20 +287,22 @@ export default function LessonReportPage() {
         <div className="min-w-0 space-y-4">
           <TranscriptStatusBadge transcriptStatus={transcriptStatus} role={role} />
 
-          <LessonReportSections
-            detail={d}
-            role={role}
-            transcriptStatus={transcriptStatus}
-          />
+          <LessonReportSections detail={d} role={role} transcriptStatus={transcriptStatus} />
 
           {isParent ? (
-            <ParentLessonActions mentorId={d.mentor_id} studentId={d.student_id} />
+            <ParentLessonActions
+              mentorId={d.mentor_id}
+              studentId={d.student_id}
+              lessonId={d.lesson_id}
+            />
           ) : null}
         </div>
 
-        <aside className="space-y-4 lg:sticky lg:top-6">
+        <aside className="space-y-4 lg:sticky lg:top-20">
           <section className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
-            <h3 className="text-sm font-semibold text-[var(--color-m-text)]">{tr.lessonInfoTitle}</h3>
+            <h3 className="text-sm font-semibold text-[var(--color-m-text)]">
+              {tr.lessonInfoTitle}
+            </h3>
             <dl className="mt-3 space-y-3 text-sm">
               <div>
                 <dt className="text-[var(--color-m-text-muted)]">{tr.lessonInfoSubject}</dt>

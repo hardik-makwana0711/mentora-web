@@ -1,5 +1,5 @@
 import { Moon, Sun } from 'lucide-react';
-import { useAppTheme } from '@/app/providers/ThemeProvider';
+import { useAppTheme } from '@/app/providers/theme-context';
 import { useStrings } from '@/constants/strings';
 import { cn } from '@/lib/utils';
 

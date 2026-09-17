@@ -67,7 +67,9 @@ export function ListingCard({
           {structured?.exam_display_name ? (
             <Badge variant="info">{structured.exam_display_name}</Badge>
           ) : null}
-          <Badge variant={isInactive ? 'danger' : 'success'}>{formatListingStatus(listing.status)}</Badge>
+          <Badge variant={isInactive ? 'danger' : 'success'}>
+            {formatListingStatus(listing.status)}
+          </Badge>
           {listing.listing_moderation_status ? (
             <MentorModerationBadge status={listing.listing_moderation_status} />
           ) : null}
@@ -79,6 +81,11 @@ export function ListingCard({
           <p className="mt-3 text-sm text-[var(--color-m-text-secondary)]">
             <span className="font-medium text-[var(--color-m-text-muted)]">{tr.gradesLabel}: </span>
             {gradeDisplay}
+          </p>
+        ) : null}
+        {listing.description?.trim() ? (
+          <p className="mt-2 line-clamp-2 text-sm text-[var(--color-m-text-secondary)]">
+            {listing.description}
           </p>
         ) : null}
       </div>

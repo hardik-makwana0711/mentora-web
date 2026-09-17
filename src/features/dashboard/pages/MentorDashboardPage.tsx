@@ -19,7 +19,6 @@ import { translateWelcomeMessage } from '@/lib/translate-dashboard';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { useAuthStore } from '@/app/store/authStore';
 import { useUnreadMessageTotal } from '@/features/messages/hooks/useUnreadMessageTotal';
-import { WelcomeCard } from '@/features/dashboard/components/WelcomeCard';
 import { TodayScheduleList } from '@/features/dashboard/components/TodayScheduleList';
 import { UpcomingLessonsList } from '@/features/dashboard/components/UpcomingLessonsList';
 import { DashboardEmptyState } from '@/features/dashboard/components/DashboardEmptyState';
@@ -172,12 +171,10 @@ export default function MentorDashboardPage() {
     navigate(`${roleBase}/lessons/session/${sessionId}`);
   };
 
-  const activeListings =
-    listingsQ.data?.filter((l) => l.status === 'active').length ?? null;
-  const pendingRequests =
-    contactQ.isSuccess
-      ? (contactQ.data.pagination?.total ?? contactQ.data.items?.length ?? 0)
-      : null;
+  const activeListings = listingsQ.data?.filter((l) => l.status === 'active').length ?? null;
+  const pendingRequests = contactQ.isSuccess
+    ? (contactQ.data.pagination?.total ?? contactQ.data.items?.length ?? 0)
+    : null;
   const unreadMessages = unreadQ.isSuccess ? (unreadQ.data ?? 0) : null;
   const wallet = walletQ.data?.wallet;
   const availablePayout = wallet?.availableBalance ?? null;
@@ -193,7 +190,10 @@ export default function MentorDashboardPage() {
       >
         <PageHeader
           title={tr.navDashboard}
-          description={translateWelcomeMessage(data.account.welcome_message, data.account.mentor_name)}
+          description={translateWelcomeMessage(
+            data.account.welcome_message,
+            data.account.mentor_name
+          )}
         />
       </motion.div>
 
@@ -206,12 +206,6 @@ export default function MentorDashboardPage() {
           availablePayout={walletQ.isSuccess ? availablePayout : null}
           currency={currency}
           roleBase={roleBase}
-        />
-
-        <WelcomeCard
-          name={data.account.mentor_name}
-          welcomeMessage={data.account.welcome_message}
-          avatarUrl={data.account.avatar_url}
         />
 
         <MentorWeekPreview todayCount={data.today_schedule.length} weekCount={weekCount} />

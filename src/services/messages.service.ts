@@ -1,6 +1,12 @@
 import { apiClient } from '@/api/client';
 import { endpoints } from '@/api/endpoints';
-import type { MessageThreadSummary, ThreadMessage, SendMessageInput, ThreadParticipant } from '@/types/messages';
+import type {
+  MessageThreadSummary,
+  ThreadMessage,
+  SendMessageInput,
+  ThreadParticipant,
+  CreateLessonThreadInput,
+} from '@/types/messages';
 
 const noCache = {
   headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache', Expires: '0' },
@@ -54,6 +60,13 @@ export async function fetchThreadMessages(threadId: string, limit = 50): Promise
 export async function sendMessage(input: SendMessageInput): Promise<ThreadMessage> {
   const { data } = await apiClient.post<ThreadMessage>(endpoints.messages.send, input);
   return data;
+}
+
+export async function createLessonThread(
+  input: CreateLessonThreadInput
+): Promise<MessageThreadSummary> {
+  const { data } = await apiClient.post<unknown>(endpoints.messages.lessonThread, input);
+  return normalizeThread(data as Record<string, unknown>);
 }
 
 export async function markMessageRead(messageId: string): Promise<void> {

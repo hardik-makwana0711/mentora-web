@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -12,6 +12,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { LessonCountSelector } from '@/features/search/components/LessonCountSelector';
 import { DateFirstSlotPicker } from '@/features/search/components/DateFirstSlotPicker';
 import { BookingSummaryCard } from '@/features/search/components/BookingSummaryCard';
+import { BookingRestrictedModal } from '@/features/search/components/BookingRestrictedModal';
 import { useAvailableSlots } from '@/features/search/hooks/useAvailableSlots';
 import { createBookingFromFlow } from '@/services/bookings.service';
 import { profileService } from '@/services/profile.service';
@@ -40,13 +41,18 @@ export default function BookingStartPage() {
   const [selectedSlots, setSelectedSlots] = useState<AvailabilityWindow[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [restrictedOpen, setRestrictedOpen] = useState(false);
 
   useEffect(() => {
     if (user && !isParent) {
-      toast.error(tr.parentOnlyBooking);
-      navigate(`${roleBase}/search`, { replace: true });
+      setRestrictedOpen(true);
     }
-  }, [user, isParent, navigate, roleBase]);
+  }, [user, isParent]);
+
+  function closeRestricted() {
+    setRestrictedOpen(false);
+    navigate(-1);
+  }
 
   const profileQ = useQuery({
     queryKey: user?.id ? qk.profile(user.id) : ['profile', 'none'],
@@ -54,7 +60,10 @@ export default function BookingStartPage() {
     enabled: isParent && Boolean(user?.id),
   });
 
-  const linkedStudents = profileQ.data?.parent_profile?.linked_students ?? [];
+  const linkedStudents = useMemo(
+    () => profileQ.data?.parent_profile?.linked_students ?? [],
+    [profileQ.data]
+  );
   const requiresStudent = isParent && linkedStudents.length > 0;
 
   useEffect(() => {
@@ -76,6 +85,10 @@ export default function BookingStartPage() {
 
   async function handleNext() {
     if (step === 1) {
+      if (!profileQ.isPending && linkedStudents.length === 0) {
+        toast.error(tr.contactNoLinkedStudents);
+        return;
+      }
       if (requiresStudent && !selectedStudentId) {
         toast.error(tr.selectStudentHint);
         return;
@@ -132,17 +145,19 @@ export default function BookingStartPage() {
 
   if (!isParent) {
     return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
-      </div>
+      <>
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
+        </div>
+        <BookingRestrictedModal open={restrictedOpen} onClose={closeRestricted} />
+      </>
     );
   }
 
   if (!listingId || !mentorId) {
     return (
       <Card className="p-6 text-center text-[var(--color-m-text-muted)]">
-        {tr.invalidBookingLink}{' '}
-        <TextLink to={`${roleBase}/search`}>{tr.findMentor}</TextLink>
+        {tr.invalidBookingLink} <TextLink to={`${roleBase}/search`}>{tr.findMentor}</TextLink>
       </Card>
     );
   }
@@ -169,10 +184,18 @@ export default function BookingStartPage() {
             {requiresStudent ? (
               <DropdownSelect
                 label={tr.selectStudent}
+                placeholder={tr.selectStudentHint}
                 value={selectedStudentId}
                 onChange={setSelectedStudentId}
                 options={linkedStudents.map((s) => ({ value: s.id, label: s.name }))}
               />
+            ) : !profileQ.isPending && linkedStudents.length === 0 ? (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-3 text-sm text-amber-100">
+                <p>{tr.contactNoLinkedStudents}</p>
+                <TextLink to={`${roleBase}/students`} className="mt-2 inline-block font-medium">
+                  {tr.navMyStudents} →
+                </TextLink>
+              </div>
             ) : null}
             <LessonCountSelector
               count={lessonCount}
@@ -221,7 +244,12 @@ export default function BookingStartPage() {
         >
           {tr.back}
         </Button>
-        <Button type="button" className="flex-1" onClick={() => void handleNext()} disabled={isSubmitting}>
+        <Button
+          type="button"
+          className="flex-1"
+          onClick={() => void handleNext()}
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <span className="inline-flex items-center justify-center gap-2">
               <Spinner className="size-4" />
@@ -230,7 +258,7 @@ export default function BookingStartPage() {
           ) : step === 3 ? (
             tr.continueToPayment
           ) : (
-            tr.submit
+            tr.nextStep
           )}
         </Button>
       </div>

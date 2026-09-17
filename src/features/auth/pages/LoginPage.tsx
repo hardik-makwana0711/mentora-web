@@ -8,14 +8,16 @@ import { useStrings } from '@/constants/strings';
 import { useAuthStore, roleHomePath } from '@/app/store/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { createLoginSchema, type LoginForm } from '@/validations/auth.schemas';
-import { AuthCard, AuthLogoBlock, AuthScreenChrome } from '@/features/auth/components/AuthScreenChrome';
+import {
+  AuthCard,
+  AuthLogoBlock,
+  AuthScreenChrome,
+} from '@/features/auth/components/AuthScreenChrome';
 import { LoginVerificationPanel } from '@/features/auth/components/LoginVerificationPanel';
 import { isLoginVerificationRequiredError } from '@/lib/auth-errors';
-import type {
-  AccountVerificationPayload,
-  VerificationChannel,
-} from '@/types/auth-verification';
+import type { AccountVerificationPayload, VerificationChannel } from '@/types/auth-verification';
 import {
   isVerificationComplete,
   markChannelVerified,
@@ -28,6 +30,8 @@ export default function LoginPage() {
   const tr = useStrings();
   const { i18n: i18nInstance } = useTranslation();
   const locale = i18nInstance.resolvedLanguage ?? i18nInstance.language;
+  // `locale` drives i18n.t() inside createLoginSchema, invisible to static analysis — must stay to refresh messages on language change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loginSchema = useMemo(() => createLoginSchema(), [locale]);
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
@@ -152,13 +156,21 @@ export default function LoginPage() {
         >
           ← {tr.backToLogin}
         </button>
-        <h2 className="mb-2 text-[24px] font-bold text-[var(--color-m-text)]">{tr.verifyContactSupportTitle}</h2>
-        <p className="text-[15px] text-[var(--color-m-text-secondary)]">{tr.verifyContactSupportBody}</p>
+        <h2 className="mb-2 text-[24px] font-bold text-[var(--color-m-text)]">
+          {tr.verifyContactSupportTitle}
+        </h2>
+        <p className="text-[15px] text-[var(--color-m-text-secondary)]">
+          {tr.verifyContactSupportBody}
+        </p>
       </div>
     ) : (
       <>
-        <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">{tr.welcomeBackTitle}</h2>
-        <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">{tr.welcomeBackSubtitle}</p>
+        <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">
+          {tr.welcomeBackTitle}
+        </h2>
+        <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">
+          {tr.welcomeBackSubtitle}
+        </p>
         <form onSubmit={onSubmit} noValidate>
           <Input
             label={tr.emailOrPhone}
@@ -167,9 +179,8 @@ export default function LoginPage() {
             {...register('login_identifier')}
             error={errors.login_identifier?.message}
           />
-          <Input
+          <PasswordInput
             label={tr.password}
-            type="password"
             autoComplete="current-password"
             placeholder={tr.passwordPlaceholder}
             {...register('password')}

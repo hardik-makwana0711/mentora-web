@@ -10,15 +10,18 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createForgotSchema, type ForgotForm } from '@/validations/auth.schemas';
 import {
-  shouldOpenResetPasswordForm,
-  shouldShowCheckDelivery,
-} from '@/types/auth-password-reset';
-import { AuthCard, AuthLogoBlock, AuthScreenChrome } from '@/features/auth/components/AuthScreenChrome';
+  AuthCard,
+  AuthLogoBlock,
+  AuthScreenChrome,
+} from '@/features/auth/components/AuthScreenChrome';
+import { shouldOpenResetPasswordForm } from '@/types/auth-password-reset';
 
 export default function ForgotPasswordPage() {
   const tr = useStrings();
   const { i18n: i18nInstance } = useTranslation();
   const locale = i18nInstance.resolvedLanguage ?? i18nInstance.language;
+  // `locale` drives i18n.t() inside createForgotSchema, invisible to static analysis — must stay to refresh messages on language change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const forgotSchema = useMemo(() => createForgotSchema(), [locale]);
   const navigate = useNavigate();
   const {
@@ -29,31 +32,20 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const data = await authService.forgotPassword(values.recovery_identifier);
+      const result = await authService.forgotPassword(values.recovery_identifier);
 
-      if (shouldOpenResetPasswordForm(data)) {
+      if (shouldOpenResetPasswordForm(result)) {
         navigate('/reset-password', {
           replace: true,
-          state: { reset_token: data.reset_token!.trim() },
+          state: { reset_token: result.reset_token },
         });
         return;
       }
 
-      if (shouldShowCheckDelivery(data)) {
-        const deliveryChannel =
-          data.delivery_channel === 'sms'
-            ? 'sms'
-            : data.delivery_channel === 'email'
-              ? 'email'
-              : undefined;
-        navigate('/forgot-password/sent', {
-          replace: true,
-          state: { message: data.message, deliveryChannel },
-        });
-        return;
-      }
-
-      queueMicrotask(() => toast.message(data.message));
+      navigate('/forgot-password/sent', {
+        replace: true,
+        state: { recoveryIdentifier: values.recovery_identifier },
+      });
     } catch (e: unknown) {
       const msg =
         e && typeof e === 'object' && 'normalizedMessage' in e
@@ -67,8 +59,12 @@ export default function ForgotPasswordPage() {
     <AuthScreenChrome
       card={
         <AuthCard>
-          <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">{tr.forgotPassword}</h2>
-          <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">{tr.forgotCardSubtitle}</p>
+          <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">
+            {tr.forgotPassword}
+          </h2>
+          <p className="mb-8 text-[15px] text-[var(--color-m-text-secondary)]">
+            {tr.forgotCardSubtitle}
+          </p>
           <form onSubmit={onSubmit} noValidate>
             <Input
               label={tr.emailOrPhone}
@@ -81,7 +77,10 @@ export default function ForgotPasswordPage() {
             </Button>
           </form>
           <p className="mt-6 text-center text-[15px]">
-            <Link className="font-semibold text-[var(--color-m-primary)] hover:underline" to="/login">
+            <Link
+              className="font-semibold text-[var(--color-m-primary)] hover:underline"
+              to="/login"
+            >
               {tr.backToLogin}
             </Link>
           </p>

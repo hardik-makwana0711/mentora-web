@@ -22,6 +22,7 @@ export function LandingLanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- shared with LandingLanguageProvider above; not worth splitting for this dev-only warning
 export function useLandingLanguage() {
   const ctx = useContext(LandingContext);
   if (!ctx) throw new Error('useLandingLanguage must be used within LandingLanguageProvider');

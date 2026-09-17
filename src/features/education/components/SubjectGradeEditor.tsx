@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/Button';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { useStrings } from '@/constants/strings';
 import { qk } from '@/constants/query-keys';
-import { EDUCATION_LEVELS, GRADES_BY_EDUCATION_LEVEL, gradeDisplayName } from '@/constants/education-levels';
+import {
+  EDUCATION_LEVELS,
+  GRADES_BY_EDUCATION_LEVEL,
+  gradeDisplayName,
+} from '@/constants/education-levels';
 import { educationService } from '@/services/education.service';
 import {
   addSubjectGrade,
@@ -72,6 +76,7 @@ export function SubjectGradeEditor({ value, onChange, disabled, error }: Subject
         <DropdownSelect
           label={tr.selectEducationLevel}
           value={educationLevel}
+          placeholder={tr.selectEducationLevel}
           onChange={(v) => {
             setEducationLevel(v as EducationLevel);
             setGradeNumber('');
@@ -82,6 +87,9 @@ export function SubjectGradeEditor({ value, onChange, disabled, error }: Subject
         <DropdownSelect
           label={tr.selectGrade}
           value={gradeNumber}
+          placeholder={educationLevel ? tr.selectGrade : tr.selectEducationLevelFirst}
+          disabled={!educationLevel}
+          emptyMessage={tr.selectEducationLevelFirst}
           onChange={(v) => {
             setGradeNumber(v);
             setSubjectId('');
@@ -98,7 +106,12 @@ export function SubjectGradeEditor({ value, onChange, disabled, error }: Subject
           ) : subjectsQuery.isError ? (
             <div className="mb-4 flex items-center gap-2 text-sm text-[var(--color-m-error)]">
               {tr.subjectsLoadError}
-              <Button type="button" variant="secondary" size="sm" onClick={() => void subjectsQuery.refetch()}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => void subjectsQuery.refetch()}
+              >
                 {tr.retry}
               </Button>
             </div>
@@ -107,15 +120,11 @@ export function SubjectGradeEditor({ value, onChange, disabled, error }: Subject
               <DropdownSelect
                 label={tr.selectSubject}
                 value={subjectId}
+                placeholder={tr.selectSubject}
                 onChange={setSubjectId}
                 options={subjectOptions}
               />
-              <Button
-                type="button"
-                size="sm"
-                disabled={disabled || !subjectId}
-                onClick={handleAdd}
-              >
+              <Button type="button" size="sm" disabled={disabled || !subjectId} onClick={handleAdd}>
                 {tr.addProficiency}
               </Button>
             </>
@@ -147,7 +156,9 @@ export function SubjectGradeEditor({ value, onChange, disabled, error }: Subject
                           aria-label={tr.removeGrade}
                           disabled={disabled}
                           className="rounded-full p-0.5 hover:bg-[var(--color-m-hover-overlay)]"
-                          onClick={() => onChange(removeSubjectGrade(value, prof.subject_id, g.grade_level_id))}
+                          onClick={() =>
+                            onChange(removeSubjectGrade(value, prof.subject_id, g.grade_level_id))
+                          }
                         >
                           <X className="size-3" />
                         </button>
