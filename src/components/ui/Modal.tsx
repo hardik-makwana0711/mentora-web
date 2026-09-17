@@ -1,7 +1,8 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useStrings } from '@/constants/strings';
+import { useFocusTrap } from '@/hooks/use-focus-trap';
 
 export function Modal({
   open,
@@ -17,6 +18,7 @@ export function Modal({
   footer?: ReactNode;
 }) {
   const tr = useStrings();
+  const panelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -26,10 +28,16 @@ export function Modal({
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  useFocusTrap(panelRef, open);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4" role="dialog" aria-modal="true">
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
+      role="dialog"
+      aria-modal="true"
+    >
       <button
         type="button"
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -37,8 +45,10 @@ export function Modal({
         onClick={onClose}
       />
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
-          'relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col rounded-t-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-elevated)] shadow-xl sm:rounded-2xl'
+          'relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col rounded-t-2xl border border-[var(--color-surface-border)] bg-[var(--color-surface-elevated)] shadow-xl outline-none sm:rounded-2xl'
         )}
       >
         <div className="flex items-center justify-between border-b border-[var(--color-surface-border)] px-4 py-3">
@@ -53,7 +63,9 @@ export function Modal({
           </button>
         </div>
         <div className="overflow-y-auto px-4 py-4">{children}</div>
-        {footer ? <div className="border-t border-[var(--color-surface-border)] px-4 py-3">{footer}</div> : null}
+        {footer ? (
+          <div className="border-t border-[var(--color-surface-border)] px-4 py-3">{footer}</div>
+        ) : null}
       </div>
     </div>
   );

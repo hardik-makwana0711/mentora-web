@@ -14,7 +14,6 @@ import { useAuthStore } from '@/app/store/authStore';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { useUnreadMessageTotal } from '@/features/messages/hooks/useUnreadMessageTotal';
 import { translateWelcomeMessage } from '@/lib/translate-dashboard';
-import { WelcomeCard } from '@/features/dashboard/components/WelcomeCard';
 import { StudentCard } from '@/features/dashboard/components/StudentCard';
 import { DashboardPanelCard } from '@/features/dashboard/components/DashboardPanelCard';
 import { UpcomingLessonCard } from '@/features/dashboard/components/UpcomingLessonCard';
@@ -87,7 +86,10 @@ export default function ParentDashboardPage() {
       >
         <PageHeader
           title={tr.navDashboard}
-          description={translateWelcomeMessage(data.account.welcome_message, data.account.parent_name)}
+          description={translateWelcomeMessage(
+            data.account.welcome_message,
+            data.account.parent_name
+          )}
         />
       </motion.div>
 
@@ -100,25 +102,21 @@ export default function ParentDashboardPage() {
           roleBase={roleBase}
         />
 
-        <WelcomeCard
-          name={data.account.parent_name}
-          welcomeMessage={data.account.welcome_message}
-          avatarUrl={data.account.avatar_url}
-        />
-
         {lesson ? (
           <UpcomingLessonCard
             mentorName={lesson.mentor_name}
             subject={lesson.subject}
             studentName={data.student?.student_name}
             startTime={lesson.start_time}
-            joinSession={{
-              session_id: lesson.session_id,
-              meeting_status: lesson.meeting_status,
-              meeting_url: lesson.meeting_url,
-              can_join: lesson.can_join,
-              meeting_provider: lesson.meeting_provider,
-            } satisfies JoinableSession}
+            joinSession={
+              {
+                session_id: lesson.session_id,
+                meeting_status: lesson.meeting_status,
+                meeting_url: lesson.meeting_url,
+                can_join: lesson.can_join,
+                meeting_provider: lesson.meeting_provider,
+              } satisfies JoinableSession
+            }
             onViewPress={() => goSession(lesson.session_id)}
           />
         ) : (

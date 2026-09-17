@@ -3,6 +3,7 @@ import { getDateFnsLocale } from '@/lib/date-locale';
 import { Badge } from '@/components/ui/Badge';
 import { LessonJoinButton } from '@/features/lessons/components/LessonJoinButton';
 import { MeetingStatusSection } from '@/features/lessons/components/MeetingStatusSection';
+import { formatSubject } from '@/features/search/lib/format-labels';
 import type { MentorScheduleItem } from '@/types/dashboard';
 import type { JoinableSession } from '@/types/sessions';
 
@@ -31,7 +32,9 @@ export function MentorScheduleRow({ item, onViewPress }: MentorScheduleRowProps)
         onClick={onViewPress}
         className="flex w-full flex-wrap items-center justify-between gap-2 text-left"
       >
-        <span className="font-medium text-[var(--color-m-text)]">{item.subject}</span>
+        <span className="font-medium text-[var(--color-m-text)]">
+          {formatSubject(item.subject)}
+        </span>
         <span className="text-sm text-[var(--color-text-secondary)]">{item.student_name}</span>
         <Badge>{format(new Date(item.start_time), 'HH:mm', { locale: getDateFnsLocale() })}</Badge>
       </button>

@@ -8,7 +8,6 @@ import {
   TrendingUp,
   Users,
   Video,
-  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useLandingLanguage } from '@/features/landing/lib/landing-context';
@@ -65,7 +64,11 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
             className="space-y-8"
           >
             <div className="space-y-6">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
                 <span className={landing.badge}>
                   <Sparkles className="size-3.5" />
                   {t('hero.badge')}
@@ -78,7 +81,9 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                 transition={{ delay: 0.3 }}
                 className="text-4xl font-bold leading-tight text-balance md:text-5xl lg:text-6xl"
               >
-                <span className="text-[var(--color-m-text)]">{titleWords.slice(0, 2).join(' ')} </span>
+                <span className="text-[var(--color-m-text)]">
+                  {titleWords.slice(0, 2).join(' ')}{' '}
+                </span>
                 <span className={landing.gradientText}>{titleWords.slice(2).join(' ')}</span>
               </motion.h1>
 
@@ -128,7 +133,9 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--color-m-primary)] via-[var(--color-m-secondary)] to-[var(--color-m-accent)]" />
                 <div className="space-y-4 p-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-[var(--color-m-text-muted)]">{t('hero.todayLesson')}</span>
+                    <span className="text-sm text-[var(--color-m-text-muted)]">
+                      {t('hero.todayLesson')}
+                    </span>
                     <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-m-secondary)] to-emerald-500 px-3 py-1 text-xs font-semibold text-white">
                       <span className="size-2 animate-ping rounded-full bg-white" />
                       {t('hero.live')}
@@ -136,19 +143,21 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                   </div>
 
                   <div className="space-y-1">
-                    <h3 className="text-xl font-semibold text-[var(--color-m-text)]">{t('hero.math')}</h3>
+                    <h3 className="text-xl font-semibold text-[var(--color-m-text)]">
+                      {t('hero.math')}
+                    </h3>
                     <p className="text-sm text-[var(--color-m-text-muted)]">{t('hero.grade7')}</p>
                   </div>
 
-                  <div className="flex min-w-0 items-center gap-3 pt-2">
-                    <div className="landing-mentor-avatar" aria-hidden>
-                      <User strokeWidth={2.25} />
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="flex size-12 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-m-primary)] via-[var(--color-m-secondary)] to-[var(--color-m-accent)] text-sm font-bold text-white shadow-lg">
+                      EK
                     </div>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-[var(--color-m-text)]">
+                    <div>
+                      <p className="text-sm font-medium text-[var(--color-m-text)]">
                         {t('hero.mentorLabel')}
                       </p>
-                      <p className="truncate text-xs text-[var(--color-m-text-muted)]">
+                      <p className="text-xs text-[var(--color-m-text-muted)]">
                         {t('hero.mentorUni')}
                       </p>
                     </div>
@@ -166,7 +175,9 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                         <div className="flex size-9 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--color-m-primary)] to-[var(--color-m-gradient-end)] shadow-md">
                           <item.icon className="size-4 text-white" />
                         </div>
-                        <span className="font-medium text-[var(--color-m-text-secondary)]">{item.text}</span>
+                        <span className="font-medium text-[var(--color-m-text-secondary)]">
+                          {item.text}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -198,7 +209,9 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                 <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[var(--color-m-primary)]/15">
                   <badge.icon className="size-6 text-[var(--color-m-primary-light)]" />
                 </div>
-                <span className="text-sm font-medium text-[var(--color-m-text)]">{badge.label}</span>
+                <span className="text-sm font-medium text-[var(--color-m-text)]">
+                  {badge.label}
+                </span>
               </motion.div>
             ))}
           </div>

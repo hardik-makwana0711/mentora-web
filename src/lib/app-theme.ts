@@ -9,7 +9,7 @@ export function getStoredAppTheme(): AppTheme {
   } catch {
     // Ignore storage errors.
   }
-  return 'dark';
+  return 'light';
 }
 
 export function setStoredAppTheme(theme: AppTheme): void {

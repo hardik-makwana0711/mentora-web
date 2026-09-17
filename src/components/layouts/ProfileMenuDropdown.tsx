@@ -1,15 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Bell,
-  Calendar,
-  Coins,
-  LayoutList,
-  LogOut,
-  UserRound,
-  Users,
-  Wallet,
-} from 'lucide-react';
+import { Bell, Calendar, Coins, LayoutList, LogOut, UserRound, Users, Wallet } from 'lucide-react';
 import { PresignedAvatar } from '@/features/profile/components/PresignedAvatar';
 import { useStrings } from '@/constants/strings';
 import { cn } from '@/lib/utils';
@@ -81,7 +72,7 @@ export function ProfileMenuDropdown({
             id: 'earnings',
             label: tr.profileMenuEarnings,
             icon: Coins,
-            onSelect: () => go(`${roleBase}/earnings`),
+            onSelect: () => go(`${roleBase}/wallet`),
           },
         ]
       : []),

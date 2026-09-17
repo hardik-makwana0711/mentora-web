@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-import { BrandMark } from '@/components/layouts/AppLogo';
 import { useStrings } from '@/constants/strings';
 import { AppChromeControls } from '@/components/ui/AppChromeControls';
 
@@ -58,16 +57,10 @@ export function AuthScreenChrome({
   );
 }
 
-export function AuthLogoBlock({
-  appName,
-  tagline,
-}: {
-  appName: string;
-  tagline: string;
-}) {
+export function AuthLogoBlock({ appName, tagline }: { appName: string; tagline: string }) {
   return (
     <div className="flex flex-col items-center text-center">
-      <BrandMark size="lg" className="mb-4 h-16 max-w-[4.5rem] sm:h-20 sm:max-w-[5.5rem]" />
+      <img src="/master-icon.png" alt="" aria-hidden className="mb-4 size-20 object-contain" />
       <h1
         className="text-[36px] font-extrabold tracking-tight text-[var(--color-m-text)]"
         style={{ letterSpacing: -1 }}

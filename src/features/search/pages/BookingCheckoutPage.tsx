@@ -13,12 +13,14 @@ import { Spinner } from '@/components/ui/Spinner';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { BookingSummaryCard } from '@/features/search/components/BookingSummaryCard';
 import { CheckoutSummaryCard } from '@/features/search/components/CheckoutSummaryCard';
+import { BookingRestrictedModal } from '@/features/search/components/BookingRestrictedModal';
 import { SponsoredCardPlacement } from '@/features/marketing/components/SponsoredCardPlacement';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { useAuthStore } from '@/app/store/authStore';
 import { invalidateMeetQueries } from '@/lib/invalidate-meet-queries';
 import { checkoutBooking } from '@/services/bookings.service';
 import { fetchParentWalletMe } from '@/services/parent-wallet.service';
+import { formatSubject } from '@/features/search/lib/format-labels';
 import { useStrings, tr } from '@/constants/strings';
 import type { BookingFlowState, BookingSlotSummary, BookingSummary } from '@/types/booking';
 
@@ -66,13 +68,18 @@ export default function BookingCheckoutPage() {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [confirmed, setConfirmed] = useState<BookingSummary | null>(null);
+  const [restrictedOpen, setRestrictedOpen] = useState(false);
 
   useEffect(() => {
     if (role && role !== 'parent') {
-      toast.error(tr.parentOnlyBooking);
-      navigate(`${roleBase}/search`, { replace: true });
+      setRestrictedOpen(true);
     }
-  }, [role, navigate, roleBase]);
+  }, [role]);
+
+  function closeRestricted() {
+    setRestrictedOpen(false);
+    navigate(-1);
+  }
 
   const walletQ = useQuery({
     queryKey: ['parent-wallet', 'me'],
@@ -89,6 +96,7 @@ export default function BookingCheckoutPage() {
           title={tr.checkoutMissingBooking}
           onRetry={() => navigate(`${roleBase}/search`)}
         />
+        <BookingRestrictedModal open={restrictedOpen} onClose={closeRestricted} />
       </div>
     );
   }
@@ -105,14 +113,15 @@ export default function BookingCheckoutPage() {
 
   if (confirmed) {
     const confirmedName = resolveMentorName(confirmed, flow);
-    const confirmedSlots = (confirmed.selected_slots?.length ?? 0) > 0
-      ? confirmed.selected_slots!
-      : slotsFromFlow(flow);
+    const confirmedSlots =
+      (confirmed.selected_slots?.length ?? 0) > 0 ? confirmed.selected_slots! : slotsFromFlow(flow);
     return (
       <div className="mx-auto max-w-lg">
         <div className="text-center">
           <CheckCircle2 className="mx-auto size-16 text-[var(--color-m-success)]" aria-hidden />
-          <h1 className="mt-4 text-2xl font-bold text-[var(--color-m-text)]">{tr.bookingConfirmed}</h1>
+          <h1 className="mt-4 text-2xl font-bold text-[var(--color-m-text)]">
+            {tr.bookingConfirmed}
+          </h1>
         </div>
 
         {/* Confirmation details */}
@@ -125,7 +134,9 @@ export default function BookingCheckoutPage() {
             {flow?.subject ? (
               <div className="flex justify-between gap-4">
                 <dt className="text-[var(--color-m-text-muted)]">{tr.bookingSummaryService}</dt>
-                <dd className="font-semibold text-[var(--color-m-text)]">{flow.subject}</dd>
+                <dd className="font-semibold text-[var(--color-m-text)]">
+                  {formatSubject(flow.subject)}
+                </dd>
               </div>
             ) : null}
             <div className="flex justify-between gap-4">
@@ -151,7 +162,10 @@ export default function BookingCheckoutPage() {
               </p>
               <ul className="space-y-1.5">
                 {confirmedSlots.map((s) => (
-                  <li key={s.slot_id} className="flex items-center gap-2 text-sm text-[var(--color-m-text)]">
+                  <li
+                    key={s.slot_id}
+                    className="flex items-center gap-2 text-sm text-[var(--color-m-text)]"
+                  >
                     <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-m-success)]" />
                     {formatSlot(s.start_time)}
                   </li>
@@ -161,11 +175,7 @@ export default function BookingCheckoutPage() {
           )}
         </div>
 
-        <SponsoredCardPlacement
-          placement="lessons_page"
-          subject={flow?.subject}
-          className="mt-6"
-        />
+        <SponsoredCardPlacement placement="lessons_page" subject={flow?.subject} className="mt-6" />
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Button type="button" onClick={() => navigate(`${roleBase}/dashboard`)}>
@@ -195,10 +205,11 @@ export default function BookingCheckoutPage() {
       setConfirmed({
         ...booking,
         ...result,
-        mentor_summary: result.mentor_summary ?? booking.mentor_summary ?? {
-          mentor_id: mentorId,
-          mentor_name: mentorName,
-        },
+        mentor_summary: result.mentor_summary ??
+          booking.mentor_summary ?? {
+            mentor_id: mentorId,
+            mentor_name: mentorName,
+          },
         selected_slots: displaySlots,
       });
       toast.success(tr.bookingConfirmed);
@@ -253,10 +264,20 @@ export default function BookingCheckoutPage() {
       </div>
 
       <div className="mt-8 flex gap-3">
-        <Button type="button" variant="secondary" onClick={() => navigate(-1)} disabled={isProcessing}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => navigate(-1)}
+          disabled={isProcessing}
+        >
           {tr.back}
         </Button>
-        <Button type="button" className="flex-1" onClick={() => void handleConfirm()} disabled={isProcessing}>
+        <Button
+          type="button"
+          className="flex-1"
+          onClick={() => void handleConfirm()}
+          disabled={isProcessing}
+        >
           {isProcessing ? (
             <span className="inline-flex items-center gap-2">
               <Spinner className="size-4" />
@@ -267,6 +288,7 @@ export default function BookingCheckoutPage() {
           )}
         </Button>
       </div>
+      <BookingRestrictedModal open={restrictedOpen} onClose={closeRestricted} />
     </PageContainer>
   );
 }

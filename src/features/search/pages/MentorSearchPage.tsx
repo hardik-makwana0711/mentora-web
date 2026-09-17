@@ -101,7 +101,7 @@ export default function MentorSearchPage() {
       </div>
 
       <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
-        <aside className="w-full shrink-0 lg:sticky lg:top-4 lg:w-72 xl:w-80">
+        <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-72 xl:w-80">
           <DiscoveryStructuredFilters
             filters={filters}
             labels={filterLabels}
@@ -145,9 +145,7 @@ export default function MentorSearchPage() {
             />
           ) : (
             <>
-              <div className="mentor-results-grid">
-                {gridItems}
-              </div>
+              <div className="mentor-results-grid">{gridItems}</div>
               {hasNextPage ? (
                 <div className="flex justify-center py-8">
                   <Button

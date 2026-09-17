@@ -1,4 +1,5 @@
-import { RoleShell, parentNav } from '@/components/layouts/RoleShell';
+import { RoleShell } from '@/components/layouts/RoleShell';
+import { parentNav } from '@/components/layouts/nav-config';
 
 const parentMobileNav = parentNav
   .filter((i) => !i.to.endsWith('/notifications') && !i.to.endsWith('/favourites'))

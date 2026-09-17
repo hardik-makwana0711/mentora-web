@@ -63,7 +63,9 @@ export function UpcomingLessonsTab({
   const initialDate = useMemo(() => {
     if (!sortedSessions.length) return today;
     const future = sortedSessions.find((s) => calendarDateKey(s.scheduled_at) >= today);
-    return future ? calendarDateKey(future.scheduled_at) : calendarDateKey(sortedSessions[0].scheduled_at);
+    return future
+      ? calendarDateKey(future.scheduled_at)
+      : calendarDateKey(sortedSessions[0].scheduled_at);
   }, [sortedSessions, today]);
 
   const [selectedDate, setSelectedDate] = useState(initialDate);
@@ -79,7 +81,8 @@ export function UpcomingLessonsTab({
 
   const sessionDates = useMemo(() => sessions.map((s) => s.scheduled_at), [sessions]);
 
-  const nextSession = sortedSessions.find((s) => calendarDateKey(s.scheduled_at) >= today) ?? sortedSessions[0];
+  const nextSession =
+    sortedSessions.find((s) => calendarDateKey(s.scheduled_at) >= today) ?? sortedSessions[0];
 
   if (sessions.length === 0) {
     return (
@@ -87,10 +90,14 @@ export function UpcomingLessonsTab({
         <CalendarDays className="mb-3 size-8 text-[var(--color-m-text-muted)]" aria-hidden />
         <p className="text-base font-semibold text-[var(--color-m-text)]">{tr.noUpcomingLessons}</p>
         <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">
-          {role === 'mentor' ? tr.noUpcomingLessonsMentorDescription : tr.noUpcomingLessonsDescription}
+          {role === 'mentor'
+            ? tr.noUpcomingLessonsMentorDescription
+            : tr.noUpcomingLessonsDescription}
         </p>
         {role !== 'mentor' ? (
-          <p className="mt-2 text-sm text-[var(--color-m-text-secondary)]">{tr.noUpcomingLessonsHint}</p>
+          <p className="mt-2 text-sm text-[var(--color-m-text-secondary)]">
+            {tr.noUpcomingLessonsHint}
+          </p>
         ) : null}
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           {role === 'parent' || role === 'student' ? (
@@ -159,7 +166,12 @@ export function UpcomingLessonsTab({
           <MeetingStatusSection session={toJoinable(nextSession)} className="mt-2" />
           <div className="mt-3 flex flex-wrap gap-2">
             <LessonJoinButton session={toJoinable(nextSession)} size="sm" />
-            <Button type="button" size="sm" variant="secondary" onClick={() => onSessionPress(nextSession)}>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => onSessionPress(nextSession)}
+            >
               {tr.lessonsViewDetails}
             </Button>
           </div>
@@ -167,7 +179,7 @@ export function UpcomingLessonsTab({
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start">
-        <aside className="mx-auto w-full max-w-sm lg:sticky lg:top-6 lg:mx-0 lg:max-w-none">
+        <aside className="mx-auto w-full max-w-sm lg:sticky lg:top-20 lg:mx-0 lg:max-w-none">
           <LessonsCalendar
             sessionDates={sessionDates}
             selectedDate={selectedDate}
@@ -194,7 +206,9 @@ export function UpcomingLessonsTab({
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center rounded-2xl border border-dashed border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-6 py-10 text-center">
               <CalendarDays className="mb-3 size-8 text-[var(--color-m-text-muted)]" aria-hidden />
-              <p className="font-semibold text-[var(--color-m-text)]">{tr.lessonsNoSessionsThisDay}</p>
+              <p className="font-semibold text-[var(--color-m-text)]">
+                {tr.lessonsNoSessionsThisDay}
+              </p>
               <p className="mt-2 max-w-sm text-sm text-[var(--color-m-text-muted)]">
                 {tr.lessonsNoSessionsThisDayHint}
               </p>

@@ -1,9 +1,11 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useStrings } from '@/constants/strings';
+import { useFocusTrap } from '@/hooks/use-focus-trap';
 
-export function Drawer({  open,
+export function Drawer({
+  open,
   title,
   children,
   footer,
@@ -20,7 +22,9 @@ export function Drawer({  open,
   panelClassName?: string;
 }) {
   const tr = useStrings();
-  useEffect(() => {    if (!open) return;
+  const panelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -28,14 +32,23 @@ export function Drawer({  open,
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  useFocusTrap(panelRef, open);
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
-      <button type="button" className="absolute inset-0 bg-black/50" aria-label={tr.closeAria} onClick={onClose} />
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/50"
+        aria-label={tr.closeAria}
+        onClick={onClose}
+      />
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
-          'relative ml-auto flex h-full w-[min(100%,400px)] flex-col border-l border-[var(--color-m-card-border)] bg-[var(--color-m-sidebar-bg)] shadow-xl',
+          'relative ml-auto flex h-full w-[min(100%,400px)] flex-col border-l border-[var(--color-m-card-border)] bg-[var(--color-m-sidebar-bg)] shadow-xl outline-none',
           side === 'left' && 'ml-0 mr-auto border-l-0 border-r',
           panelClassName
         )}

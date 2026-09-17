@@ -27,19 +27,28 @@ function MethodRow({
       ? maskIban(item.iban)
       : '';
 
-  const accountLast4 =
-    item.accountNumberLast4?.trim() ? item.accountNumberLast4 : item.accountNumber?.trim() ? item.accountNumber.slice(-4) : '';
+  const accountLast4 = item.accountNumberLast4?.trim()
+    ? item.accountNumberLast4
+    : item.accountNumber?.trim()
+      ? item.accountNumber.slice(-4)
+      : '';
 
   return (
     <div className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-semibold text-[var(--color-m-text)]">{tr.mentorWalletBankTransfer}</p>
+            <p className="text-sm font-semibold text-[var(--color-m-text)]">
+              {tr.mentorWalletBankTransfer}
+            </p>
             {item.isDefault ? (
-              <Badge className="border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]">{tr.mentorWalletDefaultBadge}</Badge>
+              <Badge className="border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]">
+                {tr.mentorWalletDefaultBadge}
+              </Badge>
             ) : null}
-            <Badge className="border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]">{item.status}</Badge>
+            <Badge className="border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]">
+              {item.status}
+            </Badge>
           </div>
           <p className="mt-2 text-sm text-[var(--color-m-text-muted)]">
             {item.bankName}
@@ -54,12 +63,24 @@ function MethodRow({
             {tr.edit}
           </Button>
           {!item.isDefault && item.status === 'ACTIVE' ? (
-            <Button type="button" size="sm" variant="secondary" onClick={onSetDefault} disabled={busy}>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={onSetDefault}
+              disabled={busy}
+            >
               {tr.mentorWalletSetDefault}
             </Button>
           ) : null}
           {item.status === 'ACTIVE' ? (
-            <Button type="button" size="sm" variant="secondary" onClick={onDeactivate} disabled={busy}>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={onDeactivate}
+              disabled={busy}
+            >
               {tr.mentorWalletDeactivate}
             </Button>
           ) : null}
@@ -102,17 +123,15 @@ export function PayoutMethodsList({
   const tr = useStrings();
   return (
     <div className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-5 shadow-[var(--shadow-m-card)] ring-1 ring-[var(--color-m-ring-subtle)]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-base font-semibold text-[var(--color-m-text)]">{tr.mentorWalletPayoutMethodsTitle}</h2>
-          <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">{tr.mentorWalletPayoutMethodsHint}</p>
+      {!loading && !error && items.length > 0 ? (
+        <div className="flex justify-end">
+          <Button type="button" size="sm" onClick={onAdd}>
+            {tr.mentorWalletAddPayoutMethod}
+          </Button>
         </div>
-        <Button type="button" size="sm" onClick={onAdd}>
-          {tr.mentorWalletAddPayoutMethod}
-        </Button>
-      </div>
+      ) : null}
 
-      <div className="mt-4">
+      <div className={items.length > 0 ? 'mt-4' : undefined}>
         {loading ? (
           <ListSkeleton />
         ) : error ? (
@@ -145,4 +164,3 @@ export function PayoutMethodsList({
     </div>
   );
 }
-
