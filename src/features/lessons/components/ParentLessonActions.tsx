@@ -3,18 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { useStrings } from '@/constants/strings';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
+import { useAuthStore } from '@/app/store/authStore';
 
 type Props = {
   mentorId?: string | null;
   studentId?: string | null;
+  lessonId?: string | null;
   className?: string;
 };
 
 /** Parent-focused next-step CTAs with supported routes only. */
-export function ParentLessonActions({ mentorId, studentId, className }: Props) {
+export function ParentLessonActions({ mentorId, studentId, lessonId, className }: Props) {
   const tr = useStrings();
   const navigate = useNavigate();
   const roleBase = useRoleBase();
+  const selfId = useAuthStore((s) => s.user?.id);
 
   return (
     <section
@@ -32,7 +35,10 @@ export function ParentLessonActions({ mentorId, studentId, className }: Props) {
             size="sm"
             onClick={() => {
               const params = new URLSearchParams();
-              params.set('participantId', mentorId);
+              if (lessonId) params.set('lessonId', lessonId);
+              params.set('mentorId', mentorId);
+              if (studentId) params.set('studentId', studentId);
+              if (selfId) params.set('parentId', selfId);
               navigate(`${roleBase}/messages?${params}`);
             }}
           >
