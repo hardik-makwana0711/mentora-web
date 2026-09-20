@@ -188,7 +188,7 @@ export default function NotificationsPage() {
                     <Card
                       className={cn(
                         'transition-colors',
-                        isRead ? 'opacity-60' : '',
+                        isRead ? 'opacity-85' : '',
                         isClickable
                           ? 'cursor-pointer hover:border-[var(--color-brand-primary)]/50'
                           : ''
