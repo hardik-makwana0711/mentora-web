@@ -16,13 +16,20 @@ type ExamPreparationSelectorProps = {
   error?: string;
 };
 
-export function ExamPreparationSelector({ value, onChange, disabled, error }: ExamPreparationSelectorProps) {
+export function ExamPreparationSelector({
+  value,
+  onChange,
+  disabled,
+  error,
+}: ExamPreparationSelectorProps) {
   const tr = useStrings();
   const [examTrack, setExamTrack] = useState<ExamTrack | ''>('');
   const [selectedSubjectId, setSelectedSubjectId] = useState('');
 
   const examQuery = useQuery({
-    queryKey: examTrack ? qk.educationExamSubjects(examTrack) : ['education', 'exam-subjects', 'none'],
+    queryKey: examTrack
+      ? qk.educationExamSubjects(examTrack)
+      : ['education', 'exam-subjects', 'none'],
     queryFn: () => educationService.getExamSubjects(examTrack as ExamTrack),
     enabled: Boolean(examTrack),
     staleTime: 60_000,
@@ -37,10 +44,7 @@ export function ExamPreparationSelector({ value, onChange, disabled, error }: Ex
     if (!selectedSubjectId || !examTrack || !examQuery.data) return;
     const item = examQuery.data.items.find((s) => s.id === selectedSubjectId);
     if (!item) return;
-    onChange([
-      ...value,
-      { id: item.id, exam_track: examTrack, display_name: item.display_name },
-    ]);
+    onChange([...value, { id: item.id, exam_track: examTrack, display_name: item.display_name }]);
     setSelectedSubjectId('');
   }
 
@@ -58,6 +62,7 @@ export function ExamPreparationSelector({ value, onChange, disabled, error }: Ex
         <DropdownSelect
           label={tr.selectExamTrack}
           value={examTrack}
+          placeholder={tr.selectExamTrack}
           onChange={(v) => {
             setExamTrack(v as ExamTrack);
             setSelectedSubjectId('');
@@ -74,7 +79,12 @@ export function ExamPreparationSelector({ value, onChange, disabled, error }: Ex
           ) : examQuery.isError ? (
             <div className="mb-4 flex items-center gap-2 text-sm text-[var(--color-m-error)]">
               {tr.examSubjectsLoadError}
-              <Button type="button" variant="secondary" size="sm" onClick={() => void examQuery.refetch()}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => void examQuery.refetch()}
+              >
                 {tr.retry}
               </Button>
             </div>
@@ -83,6 +93,7 @@ export function ExamPreparationSelector({ value, onChange, disabled, error }: Ex
               <DropdownSelect
                 label={tr.selectExamSubject}
                 value={selectedSubjectId}
+                placeholder={tr.selectExamSubject}
                 onChange={setSelectedSubjectId}
                 options={availableOptions}
               />

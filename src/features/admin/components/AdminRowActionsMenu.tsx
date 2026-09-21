@@ -1,4 +1,12 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { MoreHorizontal, type LucideIcon } from 'lucide-react';
@@ -49,10 +57,7 @@ export function AdminIconAction({
   label: string;
   disabled?: boolean;
 }) {
-  const className = cn(
-    triggerClass,
-    disabled && 'pointer-events-none opacity-40'
-  );
+  const className = cn(triggerClass, disabled && 'pointer-events-none opacity-40');
 
   if (to) {
     return (
@@ -91,7 +96,7 @@ export function AdminRowActionsMenu({
   const panelRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
 
-  const updatePosition = () => {
+  const updatePosition = useCallback(() => {
     const trigger = rootRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
@@ -105,12 +110,12 @@ export function AdminRowActionsMenu({
       left,
       minWidth: Math.max(rect.width, 200),
     });
-  };
+  }, [align]);
 
   useLayoutEffect(() => {
     if (!open) return;
     updatePosition();
-  }, [open, align]);
+  }, [open, updatePosition]);
 
   useEffect(() => {
     if (!open) return;
@@ -138,7 +143,7 @@ export function AdminRowActionsMenu({
       window.removeEventListener('scroll', onScroll, true);
       window.removeEventListener('resize', updatePosition);
     };
-  }, [open]);
+  }, [open, updatePosition]);
 
   const visibleItems = normalizeMenuItems(items);
 
@@ -169,7 +174,13 @@ export function AdminRowActionsMenu({
             >
               {visibleItems.map((item, idx) => {
                 if (item.type === 'divider') {
-                  return <div key={`d-${idx}`} className="my-1 h-px bg-[var(--color-m-card-border)]" role="separator" />;
+                  return (
+                    <div
+                      key={`d-${idx}`}
+                      className="my-1 h-px bg-[var(--color-m-card-border)]"
+                      role="separator"
+                    />
+                  );
                 }
 
                 const Icon = item.icon;
@@ -202,7 +213,8 @@ export function AdminRowActionsMenu({
                     disabled={item.disabled}
                     className={cn(
                       itemClass,
-                      item.destructive && 'text-[var(--color-m-error)] hover:bg-[var(--color-m-error)]/10',
+                      item.destructive &&
+                        'text-[var(--color-m-error)] hover:bg-[var(--color-m-error)]/10',
                       item.disabled && 'cursor-not-allowed opacity-50'
                     )}
                     onClick={() => {

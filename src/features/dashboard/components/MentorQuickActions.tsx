@@ -1,12 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  Calendar,
-  FileUp,
-  Inbox,
-  LayoutList,
-  Wallet,
-  type LucideIcon,
-} from 'lucide-react';
+import { Calendar, FileUp, LayoutList, MessageSquare, Wallet, type LucideIcon } from 'lucide-react';
 import { useStrings } from '@/constants/strings';
 
 type Action = {
@@ -44,15 +37,15 @@ export function MentorQuickActions({ roleBase }: Props) {
       icon: FileUp,
     },
     {
-      id: 'requests',
-      label: tr.dashboardQuickContactRequests,
-      href: `${roleBase}/contact-requests`,
-      icon: Inbox,
+      id: 'messages',
+      label: tr.navMessages,
+      href: `${roleBase}/messages`,
+      icon: MessageSquare,
     },
     {
       id: 'earnings',
       label: tr.dashboardQuickEarnings,
-      href: `${roleBase}/earnings`,
+      href: `${roleBase}/wallet`,
       icon: Wallet,
     },
   ];

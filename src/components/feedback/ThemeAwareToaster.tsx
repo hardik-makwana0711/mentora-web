@@ -1,4 +1,4 @@
-import { useAppTheme } from '@/app/providers/ThemeProvider';
+import { useAppTheme } from '@/app/providers/theme-context';
 import { Toaster } from 'sonner';
 
 export function ThemeAwareToaster() {

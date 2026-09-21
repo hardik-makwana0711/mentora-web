@@ -16,9 +16,10 @@ type Props = {
   payload: AccountVerificationPayload;
   onVerified: () => void | Promise<void>;
   onBack: () => void;
+  backLabel?: string;
 };
 
-export function LoginVerificationPanel({ channel, payload, onVerified, onBack }: Props) {
+export function LoginVerificationPanel({ channel, payload, onVerified, onBack, backLabel }: Props) {
   const tr = useStrings();
   const target = verificationTargetFor(payload, channel);
   const [otp, setOtp] = useState('');
@@ -32,8 +33,7 @@ export function LoginVerificationPanel({ channel, payload, onVerified, onBack }:
     return () => window.clearTimeout(timer);
   }, [timeLeft]);
 
-  const subtitle =
-    channel === 'email' ? tr.verifyEmailSubtitle : tr.verifyPhoneSubtitle;
+  const subtitle = channel === 'email' ? tr.verifyEmailSubtitle : tr.verifyPhoneSubtitle;
 
   const handleVerify = async () => {
     const code = otp.trim();
@@ -95,7 +95,7 @@ export function LoginVerificationPanel({ channel, payload, onVerified, onBack }:
         onClick={onBack}
         className="mb-4 text-[15px] font-semibold text-[var(--color-m-primary)] hover:text-[var(--color-m-primary-light)]"
       >
-        ← {tr.backToLogin}
+        ← {backLabel ?? tr.backToLogin}
       </button>
       <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">{tr.verifyTitle}</h2>
       <p className="mb-2 text-[15px] text-[var(--color-m-text-secondary)]">{subtitle}</p>

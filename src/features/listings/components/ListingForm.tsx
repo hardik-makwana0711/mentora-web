@@ -39,6 +39,8 @@ export function ListingForm({
   const tr = useStrings();
   const { i18n: i18nInstance } = useTranslation();
   const locale = i18nInstance.resolvedLanguage ?? i18nInstance.language;
+  // `locale` drives i18n.t() inside createListingFormSchema, invisible to static analysis — must stay to refresh messages on language change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const listingSchema = useMemo(() => createListingFormSchema(), [locale]);
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),

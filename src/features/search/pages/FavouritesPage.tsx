@@ -33,8 +33,12 @@ export default function FavouritesPage() {
   const [activeTab, setActiveTab] = useState<FavouritesTab>('mentors');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
-  const { entries, isPending: mentorsPending, isError: mentorsError, refetch: refetchMentors } =
-    useFavouriteMentorSearchCards();
+  const {
+    entries,
+    isPending: mentorsPending,
+    isError: mentorsError,
+    refetch: refetchMentors,
+  } = useFavouriteMentorSearchCards();
 
   const listingsQuery = useQuery({
     queryKey: qk.favouriteListings,
@@ -49,7 +53,10 @@ export default function FavouritesPage() {
     enabled: role === 'parent',
   });
 
-  const linkedStudents = profileQuery.data?.parent_profile?.linked_students ?? [];
+  const linkedStudents = useMemo(
+    () => profileQuery.data?.parent_profile?.linked_students ?? [],
+    [profileQuery.data]
+  );
   const linkedStudent = useMemo(() => {
     if (role !== 'parent' || linkedStudents.length === 0) return null;
     return linkedStudents.find((s) => s.id === selectedStudentId) ?? linkedStudents[0] ?? null;
@@ -62,7 +69,9 @@ export default function FavouritesPage() {
   }, [linkedStudents, role, selectedStudentId]);
 
   const studentFavouritesQuery = useQuery({
-    queryKey: linkedStudent?.id ? qk.studentFavouriteMentors(linkedStudent.id) : ['favourites', 'student', 'none'],
+    queryKey: linkedStudent?.id
+      ? qk.studentFavouriteMentors(linkedStudent.id)
+      : ['favourites', 'student', 'none'],
     queryFn: () => favouritesService.listStudentMentors(linkedStudent!.id),
     enabled: role === 'parent' && Boolean(linkedStudent?.id),
     staleTime: 60_000,
@@ -121,7 +130,11 @@ export default function FavouritesPage() {
             <ul className="space-y-3">
               {entries.map((entry) => (
                 <li key={entry.card.mentor_id}>
-                  <MentorSearchCard item={entry.card} layout="list" unavailable={entry.unavailable} />
+                  <MentorSearchCard
+                    item={entry.card}
+                    layout="list"
+                    unavailable={entry.unavailable}
+                  />
                 </li>
               ))}
             </ul>
@@ -129,7 +142,9 @@ export default function FavouritesPage() {
 
           {role === 'parent' && linkedStudents.length > 0 ? (
             <section className="mt-8">
-              <h2 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">{tr.studentFavouriteMentors}</h2>
+              <h2 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">
+                {tr.studentFavouriteMentors}
+              </h2>
               {linkedStudents.length > 1 ? (
                 <div className="mb-3 flex flex-wrap gap-2">
                   {linkedStudents.map((student) => (
@@ -154,9 +169,13 @@ export default function FavouritesPage() {
                   <Spinner className="size-6 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
                 </div>
               ) : studentFavouritesQuery.isError ? (
-                <p className="text-sm text-[var(--color-m-error)]">{tr.studentFavouritesLoadError}</p>
+                <p className="text-sm text-[var(--color-m-error)]">
+                  {tr.studentFavouritesLoadError}
+                </p>
               ) : (studentFavouritesQuery.data?.favourites.length ?? 0) === 0 ? (
-                <p className="text-sm text-[var(--color-m-text-muted)]">{tr.studentFavouritesEmpty}</p>
+                <p className="text-sm text-[var(--color-m-text-muted)]">
+                  {tr.studentFavouritesEmpty}
+                </p>
               ) : (
                 <ul className="space-y-2">
                   {studentFavouritesQuery.data!.favourites.map((item) => (
@@ -166,8 +185,12 @@ export default function FavouritesPage() {
                         onClick={() => navigate(`${roleBase}/search/mentors/${item.mentor_id}`)}
                         className="flex w-full items-center justify-between rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] px-4 py-3 text-left transition hover:border-[var(--color-m-primary)]/40"
                       >
-                        <span className="font-medium text-[var(--color-m-text)]">{item.mentor_name}</span>
-                        <span className="text-xs text-[var(--color-m-text-muted)]">{tr.viewMentor}</span>
+                        <span className="font-medium text-[var(--color-m-text)]">
+                          {item.mentor_name}
+                        </span>
+                        <span className="text-xs text-[var(--color-m-text-muted)]">
+                          {tr.viewMentor}
+                        </span>
                       </button>
                     </li>
                   ))}

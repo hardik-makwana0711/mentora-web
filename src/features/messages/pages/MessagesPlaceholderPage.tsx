@@ -11,7 +11,13 @@ import { Badge } from '@/components/ui/Badge';
 import { useStrings, type Strings } from '@/constants/strings';
 import { qk } from '@/constants/query-keys';
 import { useAuthStore } from '@/app/store/authStore';
-import { fetchMessageThreads, fetchThreadMessages, markMessageRead, sendMessage } from '@/services/messages.service';
+import {
+  createLessonThread,
+  fetchMessageThreads,
+  fetchThreadMessages,
+  markMessageRead,
+  sendMessage,
+} from '@/services/messages.service';
 import type { MessageThreadSummary, ThreadMessage } from '@/types/messages';
 import { cn } from '@/lib/utils';
 import { DashboardPanelCard } from '@/features/dashboard/components/DashboardPanelCard';
@@ -40,10 +46,16 @@ export default function MessagesPlaceholderPage() {
   const selfId = user?.id ?? '';
   const [searchParams] = useSearchParams();
   const deepLinkThreadId = searchParams.get('threadId');
+  const deepLinkLessonId = searchParams.get('lessonId');
+  const deepLinkStudentId = searchParams.get('studentId') ?? undefined;
+  const deepLinkMentorId = searchParams.get('mentorId') ?? undefined;
+  const deepLinkParentId = searchParams.get('parentId') ?? undefined;
   const [selectedId, setSelectedId] = useState<string | null>(deepLinkThreadId);
   const [draft, setDraft] = useState('');
+  const [lessonThreadUnavailable, setLessonThreadUnavailable] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const dateLocale = getDateFnsLocale();
+  const lessonThreadAttempted = useRef(false);
 
   const threadsQuery = useQuery({
     queryKey: qk.messageThreads,
@@ -57,16 +69,54 @@ export default function MessagesPlaceholderPage() {
     enabled: Boolean(selectedId),
   });
 
+  const createLessonThreadMutation = useMutation({
+    mutationFn: createLessonThread,
+    onSuccess: async (thread) => {
+      await qc.invalidateQueries({ queryKey: qk.messageThreads });
+      setSelectedId(thread.id);
+    },
+  });
+
   useEffect(() => {
-    if (!threadsQuery.data?.length) return;
-    if (!selectedId) {
-      const target = deepLinkThreadId
-        ? threadsQuery.data.find((t) => t.id === deepLinkThreadId)
-        : threadsQuery.data[0];
-      setSelectedId(target?.id ?? threadsQuery.data[0]?.id ?? null);
+    if (!threadsQuery.data) return;
+    if (selectedId) return;
+
+    if (deepLinkThreadId) {
+      setSelectedId(
+        threadsQuery.data.find((t) => t.id === deepLinkThreadId)?.id ??
+          threadsQuery.data[0]?.id ??
+          null
+      );
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [threadsQuery.data]);
+
+    if (deepLinkLessonId) {
+      const existing = threadsQuery.data.find((t) => t.lesson_id === deepLinkLessonId);
+      if (existing) {
+        setSelectedId(existing.id);
+        return;
+      }
+      if (lessonThreadAttempted.current || createLessonThreadMutation.isPending) return;
+      lessonThreadAttempted.current = true;
+      // The backend requires parent_id to create a lesson thread and there is no
+      // endpoint that resolves it for us, so only the parent (who knows their own
+      // id) can start a brand-new lesson conversation — matches the mobile app.
+      if (!deepLinkParentId) {
+        setLessonThreadUnavailable(true);
+        return;
+      }
+      createLessonThreadMutation.mutate({
+        lesson_id: deepLinkLessonId,
+        student_id: deepLinkStudentId,
+        mentor_id: deepLinkMentorId,
+        parent_id: deepLinkParentId,
+      });
+      return;
+    }
+
+    if (threadsQuery.data.length) setSelectedId(threadsQuery.data[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [threadsQuery.data, selectedId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -89,7 +139,8 @@ export default function MessagesPlaceholderPage() {
       setDraft('');
       await qc.invalidateQueries({ queryKey: qk.messageThreads });
       await qc.invalidateQueries({ queryKey: qk.messageUnreadTotal });
-      if (selectedId) await qc.invalidateQueries({ queryKey: qk.messageThreadMessages(selectedId) });
+      if (selectedId)
+        await qc.invalidateQueries({ queryKey: qk.messageThreadMessages(selectedId) });
     },
   });
 
@@ -120,10 +171,34 @@ export default function MessagesPlaceholderPage() {
     );
   }
 
-  if (threadsQuery.isPending) {
+  if (threadsQuery.isPending || (deepLinkLessonId && createLessonThreadMutation.isPending)) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
+      </div>
+    );
+  }
+
+  if (lessonThreadUnavailable) {
+    return (
+      <div>
+        <PageHeader title={tr.messages} description={tr.messagesPageDescription} />
+        <p className="text-sm text-[var(--color-text-muted)]">{tr.messagesParentStartRequired}</p>
+      </div>
+    );
+  }
+
+  if (createLessonThreadMutation.isError) {
+    return (
+      <div>
+        <PageHeader title={tr.messages} description="" />
+        <ErrorState
+          title={tr.messagesLoadError}
+          onRetry={() => {
+            lessonThreadAttempted.current = false;
+            createLessonThreadMutation.reset();
+          }}
+        />
       </div>
     );
   }
@@ -144,101 +219,109 @@ export default function MessagesPlaceholderPage() {
       <PageHeader title={tr.messages} description={tr.messagesPageDescription} />
 
       <div className="flex min-h-[60vh] flex-col gap-4 lg:flex-row">
-      <aside className="w-full shrink-0 lg:w-80">
-        <div className="space-y-2">
-          {threads.length === 0 ? (
-            <DashboardPanelCard>
-              <p className="text-sm text-[var(--color-text-muted)]">{tr.messagesEmptyThreads}</p>
-            </DashboardPanelCard>
-          ) : (
-            threads.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setSelectedId(t.id)}
-                className={cn(
-                  'w-full rounded-2xl border px-4 py-3 text-left transition',
-                  selectedId === t.id
-                    ? 'border-[var(--color-brand-primary)]/50 bg-[var(--color-m-primary)]/10'
-                    : 'border-[var(--color-m-card-border)] bg-[var(--color-m-card)] hover:bg-[var(--color-m-hover-overlay)]'
-                )}
-              >
-                <p className="font-medium text-[var(--color-m-text)]">{participantLabel(t, selfId, tr)}</p>
-                <p className="mt-1 line-clamp-1 text-xs text-[var(--color-text-muted)]">
-                  {t.last_message_at
-                    ? format(new Date(t.last_message_at), 'd MMM HH:mm', { locale: dateLocale })
-                    : '—'}
-                </p>
-                {t.unread_count > 0 ? (
-                  <Badge className="mt-2">{t.unread_count}</Badge>
-                ) : null}
-              </button>
-            ))
-          )}
-        </div>
-      </aside>
+        <aside className="w-full shrink-0 lg:w-80">
+          <div className="space-y-2">
+            {threads.length === 0 ? (
+              <DashboardPanelCard>
+                <p className="text-sm text-[var(--color-text-muted)]">{tr.messagesEmptyThreads}</p>
+              </DashboardPanelCard>
+            ) : (
+              threads.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setSelectedId(t.id)}
+                  className={cn(
+                    'w-full rounded-2xl border px-4 py-3 text-left transition',
+                    selectedId === t.id
+                      ? 'border-[var(--color-brand-primary)]/50 bg-[var(--color-m-primary)]/10'
+                      : 'border-[var(--color-m-card-border)] bg-[var(--color-m-card)] hover:bg-[var(--color-m-hover-overlay)]'
+                  )}
+                >
+                  <p className="font-medium text-[var(--color-m-text)]">
+                    {participantLabel(t, selfId, tr)}
+                  </p>
+                  <p className="mt-1 line-clamp-1 text-xs text-[var(--color-text-muted)]">
+                    {t.last_message_at
+                      ? format(new Date(t.last_message_at), 'd MMM HH:mm', { locale: dateLocale })
+                      : '—'}
+                  </p>
+                  {t.unread_count > 0 ? <Badge className="mt-2">{t.unread_count}</Badge> : null}
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
 
-      <main className="flex min-h-[50vh] min-w-0 flex-1 flex-col rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)]">
-        {!selectedId ? (
-          <div className="flex flex-1 items-center justify-center p-6 text-sm text-[var(--color-text-muted)]">
-            {tr.messagesSelectThread}
-          </div>
-        ) : messagesQuery.isPending ? (
-          <div className="flex flex-1 items-center justify-center">
-            <Spinner className="size-8 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
-          </div>
-        ) : messagesQuery.isError ? (
-          <div className="p-4">
-            <ErrorState title={tr.messagesLoadError} onRetry={() => void messagesQuery.refetch()} />
-          </div>
-        ) : (
-          <>
-            <div className="border-b border-[var(--color-m-card-border)] px-4 py-3">
-              <p className="font-semibold text-[var(--color-m-text)]">
-                {selectedThread ? participantLabel(selectedThread, selfId, tr) : ''}
-              </p>
+        <main className="flex min-h-[50vh] min-w-0 flex-1 flex-col rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)]">
+          {!selectedId ? (
+            <div className="flex flex-1 items-center justify-center p-6 text-sm text-[var(--color-text-muted)]">
+              {tr.messagesSelectThread}
             </div>
-            <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4" style={{ maxHeight: 'min(60vh, 520px)' }}>
-              {(messagesQuery.data ?? []).map((m: ThreadMessage) => {
-                const mine = m.sender_id === selfId;
-                return (
-                  <div key={m.id} className={cn('flex', mine ? 'justify-end' : 'justify-start')}>
-                    <div
-                      className={cn(
-                        'max-w-[85%] rounded-2xl px-3 py-2 text-sm',
-                        mine ? 'bg-[var(--color-m-primary)]/30 text-[var(--color-m-text)]' : 'bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]'
-                      )}
-                    >
-                      <p className="whitespace-pre-wrap break-words">{m.encrypted_payload}</p>
-                      <p className="mt-1 text-[10px] text-[var(--color-text-muted)]">
-                        {format(new Date(m.sent_at), 'd MMM HH:mm', { locale: dateLocale })}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-              <div ref={bottomRef} />
+          ) : messagesQuery.isPending ? (
+            <div className="flex flex-1 items-center justify-center">
+              <Spinner className="size-8 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
             </div>
-            <div className="border-t border-[var(--color-m-card-border)] p-3">
-              <Textarea
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                placeholder={tr.messagesWritePlaceholder}
-                rows={2}
-                className="mb-2"
+          ) : messagesQuery.isError ? (
+            <div className="p-4">
+              <ErrorState
+                title={tr.messagesLoadError}
+                onRetry={() => void messagesQuery.refetch()}
               />
-              <Button
-                type="button"
-                onClick={() => void handleSend()}
-                disabled={!draft.trim() || sendMutation.isPending}
-                isLoading={sendMutation.isPending}
-              >
-                {tr.messagesSend}
-              </Button>
             </div>
-          </>
-        )}
-      </main>
+          ) : (
+            <>
+              <div className="border-b border-[var(--color-m-card-border)] px-4 py-3">
+                <p className="font-semibold text-[var(--color-m-text)]">
+                  {selectedThread ? participantLabel(selectedThread, selfId, tr) : ''}
+                </p>
+              </div>
+              <div
+                className="flex flex-1 flex-col gap-2 overflow-y-auto p-4"
+                style={{ maxHeight: 'min(60vh, 520px)' }}
+              >
+                {(messagesQuery.data ?? []).map((m: ThreadMessage) => {
+                  const mine = m.sender_id === selfId;
+                  return (
+                    <div key={m.id} className={cn('flex', mine ? 'justify-end' : 'justify-start')}>
+                      <div
+                        className={cn(
+                          'max-w-[85%] rounded-2xl px-3 py-2 text-sm',
+                          mine
+                            ? 'bg-[var(--color-m-primary)]/30 text-[var(--color-m-text)]'
+                            : 'bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text)]'
+                        )}
+                      >
+                        <p className="whitespace-pre-wrap break-words">{m.encrypted_payload}</p>
+                        <p className="mt-1 text-[10px] text-[var(--color-text-muted)]">
+                          {format(new Date(m.sent_at), 'd MMM HH:mm', { locale: dateLocale })}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div ref={bottomRef} />
+              </div>
+              <div className="border-t border-[var(--color-m-card-border)] p-3">
+                <Textarea
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  placeholder={tr.messagesWritePlaceholder}
+                  rows={2}
+                  className="mb-2"
+                />
+                <Button
+                  type="button"
+                  onClick={() => void handleSend()}
+                  disabled={!draft.trim() || sendMutation.isPending}
+                  isLoading={sendMutation.isPending}
+                >
+                  {tr.messagesSend}
+                </Button>
+              </div>
+            </>
+          )}
+        </main>
       </div>
     </div>
   );

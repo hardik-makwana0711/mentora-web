@@ -58,7 +58,9 @@ export default function LessonSessionsPage() {
   });
 
   const upcomingQ = useQuery({
-    queryKey: lessonId ? qk.lessonSessions(lessonId, 'upcoming', 1) : ['lessons', 'sessions', 'up-none'],
+    queryKey: lessonId
+      ? qk.lessonSessions(lessonId, 'upcoming', 1)
+      : ['lessons', 'sessions', 'up-none'],
     queryFn: () => fetchLessonSessions(lessonId!, 'upcoming', 1, 50),
     enabled: Boolean(lessonId),
   });
@@ -86,9 +88,11 @@ export default function LessonSessionsPage() {
   const totalCompletedMinutes = completed.reduce((sum, s) => sum + (s.duration_minutes ?? 0), 0);
 
   const studentName =
-    meta?.student_name ?? ('student_name' in (group ?? {}) ? (group as { student_name: string }).student_name : '');
+    meta?.student_name ??
+    ('student_name' in (group ?? {}) ? (group as { student_name: string }).student_name : '');
   const mentorName =
-    meta?.mentor_name ?? ('mentor_name' in (group ?? {}) ? (group as { mentor_name: string }).mentor_name : '');
+    meta?.mentor_name ??
+    ('mentor_name' in (group ?? {}) ? (group as { mentor_name: string }).mentor_name : '');
   const mentorId = meta?.mentor_id;
   const studentId = meta?.student_id;
 
@@ -142,12 +146,18 @@ export default function LessonSessionsPage() {
 
   const goMessage = () => {
     const params = new URLSearchParams();
-    const participantId = lessonRole === 'mentor' ? studentId : mentorId;
-    if (participantId) params.set('participantId', participantId);
+    if (lessonId) params.set('lessonId', lessonId);
+    if (studentId) params.set('studentId', studentId);
+    if (mentorId) params.set('mentorId', mentorId);
+    if (lessonRole === 'parent' && user?.id) params.set('parentId', user.id);
     navigate(`${roleBase}/messages${params.toString() ? `?${params}` : ''}`);
   };
 
-  const renderSessionList = (items: LessonSessionListItem[], emptyTitle: string, emptyDesc?: string) => {
+  const renderSessionList = (
+    items: LessonSessionListItem[],
+    emptyTitle: string,
+    emptyDesc?: string
+  ) => {
     if (!items.length) {
       return (
         <div className="rounded-xl border border-dashed border-[var(--color-m-card-border)] px-4 py-6 text-center">
@@ -187,18 +197,19 @@ export default function LessonSessionsPage() {
 
       {pageStateBanner ? (
         <div className="mb-6 rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-4 py-3">
-          <p className="text-sm font-semibold text-[var(--color-m-text)]">{pageStateBanner.title}</p>
+          <p className="text-sm font-semibold text-[var(--color-m-text)]">
+            {pageStateBanner.title}
+          </p>
           {pageStateBanner.description ? (
-            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">{pageStateBanner.description}</p>
+            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">
+              {pageStateBanner.description}
+            </p>
           ) : null}
         </div>
       ) : null}
 
       {allSessions.length === 0 ? (
-        <EmptyState
-          title={tr.noPastSessions}
-          description={tr.lessonGroupPlannedEmptyDescription}
-        />
+        <EmptyState title={tr.noPastSessions} description={tr.lessonGroupPlannedEmptyDescription} />
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,32%)] lg:items-start">
           <div className="space-y-8">
@@ -243,7 +254,7 @@ export default function LessonSessionsPage() {
             ) : null}
           </div>
 
-          <aside className="space-y-4 lg:sticky lg:top-6">
+          <aside className="space-y-4 lg:sticky lg:top-20">
             <div className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4 ring-1 ring-[var(--color-m-ring-subtle)]">
               <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-muted)]">
                 {tr.lessonInfoTitle}
@@ -251,26 +262,38 @@ export default function LessonSessionsPage() {
               <dl className="mt-3 space-y-3 text-sm">
                 {studentName ? (
                   <div>
-                    <dt className="text-[var(--color-m-text-muted)]">{tr.lessonGroupSidebarStudent}</dt>
+                    <dt className="text-[var(--color-m-text-muted)]">
+                      {tr.lessonGroupSidebarStudent}
+                    </dt>
                     <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">{studentName}</dd>
                   </div>
                 ) : null}
                 {mentorName ? (
                   <div>
-                    <dt className="text-[var(--color-m-text-muted)]">{tr.lessonGroupSidebarMentor}</dt>
+                    <dt className="text-[var(--color-m-text-muted)]">
+                      {tr.lessonGroupSidebarMentor}
+                    </dt>
                     <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">{mentorName}</dd>
                   </div>
                 ) : null}
                 <div>
-                  <dt className="text-[var(--color-m-text-muted)]">{tr.lessonGroupSidebarSubject}</dt>
+                  <dt className="text-[var(--color-m-text-muted)]">
+                    {tr.lessonGroupSidebarSubject}
+                  </dt>
                   <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">{title}</dd>
                 </div>
                 <div>
-                  <dt className="text-[var(--color-m-text-muted)]">{tr.lessonGroupTotalSessions}</dt>
-                  <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">{allSessions.length}</dd>
+                  <dt className="text-[var(--color-m-text-muted)]">
+                    {tr.lessonGroupTotalSessions}
+                  </dt>
+                  <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">
+                    {allSessions.length}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-[var(--color-m-text-muted)]">{tr.lessonGroupTotalCompletedTime}</dt>
+                  <dt className="text-[var(--color-m-text-muted)]">
+                    {tr.lessonGroupTotalCompletedTime}
+                  </dt>
                   <dd className="mt-0.5 font-medium text-[var(--color-m-text)]">
                     {totalCompletedMinutes} {tr.minutesUnit}
                   </dd>
@@ -314,11 +337,7 @@ export default function LessonSessionsPage() {
                   </>
                 ) : null}
                 {upcoming[0] ? (
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={() => goDetail(upcoming[0])}
-                  >
+                  <Button type="button" size="sm" onClick={() => goDetail(upcoming[0])}>
                     {tr.lessonsViewDetails}
                   </Button>
                 ) : null}

@@ -13,7 +13,6 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { useStrings, tr } from '@/constants/strings';
 import { qk } from '@/constants/query-keys';
 import { profileService } from '@/services/profile.service';
-import { mentorVerificationService } from '@/services/mentor-verification.service';
 import { listingsService } from '@/services/listings.service';
 import { fetchParentWalletMe } from '@/services/parent-wallet.service';
 import { useAuthStore } from '@/app/store/authStore';
@@ -33,6 +32,8 @@ import {
   MentorModerationBadge,
   MentorModerationNotice,
 } from '@/features/profile/components/MentorModerationNotice';
+import { MentorVerificationStatusCard } from '@/features/mentor-verification/components/MentorVerificationStatusCard';
+import { useMentorVerificationGate } from '@/features/mentor-verification/hooks/useMentorVerificationGate';
 
 function normAxios(e: unknown): string {
   const ax = e as AxiosError & { normalizedMessage?: string };
@@ -97,11 +98,7 @@ export default function ProfilePage() {
     enabled: Boolean(authUser?.id),
   });
 
-  const verificationQuery = useQuery({
-    queryKey: qk.mentorVerification,
-    queryFn: () => mentorVerificationService.getStatus(),
-    enabled: profileQuery.data?.role === 'mentor',
-  });
+  const verificationGate = useMentorVerificationGate();
 
   const walletPreviewQuery = useQuery({
     queryKey: qk.mentorWalletMe,
@@ -135,11 +132,8 @@ export default function ProfilePage() {
   const checklist = useMemo(() => {
     if (!profile || profile.role !== 'mentor') return [];
     const mp = profile.mentor_profile;
-    const verified =
-      verificationQuery.data?.identityVerificationStatus === 'verified';
-    const education = Boolean(
-      mp?.primary_university || (mp?.university && mp.university.trim())
-    );
+    const verified = verificationGate.status?.identityVerificationStatus === 'verified';
+    const education = Boolean(mp?.primary_university || (mp?.university && mp.university.trim()));
     const subjects = (mp?.subject_proficiencies?.length ?? 0) > 0;
     const bio = Boolean(profile.common_profile.short_bio?.trim());
     const listing = (listingsQuery.data?.length ?? 0) > 0;
@@ -151,7 +145,7 @@ export default function ProfilePage() {
       { id: 'bio', label: tr.profileChecklistBio, done: bio },
       { id: 'listing', label: tr.profileChecklistListing, done: listing },
     ];
-  }, [profile, verificationQuery.data, listingsQuery.data, tr]);
+  }, [profile, verificationGate.status, listingsQuery.data, tr]);
 
   async function confirmLogout() {
     setLogoutBusy(true);
@@ -203,8 +197,8 @@ export default function ProfilePage() {
   const isMentor = profile.role === 'mentor';
   const completion = profile.common_profile.profile_completion;
   const moderationStatus = profile.mentor_profile?.profile_moderation_status;
-  const verificationLabel = verificationQuery.data
-    ? mentorVerificationLabel(verificationQuery.data.identityVerificationStatus)
+  const verificationLabel = verificationGate.status
+    ? mentorVerificationLabel(verificationGate.status.identityVerificationStatus)
     : tr.notProvided;
 
   return (
@@ -227,8 +221,12 @@ export default function ProfilePage() {
             className="size-28 text-xl"
           />
           <div className="min-w-0 px-1">
-            <p className="truncate text-lg font-semibold text-[var(--color-m-text)]">{displayName}</p>
-            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">{roleLabel(profile.role)}</p>
+            <p className="truncate text-lg font-semibold text-[var(--color-m-text)]">
+              {displayName}
+            </p>
+            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">
+              {roleLabel(profile.role)}
+            </p>
           </div>
 
           {isMentor ? (
@@ -244,7 +242,9 @@ export default function ProfilePage() {
               </div>
               {moderationStatus ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[var(--color-m-text-muted)]">{tr.profileModerationStatus}:</span>
+                  <span className="text-[var(--color-m-text-muted)]">
+                    {tr.profileModerationStatus}:
+                  </span>
                   <MentorModerationBadge status={moderationStatus} />
                 </div>
               ) : null}
@@ -307,7 +307,10 @@ export default function ProfilePage() {
                     {item.done ? (
                       <CheckCircle2 className="size-4 shrink-0 text-emerald-500" aria-hidden />
                     ) : (
-                      <Circle className="size-4 shrink-0 text-[var(--color-m-text-muted)]" aria-hidden />
+                      <Circle
+                        className="size-4 shrink-0 text-[var(--color-m-text-muted)]"
+                        aria-hidden
+                      />
                     )}
                     {item.label}
                   </li>
@@ -344,7 +347,13 @@ export default function ProfilePage() {
                       subjectProficiencies={profile.mentor_profile?.subject_proficiencies}
                       examProficiencies={profile.mentor_profile?.exam_proficiencies}
                     />
-                    <DetailBlock label={tr.verificationStatus} value={verificationLabel} />
+                  </div>
+
+                  <div>
+                    <SectionTitle>{tr.verificationPanelTitle}</SectionTitle>
+                    <div className="py-3">
+                      <MentorVerificationStatusCard />
+                    </div>
                   </div>
 
                   <div>
@@ -358,7 +367,7 @@ export default function ProfilePage() {
                         currency={walletPreviewQuery.data?.wallet?.currency}
                         title={tr.earningsAndPayouts}
                         hint={tr.mentorWalletPreviewHint}
-                        onPress={() => navigate(`${roleBase}/earnings`)}
+                        onPress={() => navigate(`${roleBase}/wallet`)}
                       />
                     </div>
                   </div>
@@ -391,7 +400,9 @@ export default function ProfilePage() {
                     <SectionTitle>{tr.profileSectionLinkedStudents}</SectionTitle>
                     <div className="py-3">
                       {(profile.parent_profile?.linked_students.length ?? 0) === 0 ? (
-                        <p className="text-sm text-[var(--color-m-text-muted)]">{tr.noLinkedChild}</p>
+                        <p className="text-sm text-[var(--color-m-text-muted)]">
+                          {tr.noLinkedChild}
+                        </p>
                       ) : (
                         <div className="relative">
                           <div className="app-scroll-area max-h-[360px] overflow-y-auto pr-2">

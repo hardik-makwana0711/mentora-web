@@ -25,6 +25,13 @@ export type ThreadMessage = {
   read_at?: string | null;
 };
 
+export type CreateLessonThreadInput = {
+  lesson_id: string;
+  parent_id?: string;
+  student_id?: string;
+  mentor_id?: string;
+};
+
 export type SendMessageInput = {
   thread_id: string;
   receiver_id?: string;

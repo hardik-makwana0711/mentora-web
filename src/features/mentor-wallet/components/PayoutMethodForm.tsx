@@ -64,7 +64,7 @@ export function PayoutMethodForm({
     if (!iban.trim()) e.iban = tr.mentorWalletFieldRequired;
     if (!bankName.trim()) e.bankName = tr.mentorWalletFieldRequired;
     return e;
-  }, [accountHolderName, iban, bankName]);
+  }, [accountHolderName, iban, bankName, tr.mentorWalletFieldRequired]);
 
   const valid = Object.keys(errors).length === 0;
 
@@ -92,14 +92,32 @@ export function PayoutMethodForm({
         <p className="text-sm text-[var(--color-m-error)]">{errors.accountHolderName}</p>
       ) : null}
 
-      <Input label={tr.mentorWalletIban} value={iban} onChange={setIban} required placeholder={tr.mentorWalletIbanPlaceholder} />
-      {touched && errors.iban ? <p className="text-sm text-[var(--color-m-error)]">{errors.iban}</p> : null}
+      <Input
+        label={tr.mentorWalletIban}
+        value={iban}
+        onChange={setIban}
+        required
+        placeholder={tr.mentorWalletIbanPlaceholder}
+      />
+      {touched && errors.iban ? (
+        <p className="text-sm text-[var(--color-m-error)]">{errors.iban}</p>
+      ) : null}
 
       <Input label={tr.mentorWalletBankName} value={bankName} onChange={setBankName} required />
-      {touched && errors.bankName ? <p className="text-sm text-[var(--color-m-error)]">{errors.bankName}</p> : null}
+      {touched && errors.bankName ? (
+        <p className="text-sm text-[var(--color-m-error)]">{errors.bankName}</p>
+      ) : null}
 
-      <Input label={tr.mentorWalletBranchNameOptional} value={branchName} onChange={setBranchName} />
-      <Input label={tr.mentorWalletAccountNumberOptional} value={accountNumber} onChange={setAccountNumber} />
+      <Input
+        label={tr.mentorWalletBranchNameOptional}
+        value={branchName}
+        onChange={setBranchName}
+      />
+      <Input
+        label={tr.mentorWalletAccountNumberOptional}
+        value={accountNumber}
+        onChange={setAccountNumber}
+      />
 
       {apiError ? <p className="text-sm text-[var(--color-m-error)]">{apiError}</p> : null}
 
@@ -111,4 +129,3 @@ export function PayoutMethodForm({
     </div>
   );
 }
-

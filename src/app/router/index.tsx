@@ -1,7 +1,8 @@
-import { lazy, Suspense } from 'react';
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
-import { Spinner } from '@/components/ui/Spinner';
+import { lazy } from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RequireAuth, SuspendedGate, GuardRole, RequireAdmin } from '@/routes/guards';
+import { MentorVerificationGate } from '@/features/mentor-verification/components/MentorVerificationGate';
+import { SuspenseLayout } from '@/app/router/SuspenseLayout';
 
 const LandingPage = lazy(() => import('@/features/landing/pages/LandingPage'));
 
@@ -12,6 +13,9 @@ const ForgotPasswordCheckDeliveryPage = lazy(
   () => import('@/features/auth/pages/ForgotPasswordCheckDeliveryPage')
 );
 const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'));
+const PasswordResetSuccessPage = lazy(
+  () => import('@/features/auth/pages/PasswordResetSuccessPage')
+);
 
 const ParentLayout = lazy(() => import('@/layouts/ParentLayout'));
 const StudentLayout = lazy(() => import('@/layouts/StudentLayout'));
@@ -29,15 +33,20 @@ const QuizPreviewPage = lazy(() => import('@/features/lessons/pages/QuizPreviewP
 const QuizEditPage = lazy(() => import('@/features/lessons/pages/QuizEditPage'));
 const StudentQuizPage = lazy(() => import('@/features/lessons/pages/StudentQuizPage'));
 const QuizResultPage = lazy(() => import('@/features/lessons/pages/QuizResultPage'));
-const MessagesPlaceholderPage = lazy(() => import('@/features/messages/pages/MessagesPlaceholderPage'));
+const MessagesPlaceholderPage = lazy(
+  () => import('@/features/messages/pages/MessagesPlaceholderPage')
+);
 const NotificationsPage = lazy(() => import('@/features/notifications/pages/NotificationsPage'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/ProfilePage'));
 const EditProfilePage = lazy(() => import('@/features/profile/pages/EditProfilePage'));
+const MentorMediaPage = lazy(() => import('@/features/profile/pages/MentorMediaPage'));
 const ParentWalletPage = lazy(() => import('@/features/wallet/pages/ParentWalletPage'));
 const MentorEarningsPage = lazy(() => import('@/features/mentor/pages/MentorEarningsPage'));
 const MentorWalletPage = lazy(() => import('@/features/mentor-wallet/pages/MentorWalletPage'));
 const PayoutMethodsPage = lazy(() => import('@/features/mentor-wallet/pages/PayoutMethodsPage'));
-const PayoutMethodFormPage = lazy(() => import('@/features/mentor-wallet/pages/PayoutMethodFormPage'));
+const PayoutMethodFormPage = lazy(
+  () => import('@/features/mentor-wallet/pages/PayoutMethodFormPage')
+);
 const MentorAvailabilityPlaceholderPage = lazy(
   () => import('@/features/mentor/pages/MentorAvailabilityPlaceholderPage')
 );
@@ -49,38 +58,67 @@ const StudentsPage = lazy(() => import('@/features/students/pages/StudentsPage')
 
 const MentorMaterialsPage = lazy(() => import('@/features/materials/pages/MentorMaterialsPage'));
 const CreateMaterialPage = lazy(() => import('@/features/materials/pages/CreateMaterialPage'));
-const MentorMaterialDetailPage = lazy(() => import('@/features/materials/pages/MentorMaterialDetailPage'));
+const MentorMaterialDetailPage = lazy(
+  () => import('@/features/materials/pages/MentorMaterialDetailPage')
+);
 const EditMaterialPage = lazy(() => import('@/features/materials/pages/EditMaterialPage'));
 const StudentMaterialsPage = lazy(() => import('@/features/materials/pages/StudentMaterialsPage'));
-const StudentMaterialDetailPage = lazy(() => import('@/features/materials/pages/StudentMaterialDetailPage'));
+const StudentMaterialDetailPage = lazy(
+  () => import('@/features/materials/pages/StudentMaterialDetailPage')
+);
 const ParentMaterialsPage = lazy(() => import('@/features/materials/pages/ParentMaterialsPage'));
-const ParentMaterialDetailPage = lazy(() => import('@/features/materials/pages/ParentMaterialDetailPage'));
+const ParentMaterialDetailPage = lazy(
+  () => import('@/features/materials/pages/ParentMaterialDetailPage')
+);
 
 const MentorSearchPage = lazy(() => import('@/features/search/pages/MentorSearchPage'));
-const PublicListingDetailPage = lazy(() => import('@/features/search/pages/PublicListingDetailPage'));
+const PublicListingDetailPage = lazy(
+  () => import('@/features/search/pages/PublicListingDetailPage')
+);
 const BookingStartPage = lazy(() => import('@/features/search/pages/BookingStartPage'));
 const BookingCheckoutPage = lazy(() => import('@/features/search/pages/BookingCheckoutPage'));
 const FavouritesPage = lazy(() => import('@/features/search/pages/FavouritesPage'));
 const PublicMentorRoutePage = lazy(() => import('@/features/search/pages/PublicMentorRoutePage'));
-const MentorDiscoveryPage = lazy(() => import('@/features/mentor-discovery/pages/MentorDiscoveryPage'));
+const MentorDiscoveryPage = lazy(
+  () => import('@/features/mentor-discovery/pages/MentorDiscoveryPage')
+);
 const SavedMentorsPage = lazy(() => import('@/features/mentor-discovery/pages/SavedMentorsPage'));
 const MentorDiscoveryProfilePage = lazy(
   () => import('@/features/mentor-discovery/pages/MentorDiscoveryProfilePage')
 );
-const MyMentorRequestsPage = lazy(() => import('@/features/mentor-discovery/pages/MyMentorRequestsPage'));
+const MyMentorRequestsPage = lazy(
+  () => import('@/features/mentor-discovery/pages/MyMentorRequestsPage')
+);
 const MentorDiscoveryRedirectPage = lazy(
   () => import('@/features/mentor-discovery/pages/MentorDiscoveryRedirectPage')
 );
 const MentorContactRequestsPage = lazy(
   () => import('@/features/mentor/pages/MentorContactRequestsPage')
 );
+const MentorReferencesPage = lazy(() => import('@/features/mentor/pages/MentorReferencesPage'));
+const VerificationOnboardingPage = lazy(
+  () => import('@/features/mentor-verification/pages/VerificationOnboardingPage')
+);
+const IdentityVerificationPage = lazy(
+  () => import('@/features/mentor-verification/pages/IdentityVerificationPage')
+);
+const DocumentUploadPage = lazy(
+  () => import('@/features/mentor-verification/pages/DocumentUploadPage')
+);
+const MentorPricingPage = lazy(() => import('@/features/listings/pages/MentorPricingPage'));
 
 const AdminLayout = lazy(() => import('@/layouts/AdminLayout'));
 const AdminDashboardPage = lazy(() => import('@/features/admin/pages/AdminDashboardPage'));
-const MentorVerificationsPage = lazy(() => import('@/features/admin/pages/MentorVerificationsPage'));
-const MentorVerificationDetailPage = lazy(() => import('@/features/admin/pages/MentorVerificationDetailPage'));
+const MentorVerificationsPage = lazy(
+  () => import('@/features/admin/pages/MentorVerificationsPage')
+);
+const MentorVerificationDetailPage = lazy(
+  () => import('@/features/admin/pages/MentorVerificationDetailPage')
+);
 const MentorProfilesPage = lazy(() => import('@/features/admin/pages/MentorProfilesPage'));
-const MentorProfileDetailPage = lazy(() => import('@/features/admin/pages/MentorProfileDetailPage'));
+const MentorProfileDetailPage = lazy(
+  () => import('@/features/admin/pages/MentorProfileDetailPage')
+);
 const AdminListingsPage = lazy(() => import('@/features/admin/pages/AdminListingsPage'));
 const AdminListingDetailPage = lazy(() => import('@/features/admin/pages/AdminListingDetailPage'));
 const AdminUsersPage = lazy(() => import('@/features/admin/pages/AdminUsersPage'));
@@ -104,20 +142,6 @@ const AdminMarketingCampaignEditPage = lazy(
 const AdminMarketingCampaignMetricsPage = lazy(
   () => import('@/features/admin/pages/AdminMarketingCampaignMetricsPage')
 );
-
-function SuspenseLayout() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-dvh items-center justify-center bg-[var(--color-surface-bg)]">
-          <Spinner className="size-10 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
-        </div>
-      }
-    >
-      <Outlet />
-    </Suspense>
-  );
-}
 
 const parentAppRoutes = {
   element: <ParentLayout />,
@@ -187,33 +211,193 @@ const mentorAppRoutes = {
   element: <MentorLayout />,
   children: [
     { index: true, element: <Navigate to="dashboard" replace /> },
-    { path: 'dashboard', element: <MentorDashboardPage /> },
-    { path: 'lessons', element: <LessonsHomePage /> },
-    { path: 'lessons/:lessonId/history', element: <LessonSessionsPage /> },
-    { path: 'lessons/session/:sessionId', element: <LessonDetailPage /> },
-    { path: 'lessons/session/:sessionId/report', element: <LessonReportPage /> },
-    { path: 'lessons/session/:sessionId/report/quiz/preview', element: <QuizPreviewPage /> },
-    { path: 'lessons/session/:sessionId/report/quiz/edit', element: <QuizEditPage /> },
-    { path: 'lessons/session/:sessionId/report/quiz/take', element: <StudentQuizPage /> },
-    { path: 'lessons/session/:sessionId/report/quiz/result', element: <QuizResultPage /> },
+    {
+      path: 'dashboard',
+      element: (
+        <MentorVerificationGate>
+          <MentorDashboardPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons',
+      element: (
+        <MentorVerificationGate>
+          <LessonsHomePage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/:lessonId/history',
+      element: (
+        <MentorVerificationGate>
+          <LessonSessionsPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId',
+      element: (
+        <MentorVerificationGate>
+          <LessonDetailPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId/report',
+      element: (
+        <MentorVerificationGate>
+          <LessonReportPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId/report/quiz/preview',
+      element: (
+        <MentorVerificationGate>
+          <QuizPreviewPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId/report/quiz/edit',
+      element: (
+        <MentorVerificationGate>
+          <QuizEditPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId/report/quiz/take',
+      element: (
+        <MentorVerificationGate>
+          <StudentQuizPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'lessons/session/:sessionId/report/quiz/result',
+      element: (
+        <MentorVerificationGate>
+          <QuizResultPage />
+        </MentorVerificationGate>
+      ),
+    },
     { path: 'messages', element: <MessagesPlaceholderPage /> },
-    { path: 'materials', element: <MentorMaterialsPage /> },
-    { path: 'materials/new', element: <CreateMaterialPage /> },
-    { path: 'materials/:materialId', element: <MentorMaterialDetailPage /> },
-    { path: 'materials/:materialId/edit', element: <EditMaterialPage /> },
-    { path: 'availability', element: <MentorAvailabilityPlaceholderPage /> },
+    {
+      path: 'materials',
+      element: (
+        <MentorVerificationGate>
+          <MentorMaterialsPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'materials/new',
+      element: (
+        <MentorVerificationGate>
+          <CreateMaterialPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'materials/:materialId',
+      element: (
+        <MentorVerificationGate>
+          <MentorMaterialDetailPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'materials/:materialId/edit',
+      element: (
+        <MentorVerificationGate>
+          <EditMaterialPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'availability',
+      element: (
+        <MentorVerificationGate>
+          <MentorAvailabilityPlaceholderPage />
+        </MentorVerificationGate>
+      ),
+    },
     { path: 'listings', element: <MentorListingsPage /> },
     { path: 'listings/create', element: <CreateListingPage /> },
     { path: 'listings/:listingId/edit', element: <EditListingPage /> },
-    { path: 'earnings', element: <MentorEarningsPage /> },
-    { path: 'wallet', element: <MentorWalletPage /> },
-    { path: 'wallet/payout-methods', element: <PayoutMethodsPage /> },
-    { path: 'wallet/payout-methods/new', element: <PayoutMethodFormPage /> },
-    { path: 'wallet/payout-methods/:payoutMethodId/edit', element: <PayoutMethodFormPage /> },
+    {
+      path: 'pricing',
+      element: (
+        <MentorVerificationGate>
+          <MentorPricingPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'earnings',
+      element: (
+        <MentorVerificationGate>
+          <MentorEarningsPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'wallet',
+      element: (
+        <MentorVerificationGate>
+          <MentorWalletPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'wallet/payout-methods',
+      element: (
+        <MentorVerificationGate>
+          <PayoutMethodsPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'wallet/payout-methods/new',
+      element: (
+        <MentorVerificationGate>
+          <PayoutMethodFormPage />
+        </MentorVerificationGate>
+      ),
+    },
+    {
+      path: 'wallet/payout-methods/:payoutMethodId/edit',
+      element: (
+        <MentorVerificationGate>
+          <PayoutMethodFormPage />
+        </MentorVerificationGate>
+      ),
+    },
     { path: 'profile', element: <ProfilePage /> },
     { path: 'profile/edit', element: <EditProfilePage /> },
+    {
+      path: 'media',
+      element: (
+        <MentorVerificationGate>
+          <MentorMediaPage />
+        </MentorVerificationGate>
+      ),
+    },
     { path: 'notifications', element: <NotificationsPage /> },
     { path: 'contact-requests', element: <MentorContactRequestsPage /> },
+    {
+      path: 'references',
+      element: (
+        <MentorVerificationGate>
+          <MentorReferencesPage />
+        </MentorVerificationGate>
+      ),
+    },
+    { path: 'verification', element: <VerificationOnboardingPage /> },
+    { path: 'verification/identity', element: <IdentityVerificationPage /> },
+    { path: 'verification/documents', element: <DocumentUploadPage /> },
   ],
 };
 
@@ -234,6 +418,7 @@ export const router = createBrowserRouter([
       { path: '/forgot-password', element: <ForgotPasswordPage /> },
       { path: '/forgot-password/sent', element: <ForgotPasswordCheckDeliveryPage /> },
       { path: '/reset-password', element: <ResetPasswordPage /> },
+      { path: '/reset-password/success', element: <PasswordResetSuccessPage /> },
       { path: '/mentors/:mentorId', element: <PublicMentorRoutePage /> },
       { path: '/mentor-discovery', element: <MentorDiscoveryRedirectPage /> },
       { path: '/mentor-discovery/saved', element: <MentorDiscoveryRedirectPage /> },

@@ -1,4 +1,5 @@
-import { RoleShell, studentNav } from '@/components/layouts/RoleShell';
+import { RoleShell } from '@/components/layouts/RoleShell';
+import { studentNav } from '@/components/layouts/nav-config';
 
 const studentMobileNav = studentNav
   .filter((i) => !i.to.endsWith('/notifications') && !i.to.endsWith('/favourites'))

@@ -12,7 +12,7 @@ export type VerificationStatus = 'verified' | 'pending' | 'not_started' | string
 
 export interface SearchFilters {
   q?: string;
-  /** Legacy alias sent to API as `search_query` (mobile parity). */
+  /** Legacy alias, folded into `q` before the request is sent. */
   search_query?: string;
   subject?: string;
   grade_level?: string;

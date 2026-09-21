@@ -54,9 +54,7 @@ export default function EditMaterialPage() {
     setDueDate(due);
     setOriginalDueDate(due);
     setAssignedStudentIds(
-      material.assignedStudentIds ??
-        material.assignedStudents?.map((s) => s.studentId) ??
-        []
+      material.assignedStudentIds ?? material.assignedStudents?.map((s) => s.studentId) ?? []
     );
     setStatus(material.status ?? 'active');
   }, [materialQ.data]);
@@ -135,7 +133,11 @@ export default function EditMaterialPage() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]">
         <Card className="space-y-4 p-6">
-          <Input label={tr.materialFieldTitle} value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Input
+            label={tr.materialFieldTitle}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
           <div>
             <label className="mb-2 block text-[13px] font-semibold uppercase tracking-[0.3px] text-[var(--color-m-text-secondary)]">
@@ -182,7 +184,7 @@ export default function EditMaterialPage() {
           </div>
         </Card>
 
-        <Card className="h-fit p-6 lg:sticky lg:top-6">
+        <Card className="h-fit p-6 lg:sticky lg:top-20">
           <AssignedStudentsPicker
             students={students}
             selectedIds={assignedStudentIds}
@@ -193,7 +195,11 @@ export default function EditMaterialPage() {
       </div>
 
       <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-[var(--color-m-card-border)] pt-4">
-        <Button type="button" variant="secondary" onClick={() => navigate(`${roleBase}/materials/${materialId}`)}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => navigate(`${roleBase}/materials/${materialId}`)}
+        >
           {tr.cancel}
         </Button>
         <Button type="button" onClick={handleSubmit} isLoading={updateMutation.isPending}>
@@ -223,7 +229,9 @@ export default function EditMaterialPage() {
           </div>
         }
       >
-        <p className="text-sm text-[var(--color-m-text-secondary)]">{tr.materialDueDateChangeMessage}</p>
+        <p className="text-sm text-[var(--color-m-text-secondary)]">
+          {tr.materialDueDateChangeMessage}
+        </p>
       </Modal>
     </PageContainer>
   );

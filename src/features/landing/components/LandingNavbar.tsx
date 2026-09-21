@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { AppChromeControls } from '@/components/ui/AppChromeControls';
-import { BrandMark } from '@/components/layouts/AppLogo';
 import { cn } from '@/lib/utils';
 import { useLandingLanguage } from '@/features/landing/lib/landing-context';
 import { useStrings } from '@/constants/strings';
@@ -22,23 +21,9 @@ export function LandingNavbar({ onLogin, onRegister }: LandingNavbarProps) {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const onResize = () => {
-      if (window.matchMedia('(min-width: 1024px)').matches) setIsOpen(false);
-    };
-    window.addEventListener('resize', onResize);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener('resize', onResize);
-    };
-  }, [isOpen]);
 
   const navLinks = [
     { href: '#nasil-calisir', label: t('nav.howItWorks') },
@@ -47,8 +32,6 @@ export function LandingNavbar({ onLogin, onRegister }: LandingNavbarProps) {
     { href: '#mentor-ol', label: t('nav.becomeMentor') },
   ];
 
-  const solidBar = scrolled || isOpen;
-
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -56,19 +39,15 @@ export function LandingNavbar({ onLogin, onRegister }: LandingNavbarProps) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        solidBar
-          ? 'border-b border-[var(--color-m-card-border)] bg-[var(--color-m-bg)] shadow-[var(--shadow-m-card)]'
+        scrolled
+          ? 'border-b border-[var(--color-m-card-border)] bg-[var(--color-m-bg)]/95 shadow-[var(--shadow-m-card)] backdrop-blur-md'
           : 'bg-transparent'
       )}
     >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:h-20 lg:px-8">
-        <Link
-          to="/"
-          className="group flex min-w-0 items-center gap-2 sm:gap-2.5"
-          aria-label={t('nav.brandAria')}
-        >
-          <BrandMark size="md" />
-          <span className="truncate text-lg font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)] sm:text-xl">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8">
+        <Link to="/" className="group flex items-center gap-2.5" aria-label={t('nav.brandAria')}>
+          <img src="/master-icon.png" alt="" aria-hidden className="size-10 object-contain" />
+          <span className="text-xl font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)]">
             {tr.appName}
           </span>
         </Link>
@@ -93,20 +72,21 @@ export function LandingNavbar({ onLogin, onRegister }: LandingNavbarProps) {
           </Button>
           <Button
             size="sm"
-            onClick={() => document.getElementById('hemen-basla')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() =>
+              document.getElementById('hemen-basla')?.scrollIntoView({ behavior: 'smooth' })
+            }
           >
             {t('nav.getStarted')}
           </Button>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <AppChromeControls />
           <button
             type="button"
             className="rounded-lg p-2 text-[var(--color-m-text)] transition-colors hover:bg-[var(--color-m-hover-overlay)]"
             onClick={() => setIsOpen((v) => !v)}
             aria-label={tr.toggleMenu}
-            aria-expanded={isOpen}
           >
             {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
           </button>
@@ -114,35 +94,35 @@ export function LandingNavbar({ onLogin, onRegister }: LandingNavbarProps) {
       </nav>
 
       <AnimatePresence>
-        {isOpen ? (
+        {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-[var(--color-m-card-border)] bg-[var(--color-m-bg)] lg:hidden"
+            className="overflow-hidden border-t border-[var(--color-m-card-border)] lg:hidden"
           >
-            <div className="mx-auto flex max-h-[min(70dvh,32rem)] max-w-7xl flex-col gap-1 overflow-y-auto px-4 py-4 sm:px-6">
+            <div className="flex flex-col gap-4 px-4 py-4">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
-                  className="rounded-xl px-3 py-3 text-sm font-medium text-[var(--color-m-text)] hover:bg-[var(--color-m-hover-overlay)]"
+                  className="py-2 text-sm font-medium text-[var(--color-m-text-secondary)]"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="mt-2 flex flex-col gap-2 border-t border-[var(--color-m-card-border)] pt-4">
-                <Button variant="secondary" size="sm" fullWidth onClick={onLogin}>
+              <div className="flex flex-col gap-2 border-t border-[var(--color-m-card-border)] pt-4">
+                <Button variant="ghost" size="sm" onClick={onLogin}>
                   {t('nav.login')}
                 </Button>
-                <Button size="sm" fullWidth onClick={onRegister}>
+                <Button size="sm" onClick={onRegister}>
                   {t('nav.getStarted')}
                 </Button>
               </div>
             </div>
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
     </motion.header>
   );

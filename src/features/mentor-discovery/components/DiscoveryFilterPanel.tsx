@@ -52,7 +52,7 @@ function FilterSection({
   );
 }
 
-export function countDiscoveryFilters(filters: DiscoveryFilters): number {
+function countDiscoveryFilters(filters: DiscoveryFilters): number {
   let n = 0;
   if (filters.subject) n += 1;
   if (filters.exam_type) n += 1;
@@ -86,10 +86,19 @@ function DiscoveryFilterFields({
 }) {
   const tr = useStrings();
   const subjectChips = useSubjectChips();
-  const selectedTags = new Set(value.tags?.split(',').map((t) => t.trim()).filter(Boolean) ?? []);
+  const selectedTags = new Set(
+    value.tags
+      ?.split(',')
+      .map((t) => t.trim())
+      .filter(Boolean) ?? []
+  );
 
   const toggleTag = (tag: string) => {
-    const current = value.tags?.split(',').map((t) => t.trim()).filter(Boolean) ?? [];
+    const current =
+      value.tags
+        ?.split(',')
+        .map((t) => t.trim())
+        .filter(Boolean) ?? [];
     const next = current.includes(tag) ? current.filter((t) => t !== tag) : [...current, tag];
     onChange({ ...value, tags: next.length ? next.join(',') : undefined });
   };
@@ -354,7 +363,8 @@ export function ActiveDiscoveryFilterChips({
   if (filters.subject) chips.push({ key: 'subject', label: filters.subject });
   if (filters.exam_type) chips.push({ key: 'exam_type', label: filters.exam_type });
   if (filters.grade_level) chips.push({ key: 'grade_level', label: filters.grade_level });
-  if (filters.teaching_format) chips.push({ key: 'teaching_format', label: filters.teaching_format });
+  if (filters.teaching_format)
+    chips.push({ key: 'teaching_format', label: filters.teaching_format });
   if (filters.min_rating) chips.push({ key: 'min_rating', label: `${filters.min_rating}+ ★` });
   if (filters.tags) {
     filters.tags.split(',').forEach((tag) => {
@@ -365,7 +375,12 @@ export function ActiveDiscoveryFilterChips({
   if (chips.length === 0) return null;
 
   return (
-    <div className={cn('rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-bg)]/60 p-3', className)}>
+    <div
+      className={cn(
+        'rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-bg)]/60 p-3',
+        className
+      )}
+    >
       <div className="mb-2 flex items-center justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-secondary)]">
           {tr.activeFilters}

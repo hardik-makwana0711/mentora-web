@@ -1,5 +1,6 @@
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useStrings } from '@/constants/strings';
 
 export function ErrorState({
   title,
@@ -10,6 +11,7 @@ export function ErrorState({
   description?: string;
   onRetry?: () => void;
 }) {
+  const tr = useStrings();
   return (
     <div
       role="alert"
@@ -24,7 +26,7 @@ export function ErrorState({
       </div>
       {onRetry ? (
         <Button type="button" variant="secondary" onClick={onRetry}>
-          Yeniden dene
+          {tr.retry}
         </Button>
       ) : null}
     </div>

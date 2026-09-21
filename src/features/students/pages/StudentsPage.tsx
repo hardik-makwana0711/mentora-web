@@ -10,6 +10,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Input } from '@/components/ui/Input';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { Modal } from '@/components/ui/Modal';
 import { qk } from '@/constants/query-keys';
 import { useStrings } from '@/constants/strings';
@@ -18,6 +19,8 @@ import { profileService } from '@/services/profile.service';
 import { studentsService } from '@/services/students.service';
 import { useAuthStore } from '@/app/store/authStore';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
+import { LoginVerificationPanel } from '@/features/auth/components/LoginVerificationPanel';
+import type { AccountVerificationPayload } from '@/types/auth-verification';
 
 interface StudentFormData {
   first_name: string;
@@ -79,6 +82,14 @@ export default function StudentsPage() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState<StudentFormData>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [verifyPayload, setVerifyPayload] = useState<AccountVerificationPayload | null>(null);
+
+  function closeModal() {
+    setShowModal(false);
+    setForm(EMPTY_FORM);
+    setErrors({});
+    setVerifyPayload(null);
+  }
 
   const profileQ = useQuery({
     queryKey: user?.id ? qk.profile(user.id) : ['profile', 'none'],
@@ -90,20 +101,29 @@ export default function StudentsPage() {
 
   const createMutation = useMutation({
     mutationFn: studentsService.createStudent,
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
       toast.success(tr.studentsCreatedSuccess);
-      setShowModal(false);
-      setForm(EMPTY_FORM);
-      setErrors({});
       if (user?.id) {
         await qc.invalidateQueries({ queryKey: qk.profile(user.id) });
         await qc.refetchQueries({ queryKey: qk.profile(user.id) });
       }
+      setVerifyPayload({
+        code: 'ACCOUNT_VERIFICATION_REQUIRED',
+        role: 'student',
+        is_email_verified: false,
+        is_phone_verified: false,
+        requires_email_verification: true,
+        requires_phone_verification: false,
+        next_step: 'verify_email',
+        verification_targets: { email: variables.email },
+      });
     },
     onError: (e: unknown) => {
       const err = e as {
         normalizedMessage?: string;
-        response?: { data?: { message?: string; errors?: Array<{ field: string; message: string }> } };
+        response?: {
+          data?: { message?: string; errors?: Array<{ field: string; message: string }> };
+        };
       };
       const resErrors = err.response?.data?.errors;
       if (resErrors?.length) {
@@ -216,7 +236,9 @@ export default function StudentsPage() {
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-[var(--color-m-text)]">{student.name}</p>
+                    <p className="truncate font-semibold text-[var(--color-m-text)]">
+                      {student.name}
+                    </p>
                     {student.email ? (
                       <p className="mt-0.5 truncate text-xs text-[var(--color-m-text-muted)]">
                         {student.email}
@@ -260,81 +282,85 @@ export default function StudentsPage() {
       <Modal
         open={showModal}
         title={tr.studentsModalTitle}
-        onClose={() => {
-          setShowModal(false);
-          setForm(EMPTY_FORM);
-          setErrors({});
-        }}
+        onClose={closeModal}
         footer={
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setShowModal(false);
-                setForm(EMPTY_FORM);
-                setErrors({});
-              }}
-              disabled={createMutation.isPending}
-            >
-              {tr.cancel}
-            </Button>
-            <Button type="button" onClick={handleSubmit} isLoading={createMutation.isPending}>
-              {tr.studentsCreate}
-            </Button>
-          </div>
+          verifyPayload ? null : (
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={closeModal}
+                disabled={createMutation.isPending}
+              >
+                {tr.cancel}
+              </Button>
+              <Button type="button" onClick={handleSubmit} isLoading={createMutation.isPending}>
+                {tr.studentsCreate}
+              </Button>
+            </div>
+          )
         }
       >
-        <div className="space-y-1">
-          <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 sm:gap-4">
+        {verifyPayload ? (
+          <LoginVerificationPanel
+            channel="email"
+            payload={verifyPayload}
+            onVerified={closeModal}
+            onBack={closeModal}
+            backLabel={tr.cancel}
+          />
+        ) : (
+          <div className="space-y-1">
+            <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 sm:gap-4">
+              <Input
+                label={tr.firstName}
+                value={form.first_name}
+                onChange={(e) => updateField('first_name', e.target.value)}
+                error={errors.first_name}
+                autoComplete="given-name"
+              />
+              <Input
+                label={tr.lastName}
+                value={form.last_name}
+                onChange={(e) => updateField('last_name', e.target.value)}
+                error={errors.last_name}
+                autoComplete="family-name"
+              />
+            </div>
             <Input
-              label={tr.firstName}
-              value={form.first_name}
-              onChange={(e) => updateField('first_name', e.target.value)}
-              error={errors.first_name}
-              autoComplete="given-name"
+              label={tr.email}
+              type="email"
+              value={form.email}
+              onChange={(e) => updateField('email', e.target.value)}
+              error={errors.email}
+              autoComplete="email"
             />
             <Input
-              label={tr.lastName}
-              value={form.last_name}
-              onChange={(e) => updateField('last_name', e.target.value)}
-              error={errors.last_name}
-              autoComplete="family-name"
+              label={tr.dateOfBirth}
+              type="date"
+              value={form.date_of_birth}
+              onChange={(e) => updateField('date_of_birth', e.target.value)}
+              error={errors.date_of_birth}
             />
+            <PasswordInput
+              label={tr.password}
+              value={form.password}
+              onChange={(e) => updateField('password', e.target.value)}
+              error={errors.password}
+              autoComplete="new-password"
+            />
+            <PasswordInput
+              label={tr.confirmPassword}
+              value={form.confirm_password}
+              onChange={(e) => updateField('confirm_password', e.target.value)}
+              error={errors.confirm_password}
+              autoComplete="new-password"
+            />
+            <p className="pt-1 text-xs text-[var(--color-m-text-muted)]">
+              {tr.studentsVerificationHint}
+            </p>
           </div>
-          <Input
-            label={tr.email}
-            type="email"
-            value={form.email}
-            onChange={(e) => updateField('email', e.target.value)}
-            error={errors.email}
-            autoComplete="email"
-          />
-          <Input
-            label={tr.dateOfBirth}
-            type="date"
-            value={form.date_of_birth}
-            onChange={(e) => updateField('date_of_birth', e.target.value)}
-            error={errors.date_of_birth}
-          />
-          <Input
-            label={tr.password}
-            type="password"
-            value={form.password}
-            onChange={(e) => updateField('password', e.target.value)}
-            error={errors.password}
-            autoComplete="new-password"
-          />
-          <Input
-            label={tr.confirmPassword}
-            type="password"
-            value={form.confirm_password}
-            onChange={(e) => updateField('confirm_password', e.target.value)}
-            error={errors.confirm_password}
-            autoComplete="new-password"
-          />
-          <p className="pt-1 text-xs text-[var(--color-m-text-muted)]">{tr.studentsVerificationHint}</p>
-        </div>
+        )}
       </Modal>
     </div>
   );

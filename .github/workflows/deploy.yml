@@ -1,0 +1,41 @@
+name: Deploy Mentora Web to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        env:
+          VITE_API_BASE_URL: https://api.mentoratr.com
+          VITE_APP_ENV: production
+          VITE_APP_NAME: Mentora
+          VITE_SOCKET_URL: https://api.mentoratr.com
+        run: npm run build
+
+      - name: Deploy to EC2 via rsync
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          ARGS: "-avz --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.EC2_HOST }}
+          REMOTE_USER: ec2-user
+          TARGET: "/var/www/mentora-web/dist"

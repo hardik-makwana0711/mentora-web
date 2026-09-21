@@ -10,7 +10,9 @@ import type {
   SearchFilters,
 } from '@/types/search';
 
-function flattenListingAvailableSlots(payload: ListingAvailableSlotsResponse | AvailabilityWindow[]): AvailabilityWindow[] {
+function flattenListingAvailableSlots(
+  payload: ListingAvailableSlotsResponse | AvailabilityWindow[]
+): AvailabilityWindow[] {
   if (Array.isArray(payload)) return payload;
   return (payload.availableSlots ?? []).flatMap((day) =>
     day.slots.map((slot) => ({
@@ -23,12 +25,12 @@ function flattenListingAvailableSlots(payload: ListingAvailableSlotsResponse | A
 
 /** Mirrors mobile `searchApi.cleanSearchParams` — maps discovery names to backend query keys. */
 function cleanParams(filters: SearchFilters): Record<string, string | number> {
-  const search_query = filters.q ?? filters.search_query;
+  const q = filters.q ?? filters.search_query;
   const grade = filters.grade_level ?? filters.grade;
 
   return Object.fromEntries(
     Object.entries({
-      search_query,
+      q,
       subject: filters.subject,
       grade,
       lesson_format: filters.lesson_format,
@@ -58,7 +60,9 @@ export const searchService = {
   },
 
   async getPublicListing(listingId: string): Promise<PublicListingDetailResponse> {
-    const { data } = await apiClient.get<PublicListingDetailResponse>(endpoints.listings.public(listingId));
+    const { data } = await apiClient.get<PublicListingDetailResponse>(
+      endpoints.listings.public(listingId)
+    );
     return data;
   },
 
@@ -67,10 +71,13 @@ export const searchService = {
     startDate: string,
     endDate: string
   ): Promise<MentorAvailabilitySlot[]> {
-    const { data } = await apiClient.get<MentorAvailabilitySlot[]>(endpoints.mentors.availability(mentorId), {
-      params: { start_date: startDate, end_date: endDate },
-      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
-    });
+    const { data } = await apiClient.get<MentorAvailabilitySlot[]>(
+      endpoints.mentors.availability(mentorId),
+      {
+        params: { start_date: startDate, end_date: endDate },
+        headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' },
+      }
+    );
     return Array.isArray(data) ? data : [];
   },
 
