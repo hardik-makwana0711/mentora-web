@@ -55,10 +55,12 @@ jobs:
           envs: GHCR_TOKEN,GHCR_ACTOR,IMAGE
           script: |
             set -e
+            cd /home/ec2-user/mentora-web
+            git fetch origin main
+            git reset --hard origin/main
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
             docker pull "$IMAGE:latest"
             docker logout ghcr.io
-            cd /home/ec2-user/mentora-web
             docker compose up -d
             docker image prune -f
         env:
