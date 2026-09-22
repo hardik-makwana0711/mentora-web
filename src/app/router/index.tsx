@@ -13,6 +13,9 @@ const ForgotPasswordCheckDeliveryPage = lazy(
   () => import('@/features/auth/pages/ForgotPasswordCheckDeliveryPage')
 );
 const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'));
+
+const PrivacyPolicyPage = lazy(() => import('@/features/legal/pages/PrivacyPolicyPage'));
+const TermsAndConditionsPage = lazy(() => import('@/features/legal/pages/TermsAndConditionsPage'));
 const PasswordResetSuccessPage = lazy(
   () => import('@/features/auth/pages/PasswordResetSuccessPage')
 );
@@ -419,6 +422,8 @@ export const router = createBrowserRouter([
       { path: '/forgot-password/sent', element: <ForgotPasswordCheckDeliveryPage /> },
       { path: '/reset-password', element: <ResetPasswordPage /> },
       { path: '/reset-password/success', element: <PasswordResetSuccessPage /> },
+      { path: '/privacy-policy', element: <PrivacyPolicyPage /> },
+      { path: '/terms-and-conditions', element: <TermsAndConditionsPage /> },
       { path: '/mentors/:mentorId', element: <PublicMentorRoutePage /> },
       { path: '/mentor-discovery', element: <MentorDiscoveryRedirectPage /> },
       { path: '/mentor-discovery/saved', element: <MentorDiscoveryRedirectPage /> },

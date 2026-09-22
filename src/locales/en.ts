@@ -1495,6 +1495,12 @@ export const en = {
   saveChanges: 'Save changes',
   confirmPassword: 'Confirm password',
   termsAccepted: 'I accept the terms of service',
+  privacyPolicy: 'Privacy Policy',
+  termsAndConditions: 'Terms and Conditions',
+  legalBackToHome: '← Back to home',
+  legalLastUpdated: 'Last updated',
+  registerLegalAgreementPrefix: 'By registering, you agree to our',
+  registerLegalAgreementJoiner: 'and',
   registerSuccess:
     'Registration received. Use the mobile app for verification steps, or try signing in.',
   registerFailed: 'Registration failed',

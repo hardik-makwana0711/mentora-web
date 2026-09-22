@@ -1496,6 +1496,12 @@ export const tr: { [K in keyof Strings]: string } = {
   saveChanges: 'Değişiklikleri kaydet',
   confirmPassword: 'Şifre tekrar',
   termsAccepted: 'Kullanım şartlarını kabul ediyorum',
+  privacyPolicy: 'Gizlilik Politikası',
+  termsAndConditions: 'Kullanım Şartları',
+  legalBackToHome: '← Ana sayfaya dön',
+  legalLastUpdated: 'Son güncelleme',
+  registerLegalAgreementPrefix: 'Kayıt olarak',
+  registerLegalAgreementJoiner: 've',
   registerSuccess:
     'Kayıt alındı. Doğrulama adımları için mobil uygulamayı kullanın veya giriş yapmayı deneyin.',
   registerFailed: 'Kayıt başarısız',
