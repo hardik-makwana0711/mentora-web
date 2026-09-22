@@ -1,7 +1,6 @@
-# Runs mentora-web as a single container serving the built SPA.
-#
-# Reads VITE_* build values from a local .env file in this directory — that
-# file lives ONLY on the server and is never committed (see deploy/DOCKER.md).
+# Runs mentora-web on the server by pulling the image GitHub Actions already
+# built and pushed to GHCR (see .github/workflows/deploy.yml) — nothing is
+# built on the server itself.
 #
 # The container listens on 127.0.0.1:8080 only — it is not exposed to the
 # internet directly. The host's own Nginx (deploy/mentora-web.conf) handles
@@ -9,16 +8,7 @@
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-        VITE_APP_ENV: ${VITE_APP_ENV:-production}
-        VITE_APP_NAME: ${VITE_APP_NAME:-Mentora}
-        VITE_SOCKET_URL: ${VITE_SOCKET_URL}
-        VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
-    image: mentora-web:latest
+    image: ghcr.io/hardik-makwana0711/mentora-web:latest
     container_name: mentora-web
     restart: unless-stopped
     ports:
