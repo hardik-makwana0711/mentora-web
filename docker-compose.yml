@@ -1,0 +1,15 @@
+# Runs mentora-web on the server by pulling the image GitHub Actions already
+# built and pushed to GHCR (see .github/workflows/deploy.yml) — nothing is
+# built on the server itself.
+#
+# The container listens on 127.0.0.1:8080 only — it is not exposed to the
+# internet directly. The host's own Nginx (deploy/mentora-web.conf) handles
+# the public domain, TLS, and reverse-proxies to this port.
+
+services:
+  web:
+    image: ghcr.io/hardik-makwana0711/mentora-web:latest
+    container_name: mentora-web
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8080:80'

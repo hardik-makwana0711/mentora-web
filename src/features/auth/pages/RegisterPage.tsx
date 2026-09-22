@@ -216,6 +216,26 @@ export default function RegisterPage() {
               {...register('confirm_password')}
               error={errors.confirm_password?.message}
             />
+            <p className="mb-2 text-[13px] text-[var(--color-m-text-muted)]">
+              {tr.registerLegalAgreementPrefix}{' '}
+              <Link
+                to="/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-2 hover:text-[var(--color-m-primary)]"
+              >
+                {tr.privacyPolicy}
+              </Link>{' '}
+              {tr.registerLegalAgreementJoiner}{' '}
+              <Link
+                to="/terms-and-conditions"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-2 hover:text-[var(--color-m-primary)]"
+              >
+                {tr.termsAndConditions}
+              </Link>
+            </p>
             <Checkbox
               label={tr.termsAccepted}
               {...register('terms_accepted', { setValueAs: (v) => v === true })}

@@ -10,8 +10,8 @@ export function LandingFooter() {
   const tr = useStrings();
 
   const footerLinks = [
-    { href: '#gizlilik', label: t('footer.privacy'), id: 'gizlilik' },
-    { href: '#kullanim', label: t('footer.terms'), id: 'kullanim' },
+    { href: '/privacy-policy', label: t('footer.privacy'), internal: true },
+    { href: '/terms-and-conditions', label: t('footer.terms'), internal: true },
     { href: '#mentor-basvuru', label: t('footer.mentorApply') },
     { href: '#iletisim', label: t('footer.contact'), id: 'iletisim' },
   ];
@@ -44,17 +44,28 @@ export function LandingFooter() {
             transition={{ delay: 0.1 }}
             className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end"
           >
-            {footerLinks.map((link) => (
-              <a
-                key={link.href}
-                id={'id' in link ? link.id : undefined}
-                href={link.href}
-                className="group relative text-sm text-[var(--color-m-text-secondary)] transition-colors hover:text-[var(--color-m-primary-light)]"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-[var(--color-m-primary)] to-[var(--color-m-secondary)] transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+            {footerLinks.map((link) =>
+              'internal' in link && link.internal ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="group relative text-sm text-[var(--color-m-text-secondary)] transition-colors hover:text-[var(--color-m-primary-light)]"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-[var(--color-m-primary)] to-[var(--color-m-secondary)] transition-all duration-300 group-hover:w-full" />
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  id={'id' in link ? link.id : undefined}
+                  href={link.href}
+                  className="group relative text-sm text-[var(--color-m-text-secondary)] transition-colors hover:text-[var(--color-m-primary-light)]"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-[var(--color-m-primary)] to-[var(--color-m-secondary)] transition-all duration-300 group-hover:w-full" />
+                </a>
+              )
+            )}
           </motion.div>
         </div>
 
