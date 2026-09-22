@@ -9,28 +9,20 @@ LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse origin/main)
 
 if [ "$LOCAL" != "$REMOTE" ]; then
-    echo "[$(date)] New commit detected ($LOCAL -> $REMOTE). Pulling and building..."
+    echo "[$(date)] New commit detected ($LOCAL -> $REMOTE). Pulling and rebuilding container..."
     git pull origin main
 
-    # Ensure .env.production exists
-    if [ ! -f .env.production ]; then
-        cat << 'EOF' > .env.production
-VITE_API_BASE_URL=https://api.mentoratr.com
-VITE_APP_ENV=production
-VITE_APP_NAME=Mentora
-VITE_SOCKET_URL=https://api.mentoratr.com
-VITE_SENTRY_DSN=
-EOF
+    # .env must already exist here with the real production VITE_* values —
+    # it is never committed to git (see deploy/DOCKER.md). docker-compose.yml
+    # reads it automatically to build the image.
+    if [ ! -f .env ]; then
+        echo "[$(date)] ERROR: .env is missing on the server. See deploy/DOCKER.md." >&2
+        exit 1
     fi
 
-    # Install dependencies and required Linux native binary
-    npm ci --include=optional || npm install --include=optional
+    docker compose build
+    docker compose up -d
+    docker image prune -f
 
-    # Build production bundle
-    npm run build
-
-    # Deploy to Nginx root
-    cp -r dist/* /var/www/mentora-web/dist/
-    sudo chmod -R 755 /var/www
     echo "[$(date)] Auto-deployment finished successfully!"
 fi

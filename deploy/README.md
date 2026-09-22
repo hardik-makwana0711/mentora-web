@@ -1,67 +1,32 @@
-# Deploying mentora-web to an EC2 instance (moving off Vercel)
+# Deploying mentora-web
 
-This app is a static Vite build — no server-side code. The EC2 box only needs
-Nginx to serve the built files; it does not need Node.js installed unless you
-choose to build on the server itself.
+The app runs as a Docker container on an EC2 instance: Nginx inside the
+container serves the Vite build, and the host's own Nginx terminates TLS for
+`mentoratr.com` and reverse-proxies to the container.
 
-## One-time server setup
-
-SSH into the instance, then:
-
-```bash
-sudo apt update && sudo apt install -y nginx certbot python3-certbot-nginx
-sudo mkdir -p /var/www/mentora-web
-sudo chown $USER:$USER /var/www/mentora-web
-```
-
-Copy `deploy/nginx.conf` from this repo, replace `YOUR_DOMAIN` with your real
-domain, then install it:
-
-```bash
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/mentora-web
-sudo ln -s /etc/nginx/sites-available/mentora-web /etc/nginx/sites-enabled/mentora-web
-sudo rm -f /etc/nginx/sites-enabled/default   # avoid the default site catching your domain
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-Get an SSL certificate (requires the domain's DNS A record already pointing
-at this instance's IP):
-
-```bash
-sudo certbot --nginx -d YOUR_DOMAIN -d www.YOUR_DOMAIN
-```
-
-Certbot rewrites the Nginx config to add the HTTPS server block and redirect
-HTTP → HTTPS automatically.
+See [`deploy/DOCKER.md`](DOCKER.md) for the full breakdown of what's
+committed to GitHub versus what must exist only on the server, plus one-time
+server setup steps.
 
 ## Every deploy
 
-Build locally (or in CI) with the **production** API URL baked in — Vite
-inlines `VITE_*` env vars at build time, so `.env` must be correct _before_
-running `build`:
+Nothing to run locally — push to `main` and either:
 
-```bash
-npm ci
-npm run build
-```
+- the [GitHub Actions workflow](../.github/workflows/deploy.yml) SSHes into
+  the server and rebuilds immediately, or
+- the server's own systemd timer (`deploy/auto-deploy.sh`, polling every
+  minute) picks up the new commit
 
-Copy the build output to the server:
-
-```bash
-rsync -avz --delete dist/ your-user@YOUR_SERVER_IP:/var/www/mentora-web/dist/
-```
-
-That's it — Nginx serves the new files immediately (index.html is set to
-never cache, so users get the new build on their next request without
-needing a hard refresh).
+Both do the same thing: `git pull`, `docker compose build`, `docker compose
+up -d`. `npm run deploy` runs the same trigger manually from your machine if
+you don't want to wait.
 
 ## Why the Nginx config matters
 
 This app uses `createBrowserRouter` (React Router's History API mode), so a
 direct visit or refresh on any route other than `/` — e.g.
 `/parent/dashboard` — is a request straight to Nginx for that exact path.
-Without the `try_files $uri $uri/ /index.html;` fallback in `deploy/nginx.conf`,
-every such request 404s. Vercel does this automatically for detected
-frameworks with zero config, which is why the app worked there without any
-routing config committed to the repo — moving off Vercel means this now has
-to be explicit.
+Without the `try_files $uri $uri/ /index.html;` fallback
+(in [`deploy/nginx.docker.conf`](nginx.docker.conf), inside the container),
+every such request 404s. Vercel did this automatically, which is why the app
+worked there with zero routing config — that now has to be explicit.
