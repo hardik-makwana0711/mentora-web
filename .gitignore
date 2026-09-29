@@ -144,3 +144,7 @@ vite.config.ts.timestamp-*
 
 # Local AI-assistant tooling config (never commit)
 .claude/
+
+# Custom & local helper scripts (never commit)
+scripts/
+
