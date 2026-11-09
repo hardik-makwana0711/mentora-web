@@ -1497,6 +1497,7 @@ export const tr: { [K in keyof Strings]: string } = {
   confirmPassword: 'Şifre tekrar',
   termsAccepted: 'Kullanım şartlarını kabul ediyorum',
   privacyPolicy: 'Gizlilik Politikası',
+  supportPageTitle: 'Destek',
   termsAndConditions: 'Kullanım Şartları',
   legalBackToHome: '← Ana sayfaya dön',
   legalLastUpdated: 'Son güncelleme',

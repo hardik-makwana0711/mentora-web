@@ -13,7 +13,7 @@ export function LandingFooter() {
     { href: '/privacy-policy', label: t('footer.privacy'), internal: true },
     { href: '/terms-and-conditions', label: t('footer.terms'), internal: true },
     { href: '#mentor-basvuru', label: t('footer.mentorApply') },
-    { href: '#iletisim', label: t('footer.contact'), id: 'iletisim' },
+    { href: '/support', label: t('footer.contact'), internal: true },
   ];
 
   return (
@@ -57,7 +57,6 @@ export function LandingFooter() {
               ) : (
                 <a
                   key={link.href}
-                  id={'id' in link ? link.id : undefined}
                   href={link.href}
                   className="group relative text-sm text-[var(--color-m-text-secondary)] transition-colors hover:text-[var(--color-m-primary-light)]"
                 >
