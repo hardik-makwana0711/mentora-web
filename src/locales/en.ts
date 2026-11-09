@@ -1496,6 +1496,7 @@ export const en = {
   confirmPassword: 'Confirm password',
   termsAccepted: 'I accept the terms of service',
   privacyPolicy: 'Privacy Policy',
+  supportPageTitle: 'Support',
   termsAndConditions: 'Terms and Conditions',
   legalBackToHome: '← Back to home',
   legalLastUpdated: 'Last updated',
