@@ -169,7 +169,7 @@ export function RoleShell({
               </button>
               <AppLogo compact />
             </div>
-            <div className="hidden text-[13px] text-[var(--color-m-text-muted)] md:block">
+            <div className="hidden whitespace-nowrap text-[13px] text-[var(--color-m-text-muted)] lg:block">
               {new Intl.DateTimeFormat(getDateFnsLocale().code ?? 'en', {
                 dateStyle: 'full',
               }).format(new Date())}
