@@ -208,11 +208,11 @@ export function RoleShell({
       </div>
 
       <nav
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden"
+        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden"
         aria-label={tr.mobileTabMenuAria}
       >
         <div
-          className="pointer-events-auto flex w-full max-w-md flex-row items-end justify-around border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-1.5 py-2 shadow-[var(--shadow-m-tab)]"
+          className="pointer-events-auto flex w-full max-w-md flex-row items-end justify-around border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-3 py-2 shadow-[var(--shadow-m-tab)]"
           style={{ borderRadius: 28 }}
         >
           {mobileNavItems.slice(0, 5).map((item) => (
@@ -238,7 +238,7 @@ export function RoleShell({
                     />
                     {item.labelKey === 'navMessages' && unreadTotal > 0 ? (
                       <span
-                        className="absolute -right-0.5 -top-0.5 flex min-w-[18px] items-center justify-center rounded-full bg-[var(--color-m-error)] px-1 text-xs font-bold text-white"
+                        className="absolute -right-0.5 -top-0.5 flex min-w-[18px] items-center justify-center rounded-full bg-[var(--color-m-error)] px-1 text-[9px] font-bold text-white"
                         aria-label={unreadBadgeAria(unreadTotal)}
                       >
                         {formatUnreadBadge(unreadTotal)}
@@ -247,8 +247,7 @@ export function RoleShell({
                   </span>
                   <span
                     className={cn(
-                      // Two short lines instead of "Dashboar…" / "My…" on 375 px phones
-                      'mt-1 line-clamp-2 max-w-full text-center text-xs leading-[1.15] tracking-tight [overflow-wrap:normal]',
+                      'mt-1 line-clamp-1 max-w-full px-0.5 text-center text-[10px] tracking-[0.3px]',
                       isActive
                         ? 'font-bold text-[var(--color-m-primary-light)]'
                         : 'font-medium text-[var(--color-m-text-muted)]'
