@@ -46,10 +46,7 @@ export default function MentorPublicProfilePage() {
     <PageContainer>
       <BackLink to={`${roleBase}/search`}>{tr.back}</BackLink>
 
-      <MentorProfileHeader
-        mentor={data.mentor}
-        isFavourited={data.mentor.is_favourited ?? false}
-      />
+      <MentorProfileHeader mentor={data.mentor} isFavourited={data.mentor.is_favourited ?? false} />
 
       <section className="mt-8">
         <h2 className="text-lg font-semibold text-[var(--color-m-text)]">{tr.aboutMentor}</h2>
@@ -92,7 +89,7 @@ export default function MentorPublicProfilePage() {
 
       {isStudent ? (
         <div className="mt-6 flex gap-3 rounded-xl border border-[var(--color-m-primary)]/30 bg-[var(--color-m-primary)]/10 p-4 text-sm text-[var(--color-m-text-secondary)]">
-          <Info className="size-5 shrink-0 text-[var(--color-m-primary)]" aria-hidden />
+          <Info className="size-5 shrink-0 text-[var(--color-m-primary-text)]" aria-hidden />
           <p>{data.viewer_permissions.reason ?? tr.studentBookingNote}</p>
         </div>
       ) : null}

@@ -66,7 +66,7 @@ export function MentorQuickActions({ roleBase }: Props) {
               className="flex flex-col items-center gap-2 rounded-[16px] border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4 text-center transition hover:border-[var(--color-brand-primary)]/40 hover:shadow-[var(--shadow-m-glow)]"
             >
               <span className="flex size-11 items-center justify-center rounded-xl bg-[var(--color-brand-primary)]/15">
-                <Icon className="size-5 text-[var(--color-brand-primary)]" aria-hidden />
+                <Icon className="size-5 text-[var(--color-m-primary-text)]" aria-hidden />
               </span>
               <span className="text-sm font-medium text-[var(--color-text-secondary)]">
                 {action.label}

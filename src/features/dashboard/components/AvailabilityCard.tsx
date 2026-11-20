@@ -19,10 +19,12 @@ export function AvailabilityCard({
 
   return (
     <DashboardPanelCard>
-      <p className="text-sm font-semibold text-[var(--color-m-text)]">{tr.availabilityStatus}</p>
+      <p className="text-base font-extrabold tracking-[-0.3px] text-[var(--color-m-text)]">
+        {tr.availabilityStatus}
+      </p>
       <div className="mt-4 flex flex-wrap gap-4">
         <div className="flex-1 text-center">
-          <div className="mx-auto mb-1 h-2 w-2 rounded-full bg-green-500" />
+          <div className="mx-auto mb-1 h-2 w-2 rounded-full bg-[var(--color-m-success)]" />
           <p className="text-2xl font-bold text-[var(--color-m-text)]">{openSlots}</p>
           <p className="text-xs text-[var(--color-text-muted)]">{tr.dashboardOpenSlots}</p>
         </div>
@@ -43,13 +45,13 @@ export function AvailabilityCard({
       </div>
       {total > 0 && (
         <div className="mt-4">
-          <div className="h-2 overflow-hidden rounded-full bg-[var(--color-m-card-border)]">
+          <div className="h-2.5 overflow-hidden rounded-full bg-[var(--color-m-primary-soft)]">
             <div
               className="h-full rounded-full bg-[var(--color-brand-primary)] transition-all"
               style={{ width: `${bookedPct}%` }}
             />
           </div>
-          <div className="mt-1 flex justify-between text-[10px] text-[var(--color-text-muted)]">
+          <div className="mt-1 flex justify-between text-xs font-semibold text-[var(--color-m-text-secondary)]">
             <span>{tr.dashboardAvailableShort}</span>
             <span>{tr.dashboardBookedPercent.replace('{{percent}}', String(bookedPct))}</span>
           </div>

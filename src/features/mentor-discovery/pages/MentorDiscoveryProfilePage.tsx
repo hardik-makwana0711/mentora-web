@@ -171,7 +171,7 @@ export default function MentorDiscoveryProfilePage() {
             title={tr.reportProfile}
             aria-label={tr.reportProfile}
             onClick={() => setReportOpen(true)}
-            className="rounded-lg p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-rose-400"
+            className="rounded-lg p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-error)]"
           >
             <Flag className="size-5" />
           </button>
@@ -187,7 +187,9 @@ export default function MentorDiscoveryProfilePage() {
           {(() => {
             const headline = buildMentorHeadline(displayProfile);
             return headline ? (
-              <p className="mt-1 text-sm font-medium text-[var(--color-m-primary)]">{headline}</p>
+              <p className="mt-1 text-sm font-medium text-[var(--color-m-primary-text)]">
+                {headline}
+              </p>
             ) : null;
           })()}
 
@@ -298,7 +300,7 @@ export default function MentorDiscoveryProfilePage() {
             type="button"
             disabled={contacting}
             onClick={handleContactMentor}
-            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-m-primary)] to-[var(--color-m-gradient-end)] px-5 py-3 text-sm font-semibold text-white shadow-[var(--shadow-m-glow)] disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(180deg,var(--color-m-primary-gradient-top),var(--color-m-primary))] px-5 py-3 text-sm font-semibold text-white shadow-[var(--shadow-m-glow)] disabled:opacity-60"
           >
             {tr.requestLesson}
           </button>

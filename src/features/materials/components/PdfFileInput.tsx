@@ -60,7 +60,9 @@ export function PdfFileInput({
         <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-4 py-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-[var(--color-m-text)]">{file.name}</p>
-            <p className="mt-0.5 text-xs text-[var(--color-m-text-muted)]">{formatFileSize(file.size)}</p>
+            <p className="mt-0.5 text-xs text-[var(--color-m-text-muted)]">
+              {formatFileSize(file.size)}
+            </p>
           </div>
           <Button type="button" size="sm" variant="secondary" onClick={() => applyFile(null)}>
             <X className="mr-1 size-4" />
@@ -95,7 +97,7 @@ export function PdfFileInput({
               : 'border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] hover:border-[var(--color-brand-primary)]/40'
           )}
         >
-          <FileUp className="size-8 text-[var(--color-brand-primary)]" aria-hidden />
+          <FileUp className="size-8 text-[var(--color-m-primary-text)]" aria-hidden />
           <p className="text-sm font-medium text-[var(--color-m-text)]">{tr.materialPdfDropHint}</p>
           <p className="text-xs text-[var(--color-m-text-muted)]">{tr.materialPdfConstraints}</p>
         </button>
@@ -109,7 +111,9 @@ export function PdfFileInput({
         onChange={(e) => applyFile(e.target.files?.[0] ?? null)}
       />
 
-      {displayError ? <p className="mt-2 text-sm text-[var(--color-m-error)]">{displayError}</p> : null}
+      {displayError ? (
+        <p className="mt-2 text-sm text-[var(--color-m-error)]">{displayError}</p>
+      ) : null}
     </div>
   );
 }

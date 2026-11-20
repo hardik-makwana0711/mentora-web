@@ -21,7 +21,9 @@ export function CheckoutSummaryCard({ booking, walletCredits }: Props) {
 
       {walletCredits != null ? (
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
-          {tr.walletBalance}: <span className="font-semibold text-[var(--color-m-text)]">{walletCredits}</span> {tr.creditsUnit}
+          {tr.walletBalance}:{' '}
+          <span className="font-semibold text-[var(--color-m-text)]">{walletCredits}</span>{' '}
+          {tr.creditsUnit}
         </p>
       ) : null}
 
@@ -34,7 +36,9 @@ export function CheckoutSummaryCard({ booking, walletCredits }: Props) {
           <>
             <div className="flex justify-between gap-4">
               <dt className="text-[var(--color-text-muted)]">{tr.checkoutPackage}</dt>
-              <dd className="font-medium text-[var(--color-m-success)]">+{booking.purchased_credits}</dd>
+              <dd className="font-medium text-[var(--color-m-success)]">
+                +{booking.purchased_credits}
+              </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-[var(--color-text-muted)]">{tr.checkoutConsume}</dt>
@@ -49,7 +53,9 @@ export function CheckoutSummaryCard({ booking, walletCredits }: Props) {
         )}
         <div className="flex justify-between gap-4 border-t border-[var(--color-m-card-border)] pt-3">
           <dt className="font-semibold text-[var(--color-m-text)]">{tr.checkoutFinalBalance}</dt>
-          <dd className="font-semibold text-[var(--color-m-primary)]">{booking.total_credits}</dd>
+          <dd className="font-semibold text-[var(--color-m-primary-text)]">
+            {booking.total_credits}
+          </dd>
         </div>
       </dl>
 

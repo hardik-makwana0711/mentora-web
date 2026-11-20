@@ -57,9 +57,9 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           </button>
         </div>
         {error ? (
-          <p className="mt-1 pl-1 text-[11px] text-[var(--color-m-error)]">{error}</p>
+          <p className="mt-1 pl-1 text-xs text-[var(--color-m-error)]">{error}</p>
         ) : hint ? (
-          <p className="mt-1 pl-1 text-[11px] text-[var(--color-m-text-muted)]">{hint}</p>
+          <p className="mt-1 pl-1 text-xs text-[var(--color-m-text-muted)]">{hint}</p>
         ) : null}
       </div>
     );

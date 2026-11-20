@@ -1,0 +1,8 @@
+node_modules/
+.auth/
+test-results/
+report/
+results/
+results-run.log
+playwright-report/
+results-rerun.log

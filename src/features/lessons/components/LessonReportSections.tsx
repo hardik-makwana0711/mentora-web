@@ -32,8 +32,9 @@ export function LessonReportSections({
   });
 
   const legacyAnsweredQuestions =
-    legacyQuizQ.data?.questions.filter((q) => q.selected_answer != null && q.selected_answer !== '') ??
-    [];
+    legacyQuizQ.data?.questions.filter(
+      (q) => q.selected_answer != null && q.selected_answer !== ''
+    ) ?? [];
 
   const resolvedAiQuizId = aiQuizIdOverride ?? detail.ai_quiz_id ?? null;
   const isMentor = role === 'mentor';
@@ -66,7 +67,9 @@ export function LessonReportSections({
 
       {primaryQuizId ? (
         <section className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
-          <h3 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">{tr.legacyQuizAnswers}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">
+            {tr.legacyQuizAnswers}
+          </h3>
           {legacyQuizQ.isPending ? (
             <div className="flex justify-center py-4">
               <Spinner className="size-6 border-[var(--color-brand-primary)]/30 border-t-[var(--color-brand-primary)]" />
@@ -83,9 +86,16 @@ export function LessonReportSections({
                   </p>
                   <p className="mt-1 text-sm text-[var(--color-m-text)]">{q.question_text}</p>
                   <p className="mt-2 text-sm text-[var(--color-m-text-secondary)]">
-                    {tr.answerLabel}: <span className="text-[var(--color-m-text)]">{q.selected_answer}</span>
+                    {tr.answerLabel}:{' '}
+                    <span className="text-[var(--color-m-text)]">{q.selected_answer}</span>
                     {q.is_correct != null ? (
-                      <span className={q.is_correct ? ' text-emerald-400' : ' text-red-400'}>
+                      <span
+                        className={
+                          q.is_correct
+                            ? ' text-[var(--color-m-success)]'
+                            : ' text-[var(--color-m-error)]'
+                        }
+                      >
                         {' '}
                         ({q.is_correct ? tr.correctLabel : tr.incorrectLabel})
                       </span>
@@ -95,16 +105,22 @@ export function LessonReportSections({
               ))}
             </ul>
           ) : legacyQuizQ.data && legacyQuizQ.data.questions.length > 0 ? (
-            <p className="text-sm italic text-[var(--color-m-text-muted)]">{tr.legacyQuizAnswersPending}</p>
+            <p className="text-sm italic text-[var(--color-m-text-muted)]">
+              {tr.legacyQuizAnswersPending}
+            </p>
           ) : (
-            <p className="text-sm italic text-[var(--color-m-text-muted)]">{tr.noLegacyQuizAnswers}</p>
+            <p className="text-sm italic text-[var(--color-m-text-muted)]">
+              {tr.noLegacyQuizAnswers}
+            </p>
           )}
         </section>
       ) : null}
 
       {detail.quizzes.length > 0 ? (
         <section className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
-          <h3 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">{tr.legacyQuizzes}</h3>
+          <h3 className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">
+            {tr.legacyQuizzes}
+          </h3>
           <ul className="space-y-2">
             {detail.quizzes.map((q) => (
               <li key={q.quiz_id} className="text-sm text-[var(--color-m-text-secondary)]">

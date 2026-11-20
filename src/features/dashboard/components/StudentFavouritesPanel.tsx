@@ -37,7 +37,7 @@ export function StudentFavouritesPanel({
     <Card className="p-4">
       <div className="flex items-center justify-between gap-2">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-[var(--color-m-text)]">
-          <Heart className="size-4 text-[#FF6B8A]" aria-hidden />
+          <Heart className="size-4 text-[var(--color-m-error)]" aria-hidden />
           {title}
         </h3>
         <TextLink to={`${roleBase}/favourites`}>{tr.navFavorites}</TextLink>
@@ -66,7 +66,9 @@ export function StudentFavouritesPanel({
                   className="size-9 shrink-0"
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium text-[var(--color-m-text)]">{item.mentor_name}</span>
+                  <span className="block truncate text-sm font-medium text-[var(--color-m-text)]">
+                    {item.mentor_name}
+                  </span>
                   <span className="block truncate text-xs text-[var(--color-m-text-muted)]">
                     {formatSubjects(item.subjects)}
                   </span>

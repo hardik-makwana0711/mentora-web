@@ -9,7 +9,13 @@ import { PresignedAvatar } from '@/features/profile/components/PresignedAvatar';
 import { useStrings } from '@/constants/strings';
 import type { ProfileResponse } from '@/types/profile';
 
-export function ProfilePhotoPicker({ photoUrl, displayName }: { photoUrl: string | null; displayName: string }) {
+export function ProfilePhotoPicker({
+  photoUrl,
+  displayName,
+}: {
+  photoUrl: string | null;
+  displayName: string;
+}) {
   const tr = useStrings();
   const inputRef = useRef<HTMLInputElement>(null);
   const qc = useQueryClient();
@@ -60,15 +66,28 @@ export function ProfilePhotoPicker({ photoUrl, displayName }: { photoUrl: string
 
   return (
     <div className="mb-6 flex flex-col items-center gap-3 border-b border-[var(--color-m-card-border)] pb-6">
-      <PresignedAvatar key={photoUrl ?? 'none'} storedUrl={photoUrl} name={displayName} className="size-24 text-2xl" />
+      <PresignedAvatar
+        key={photoUrl ?? 'none'}
+        storedUrl={photoUrl}
+        name={displayName}
+        className="size-24 text-2xl"
+      />
       <input
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp,image/gif"
         className="sr-only"
+        aria-label={tr.changePhoto}
+        tabIndex={-1}
         onChange={onPick}
       />
-      <Button type="button" variant="secondary" size="sm" isLoading={mutation.isPending} onClick={() => inputRef.current?.click()}>
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        isLoading={mutation.isPending}
+        onClick={() => inputRef.current?.click()}
+      >
         {tr.changePhoto}
       </Button>
       <p className="text-center text-xs text-[var(--color-m-text-muted)]">{tr.profilePhotoHint}</p>

@@ -28,24 +28,24 @@ export function DashboardEmptyState({
   return (
     <DashboardPanelCard
       className={cn(
-        'flex flex-col items-center text-center',
+        'flex flex-col items-center border-dashed text-center',
         compact ? 'py-5' : 'py-8'
       )}
     >
       <div
         className={cn(
-          'mb-3 flex items-center justify-center rounded-2xl bg-[var(--color-brand-primary)]/15',
+          'mb-3 flex items-center justify-center rounded-[20px] bg-[var(--color-m-primary-soft)]',
           compact ? 'size-12' : 'mb-4 size-16'
         )}
       >
         <Icon
-          className={cn(compact ? 'size-6' : 'size-8', 'text-[var(--color-brand-primary)]')}
+          className={cn(compact ? 'size-6' : 'size-8', 'text-[var(--color-m-primary-text)]')}
           aria-hidden
         />
       </div>
       <h3
         className={cn(
-          'font-semibold text-[var(--color-m-text)]',
+          'font-extrabold tracking-[-0.3px] text-[var(--color-m-text)]',
           compact ? 'text-base' : 'text-lg'
         )}
       >
@@ -54,7 +54,7 @@ export function DashboardEmptyState({
       {description ? (
         <p
           className={cn(
-            'max-w-sm text-sm text-[var(--color-text-muted)]',
+            'max-w-sm text-sm text-[var(--color-m-text-secondary)]',
             compact ? 'mt-1' : 'mt-2'
           )}
         >
@@ -62,7 +62,12 @@ export function DashboardEmptyState({
         </p>
       ) : null}
       {(buttonText && onPress) || (secondaryButtonText && onSecondaryPress) ? (
-        <div className={cn('flex flex-wrap items-center justify-center gap-2', compact ? 'mt-3' : 'mt-5')}>
+        <div
+          className={cn(
+            'flex flex-wrap items-center justify-center gap-2',
+            compact ? 'mt-3' : 'mt-5'
+          )}
+        >
           {buttonText && onPress ? (
             <Button type="button" size="sm" onClick={onPress}>
               {buttonText}

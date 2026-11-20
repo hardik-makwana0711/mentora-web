@@ -187,7 +187,7 @@ export function SubmitReferenceModal({
                     <Star
                       className={
                         value <= rating
-                          ? 'size-6 fill-yellow-400 text-yellow-400'
+                          ? 'size-6 fill-[var(--color-m-accent)] text-[var(--color-m-accent-text)]'
                           : 'size-6 text-[var(--color-m-card-border)]'
                       }
                       aria-hidden

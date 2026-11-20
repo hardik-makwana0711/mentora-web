@@ -305,7 +305,10 @@ export default function ProfilePage() {
                     className="flex items-center gap-2 text-sm text-[var(--color-m-text-secondary)]"
                   >
                     {item.done ? (
-                      <CheckCircle2 className="size-4 shrink-0 text-emerald-500" aria-hidden />
+                      <CheckCircle2
+                        className="size-4 shrink-0 text-[var(--color-m-success)]"
+                        aria-hidden
+                      />
                     ) : (
                       <Circle
                         className="size-4 shrink-0 text-[var(--color-m-text-muted)]"

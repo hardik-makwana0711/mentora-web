@@ -68,12 +68,10 @@ export function LessonCard({
     ? studentName
     : isParent && studentName && mentorName
       ? `${studentName} · ${mentorName}`
-      : mentorName ?? studentName;
+      : (mentorName ?? studentName);
 
   const joinSession: JoinableSession | null =
-    variant === 'upcoming' &&
-    isActiveSessionForMeet(status) &&
-    'session_id' in session
+    variant === 'upcoming' && isActiveSessionForMeet(status) && 'session_id' in session
       ? {
           session_id: session.session_id,
           meeting_status: 'meeting_status' in session ? session.meeting_status : undefined,
@@ -102,7 +100,7 @@ export function LessonCard({
       <div
         className={cn(
           'w-1 shrink-0 rounded-full',
-          status === 'cancelled' ? 'bg-red-500' : 'bg-[var(--color-brand-primary)]'
+          status === 'cancelled' ? 'bg-[var(--color-m-error)]' : 'bg-[var(--color-brand-primary)]'
         )}
       />
       <div className="min-w-0 flex-1">
@@ -112,7 +110,9 @@ export function LessonCard({
             {peopleLine ? (
               <p className="mt-0.5 text-sm text-[var(--color-m-text-secondary)]">{peopleLine}</p>
             ) : null}
-            {topic ? <p className="mt-1 text-xs text-[var(--color-m-text-muted)]">{topic}</p> : null}
+            {topic ? (
+              <p className="mt-1 text-xs text-[var(--color-m-text-muted)]">{topic}</p>
+            ) : null}
           </div>
           {status ? (
             <Badge variant={badgeVariant(status)}>{sessionStatusLabel(status)}</Badge>
@@ -225,7 +225,11 @@ export function LessonCard({
 
   if (cardClickHandler && !hasNestedActions) {
     return (
-      <button type="button" onClick={cardClickHandler} className={cn(shellClass, 'w-full text-left')}>
+      <button
+        type="button"
+        onClick={cardClickHandler}
+        className={cn(shellClass, 'w-full text-left')}
+      >
         {body}
       </button>
     );

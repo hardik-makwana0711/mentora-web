@@ -13,11 +13,7 @@ import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 
 function resolveSubmissionStatus(material: TeacherMaterial): SubmissionStatus | null {
   if (material.type !== 'assignment') return null;
-  return (
-    material.submissionStatus ??
-    material.submission?.status ??
-    'not_submitted'
-  );
+  return material.submissionStatus ?? material.submission?.status ?? 'not_submitted';
 }
 
 export function MaterialCard({
@@ -60,13 +56,13 @@ export function MaterialCard({
         <div
           className={cn(
             'flex size-10 shrink-0 items-center justify-center rounded-xl',
-            isAssignment ? 'bg-orange-500/15' : 'bg-[var(--color-brand-primary)]/15'
+            isAssignment ? 'bg-[var(--color-m-warning)]/15' : 'bg-[var(--color-brand-primary)]/15'
           )}
         >
           {isAssignment ? (
-            <FileText className="size-5 text-orange-400" />
+            <FileText className="size-5 text-[var(--color-m-warning)]" />
           ) : (
-            <BookOpen className="size-5 text-[var(--color-brand-primary)]" />
+            <BookOpen className="size-5 text-[var(--color-m-primary-text)]" />
           )}
         </div>
         <div className="min-w-0 flex-1">
@@ -74,7 +70,7 @@ export function MaterialCard({
             <button
               type="button"
               onClick={() => navigate(detailPath)}
-              className="text-left font-semibold text-[var(--color-m-text)] hover:text-[var(--color-brand-primary)]"
+              className="text-left font-semibold text-[var(--color-m-text)] hover:text-[var(--color-m-primary-text)]"
             >
               {material.title}
             </button>
@@ -82,7 +78,9 @@ export function MaterialCard({
           </div>
 
           {role === 'parent' && material.childName ? (
-            <p className="mt-1 text-sm text-[var(--color-m-text-secondary)]">{material.childName}</p>
+            <p className="mt-1 text-sm text-[var(--color-m-text-secondary)]">
+              {material.childName}
+            </p>
           ) : null}
           {material.teacherName ? (
             <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">{material.teacherName}</p>
@@ -113,13 +111,15 @@ export function MaterialCard({
               </span>
             ) : null}
             {role === 'mentor' && isAssignment ? (
-              <span className="flex items-center gap-1 text-green-400">
+              <span className="flex items-center gap-1 text-[var(--color-m-success)]">
                 <CheckCircle2 className="size-3.5" />
-                {tr.materialSubmittedCount.replace('{{submitted}}', String(submittedCount)).replace('{{total}}', String(assignedCount))}
+                {tr.materialSubmittedCount
+                  .replace('{{submitted}}', String(submittedCount))
+                  .replace('{{total}}', String(assignedCount))}
               </span>
             ) : null}
             {role === 'mentor' && isAssignment && missingCount > 0 ? (
-              <span className="flex items-center gap-1 text-orange-400">
+              <span className="flex items-center gap-1 text-[var(--color-m-warning)]">
                 <AlertCircle className="size-3.5" />
                 {tr.materialMissingCount.replace('{{count}}', String(missingCount))}
               </span>
@@ -152,7 +152,12 @@ export function MaterialCard({
             ) : null}
             {role === 'mentor' ? (
               <>
-                <Button type="button" size="sm" variant="secondary" onClick={() => navigate(detailPath)}>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => navigate(detailPath)}
+                >
                   {tr.materialViewDetails}
                 </Button>
                 <Button
@@ -166,7 +171,12 @@ export function MaterialCard({
               </>
             ) : null}
             {role === 'parent' ? (
-              <Button type="button" size="sm" variant="secondary" onClick={() => navigate(detailPath)}>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={() => navigate(detailPath)}
+              >
                 {tr.materialViewDetails}
               </Button>
             ) : null}

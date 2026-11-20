@@ -39,7 +39,7 @@ export function AttendanceStatusSelector({
           </button>
         ))}
       </div>
-      {error ? <p className="mt-1 pl-1 text-[11px] text-[var(--color-m-error)]">{error}</p> : null}
+      {error ? <p className="mt-1 pl-1 text-xs text-[var(--color-m-error)]">{error}</p> : null}
     </div>
   );
 }

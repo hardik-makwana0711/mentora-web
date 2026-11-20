@@ -20,7 +20,7 @@ export function ProfileAboutSection({
       sectionRef={sectionRef}
     >
       {profile.profile_slogan ? (
-        <p className="mb-3 text-base font-medium italic text-[var(--color-m-primary)]">
+        <p className="mb-3 text-base font-medium italic text-[var(--color-m-primary-text)]">
           “{profile.profile_slogan}”
         </p>
       ) : null}

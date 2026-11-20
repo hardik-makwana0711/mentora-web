@@ -95,7 +95,7 @@ export default function ForgotPasswordCheckDeliveryPage() {
                 type="button"
                 disabled={timeLeft > 0 || isResending}
                 onClick={() => void handleResend()}
-                className="font-bold text-[var(--color-m-primary)] disabled:text-[var(--color-m-text-muted)]"
+                className="font-bold text-[var(--color-m-primary-text)] disabled:text-[var(--color-m-text-muted)]"
               >
                 {timeLeft > 0
                   ? i18n.t('verifyResendIn', { seconds: timeLeft })
@@ -106,7 +106,7 @@ export default function ForgotPasswordCheckDeliveryPage() {
 
           <p className="mt-6 text-center text-[15px]">
             <Link
-              className="font-semibold text-[var(--color-m-primary)] hover:underline"
+              className="font-semibold text-[var(--color-m-primary-text)] hover:underline"
               to="/login"
             >
               {tr.backToLogin}

@@ -125,8 +125,14 @@ function TimeModal({
       <div className="absolute inset-0 bg-black/60" onClick={onCancel} />
       <div className="relative z-10 w-full max-w-sm rounded-t-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-6 shadow-xl sm:rounded-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-base font-semibold text-[var(--color-m-text)]">{tr.availabilitySelectTime}</h3>
-          <button type="button" onClick={onCancel} className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)]">
+          <h3 className="text-base font-semibold text-[var(--color-m-text)]">
+            {tr.availabilitySelectTime}
+          </h3>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)]"
+          >
             <X className="size-5" />
           </button>
         </div>
@@ -147,14 +153,18 @@ function TimeModal({
                 )}
               />
             </div>
-            <span className="text-sm text-[var(--color-m-text-secondary)]">{tr.availabilityDayUnavailable}</span>
+            <span className="text-sm text-[var(--color-m-text-secondary)]">
+              {tr.availabilityDayUnavailable}
+            </span>
           </label>
         )}
 
         {!isUnavailable && (
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--color-m-text-muted)]">{tr.availabilityStartTime}</label>
+              <label className="mb-1 block text-xs font-medium text-[var(--color-m-text-muted)]">
+                {tr.availabilityStartTime}
+              </label>
               <input
                 type="time"
                 value={startTime}
@@ -163,7 +173,9 @@ function TimeModal({
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--color-m-text-muted)]">{tr.availabilityEndTime}</label>
+              <label className="mb-1 block text-xs font-medium text-[var(--color-m-text-muted)]">
+                {tr.availabilityEndTime}
+              </label>
               <input
                 type="time"
                 value={endTime}
@@ -296,9 +308,13 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
   function toggleSameHours(val: boolean) {
     setUseSameHours(val);
     if (val) {
-      const base = weeklyRules[1]?.length ? weeklyRules[1] : [{ startTime: '09:00', endTime: '17:00' }];
+      const base = weeklyRules[1]?.length
+        ? weeklyRules[1]
+        : [{ startTime: '09:00', endTime: '17:00' }];
       const newRules: WeeklyRules = {};
-      DAYS.forEach((d) => { newRules[d.val] = [...base]; });
+      DAYS.forEach((d) => {
+        newRules[d.val] = [...base];
+      });
       onRulesChange(newRules);
     }
   }
@@ -319,7 +335,7 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
               className={cn(
                 'flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-colors',
                 active
-                  ? 'bg-[var(--color-brand-primary)] text-[var(--color-m-text)]'
+                  ? 'bg-[var(--color-brand-primary)] text-white'
                   : 'border border-[var(--color-m-card-border)] text-[var(--color-m-text-muted)] hover:border-[var(--color-brand-primary)] hover:text-[var(--color-m-text)]'
               )}
             >
@@ -345,14 +361,18 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
             )}
           />
         </div>
-        <span className="text-sm text-[var(--color-m-text-secondary)]">{tr.availabilitySameHoursAllDays}</span>
+        <span className="text-sm text-[var(--color-m-text-secondary)]">
+          {tr.availabilitySameHoursAllDays}
+        </span>
       </label>
 
       {/* Per-day or unified rows */}
       <div className="mt-6 space-y-4">
         {useSameHours ? (
           <div className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
-            <p className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">{tr.availabilityAllDays}</p>
+            <p className="mb-3 text-sm font-semibold text-[var(--color-m-text)]">
+              {tr.availabilityAllDays}
+            </p>
             {sampleRanges.map((range, idx) => (
               <div key={idx} className="mb-2 flex items-center gap-2">
                 <button
@@ -365,6 +385,7 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
                 <button
                   type="button"
                   onClick={() => deleteRange(1, idx)}
+                  aria-label={tr.delete}
                   className="rounded-lg p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-error)]"
                 >
                   <Trash2 className="size-4" />
@@ -374,7 +395,7 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
             <button
               type="button"
               onClick={() => openAddRange(1)}
-              className="mt-1 flex items-center gap-1 text-sm text-[var(--color-brand-primary)] hover:underline"
+              className="mt-1 flex items-center gap-1 text-sm text-[var(--color-m-primary-text)] hover:underline"
             >
               <Plus className="size-4" /> {tr.availabilityAddRange}
             </button>
@@ -402,6 +423,7 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
                     <button
                       type="button"
                       onClick={() => deleteRange(day.val, idx)}
+                      aria-label={tr.delete}
                       className="rounded-lg p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-error)]"
                     >
                       <Trash2 className="size-4" />
@@ -411,7 +433,7 @@ function WeeklyHoursTab({ weeklyRules, onRulesChange }: WeeklyHoursProps) {
                 <button
                   type="button"
                   onClick={() => openAddRange(day.val)}
-                  className="mt-1 flex items-center gap-1 text-sm text-[var(--color-brand-primary)] hover:underline"
+                  className="mt-1 flex items-center gap-1 text-sm text-[var(--color-m-primary-text)] hover:underline"
                 >
                   <Plus className="size-4" /> {tr.availabilityAddRange}
                 </button>
@@ -469,12 +491,16 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
   const monthLabel = format(new Date(calYear, calMonth, 1), 'MMMM yyyy', { locale: dateLocale });
 
   function prevMonth() {
-    if (calMonth === 0) { setCalYear(y => y - 1); setCalMonth(11); }
-    else setCalMonth(m => m - 1);
+    if (calMonth === 0) {
+      setCalYear((y) => y - 1);
+      setCalMonth(11);
+    } else setCalMonth((m) => m - 1);
   }
   function nextMonth() {
-    if (calMonth === 11) { setCalYear(y => y + 1); setCalMonth(0); }
-    else setCalMonth(m => m + 1);
+    if (calMonth === 11) {
+      setCalYear((y) => y + 1);
+      setCalMonth(0);
+    } else setCalMonth((m) => m + 1);
   }
 
   function dateString(day: number) {
@@ -503,7 +529,11 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
     if (lastRange) {
       setStartTime(lastRange.end_time);
       const [h] = lastRange.end_time.split(':').map(Number);
-      setEndTime(`${Math.min(h! + 1, 23).toString().padStart(2, '0')}:00`);
+      setEndTime(
+        `${Math.min(h! + 1, 23)
+          .toString()
+          .padStart(2, '0')}:00`
+      );
     } else {
       setStartTime('09:00');
       setEndTime('17:00');
@@ -512,7 +542,11 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
     setModalOpen(true);
   }
 
-  function openEditOverrideRange(date: string, idx: number, range: { start_time: string; end_time: string }) {
+  function openEditOverrideRange(
+    date: string,
+    idx: number,
+    range: { start_time: string; end_time: string }
+  ) {
     setSelectedDate(date);
     setStartTime(range.start_time);
     setEndTime(range.end_time);
@@ -531,7 +565,10 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
     const existingRanges = existing?.custom_ranges ?? [];
 
     if (!isUnavailable) {
-      const asTimeRange: TimeRange[] = existingRanges.map(r => ({ startTime: r.start_time, endTime: r.end_time }));
+      const asTimeRange: TimeRange[] = existingRanges.map((r) => ({
+        startTime: r.start_time,
+        endTime: r.end_time,
+      }));
       if (hasTimeOverlap(asTimeRange, startTime, endTime, editRangeIdx)) {
         toast.error(tr.availabilityTimeOverlap);
         return;
@@ -561,11 +598,13 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
   }
 
   function deleteOverrideRange(date: string, idx: number) {
-    const newOverrides = overrides.map((o) => {
-      if (o.date !== date) return o;
-      const ranges = o.custom_ranges.filter((_, i) => i !== idx);
-      return { ...o, custom_ranges: ranges, unavailable: ranges.length === 0 };
-    }).filter((o) => o.custom_ranges.length > 0 || o.unavailable);
+    const newOverrides = overrides
+      .map((o) => {
+        if (o.date !== date) return o;
+        const ranges = o.custom_ranges.filter((_, i) => i !== idx);
+        return { ...o, custom_ranges: ranges, unavailable: ranges.length === 0 };
+      })
+      .filter((o) => o.custom_ranges.length > 0 || o.unavailable);
     onOverridesChange(newOverrides);
   }
 
@@ -576,11 +615,21 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
       {/* Calendar */}
       <div className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
         <div className="mb-4 flex items-center justify-between">
-          <button type="button" onClick={prevMonth} className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]">
+          <button
+            type="button"
+            onClick={prevMonth}
+            className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]"
+          >
             <ChevronLeft className="size-5" />
           </button>
-          <p className="text-sm font-semibold capitalize text-[var(--color-m-text)]">{monthLabel}</p>
-          <button type="button" onClick={nextMonth} className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]">
+          <p className="text-sm font-semibold capitalize text-[var(--color-m-text)]">
+            {monthLabel}
+          </p>
+          <button
+            type="button"
+            onClick={nextMonth}
+            className="rounded-lg p-1 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]"
+          >
             <ChevronRight className="size-5" />
           </button>
         </div>
@@ -606,10 +655,15 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
                 className={cn(
                   'relative flex h-9 w-full items-center justify-center rounded-lg text-sm transition-colors',
                   past && 'cursor-not-allowed text-[var(--color-m-text-muted)] opacity-40',
-                  !past && !override && 'text-[var(--color-m-text)] hover:bg-[var(--color-m-hover-overlay)]',
-                  isToday(day) && !override && 'font-bold text-[var(--color-brand-primary)]',
-                  override?.unavailable && 'bg-[var(--color-m-error)]/20 font-semibold text-[var(--color-m-error)]',
-                  override && !override.unavailable && 'bg-[var(--color-brand-primary)]/20 font-semibold text-[var(--color-brand-primary)]'
+                  !past &&
+                    !override &&
+                    'text-[var(--color-m-text)] hover:bg-[var(--color-m-hover-overlay)]',
+                  isToday(day) && !override && 'font-bold text-[var(--color-m-primary-text)]',
+                  override?.unavailable &&
+                    'bg-[var(--color-m-error)]/20 font-semibold text-[var(--color-m-error)]',
+                  override &&
+                    !override.unavailable &&
+                    'bg-[var(--color-brand-primary)]/20 font-semibold text-[var(--color-m-primary-text)]'
                 )}
               >
                 {day}
@@ -643,9 +697,14 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
             const dateObj = parseISO(ov.date + 'T12:00:00');
             const label = format(dateObj, 'd MMMM yyyy, EEEE', { locale: dateLocale });
             return (
-              <div key={ov.date} className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
+              <div
+                key={ov.date}
+                className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4"
+              >
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm font-semibold capitalize text-[var(--color-m-text)]">{label}</p>
+                  <p className="text-sm font-semibold capitalize text-[var(--color-m-text)]">
+                    {label}
+                  </p>
                   <button
                     type="button"
                     onClick={() => deleteOverride(ov.date)}
@@ -656,7 +715,9 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
                 </div>
 
                 {ov.unavailable ? (
-                  <p className="text-sm text-[var(--color-m-error)]">{tr.availabilityUnavailable}</p>
+                  <p className="text-sm text-[var(--color-m-error)]">
+                    {tr.availabilityUnavailable}
+                  </p>
                 ) : (
                   <>
                     {ov.custom_ranges.map((r, idx) => (
@@ -671,6 +732,7 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
                         <button
                           type="button"
                           onClick={() => deleteOverrideRange(ov.date, idx)}
+                          aria-label={tr.delete}
                           className="rounded-lg p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-error)]"
                         >
                           <Trash2 className="size-4" />
@@ -684,12 +746,16 @@ function OverridesTab({ overrides, onOverridesChange }: OverridesTabProps) {
                         const [h] = (last?.end_time ?? '09:00').split(':').map(Number);
                         setSelectedDate(ov.date);
                         setStartTime(last?.end_time ?? '09:00');
-                        setEndTime(`${Math.min(h! + 1, 23).toString().padStart(2, '0')}:00`);
+                        setEndTime(
+                          `${Math.min(h! + 1, 23)
+                            .toString()
+                            .padStart(2, '0')}:00`
+                        );
                         setEditRangeIdx(ov.custom_ranges.length);
                         setIsUnavailable(false);
                         setModalOpen(true);
                       }}
-                      className="mt-1 flex items-center gap-1 text-sm text-[var(--color-brand-primary)] hover:underline"
+                      className="mt-1 flex items-center gap-1 text-sm text-[var(--color-m-primary-text)] hover:underline"
                     >
                       <Plus className="size-4" /> {tr.availabilityAddRange}
                     </button>
@@ -730,7 +796,13 @@ export default function MentorAvailabilityPlaceholderPage() {
 
   const [activeTab, setActiveTab] = useState<'hours' | 'overrides'>('hours');
   const [weeklyRules, setWeeklyRules] = useState<WeeklyRules>({
-    1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
   });
   const [overrides, setOverrides] = useState<DateOverride[]>([]);
   const [initialized, setInitialized] = useState(false);
@@ -777,10 +849,7 @@ export default function MentorAvailabilityPlaceholderPage() {
 
   return (
     <div>
-      <PageHeader
-        title={tr.navAvailability}
-        description={tr.availabilityPageDescription}
-      />
+      <PageHeader title={tr.navAvailability} description={tr.availabilityPageDescription} />
 
       {/* Tab selector */}
       <div className="mb-6 flex rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-1">
@@ -825,11 +894,7 @@ export default function MentorAvailabilityPlaceholderPage() {
         >
           {tr.cancel}
         </Button>
-        <Button
-          type="button"
-          onClick={handleSave}
-          isLoading={saveMutation.isPending}
-        >
+        <Button type="button" onClick={handleSave} isLoading={saveMutation.isPending}>
           {tr.save}
         </Button>
       </div>

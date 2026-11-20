@@ -41,7 +41,7 @@ export function ExpandableText({
           type="button"
           aria-expanded={expanded}
           onClick={() => setExpanded((v) => !v)}
-          className="mt-2 text-sm font-semibold text-[#6C63FF] hover:underline"
+          className="mt-2 text-sm font-semibold text-[var(--color-m-primary-text)] hover:underline"
         >
           {expanded ? tr.showLess : tr.readMore}
         </button>

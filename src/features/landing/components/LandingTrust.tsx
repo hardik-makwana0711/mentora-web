@@ -17,12 +17,7 @@ function TrustSecurityVisual() {
   const { t } = useLandingLanguage();
 
   return (
-    <div
-      className={cn(
-        landing.card,
-        'relative overflow-hidden p-6 sm:p-8 lg:p-10'
-      )}
-    >
+    <div className={cn(landing.card, 'relative overflow-hidden p-6 sm:p-8 lg:p-10')}>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--color-m-primary)] via-[var(--color-m-secondary)] to-[var(--color-m-accent)]" />
       <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[var(--color-m-primary)]/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -left-16 size-56 rounded-full bg-[var(--color-m-secondary)]/10 blur-3xl" />
@@ -76,7 +71,13 @@ function TrustSecurityVisual() {
           className="relative z-10"
         >
           <motion.div
-            animate={{ boxShadow: ['0 0 0 0 rgba(108,92,231,0.35)', '0 0 0 18px rgba(108,92,231,0)', '0 0 0 0 rgba(108,92,231,0)'] }}
+            animate={{
+              boxShadow: [
+                '0 0 0 0 rgba(31,63,191,0.35)',
+                '0 0 0 18px rgba(31,63,191,0)',
+                '0 0 0 0 rgba(31,63,191,0)',
+              ],
+            }}
             transition={{ duration: 2.8, repeat: Infinity, ease: 'easeOut' }}
             className="flex size-28 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-m-primary)] via-[var(--color-m-secondary)] to-[var(--color-m-accent)] shadow-[var(--shadow-m-glow)] sm:size-32"
           >
@@ -102,9 +103,12 @@ function TrustSecurityVisual() {
             >
               <div className="group flex w-[5.5rem] flex-col items-center gap-2 sm:w-24">
                 <div className="flex size-12 items-center justify-center rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-elevated)] shadow-[var(--shadow-m-card)] transition group-hover:border-[var(--color-m-primary)]/40 group-hover:shadow-[var(--shadow-m-glow)] sm:size-14">
-                  <item.icon className="size-5 text-[var(--color-m-primary-light)] sm:size-6" strokeWidth={1.75} />
+                  <item.icon
+                    className="size-5 text-[var(--color-m-primary-light)] sm:size-6"
+                    strokeWidth={1.75}
+                  />
                 </div>
-                <span className="line-clamp-2 text-center text-[10px] font-medium leading-tight text-[var(--color-m-text-secondary)] sm:text-[11px]">
+                <span className="line-clamp-2 text-center text-xs font-medium leading-tight text-[var(--color-m-text-secondary)] sm:text-xs">
                   {t(item.labelKey)}
                 </span>
               </div>
@@ -135,7 +139,7 @@ function TrustSecurityVisual() {
           {(['trust.badgeSsl', 'trust.badgeKvkk', 'trust.badgeVerified'] as const).map((key) => (
             <span
               key={key}
-              className="rounded-full border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-3 py-1 text-[11px] font-semibold tracking-wide text-[var(--color-m-text-secondary)]"
+              className="rounded-full border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-3 py-1 text-xs font-semibold tracking-wide text-[var(--color-m-text-secondary)]"
             >
               {t(key)}
             </span>
@@ -187,16 +191,17 @@ export function LandingTrust() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08 }}
-                  className={cn(
-                    landing.card,
-                    landing.cardHover,
-                    'flex items-center gap-3 p-4'
-                  )}
+                  className={cn(landing.card, landing.cardHover, 'flex items-center gap-3 p-4')}
                 >
                   <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-m-primary)]/20 to-[var(--color-m-secondary)]/15">
-                    <item.icon className="size-5 text-[var(--color-m-primary-light)]" strokeWidth={1.75} />
+                    <item.icon
+                      className="size-5 text-[var(--color-m-primary-light)]"
+                      strokeWidth={1.75}
+                    />
                   </div>
-                  <span className="text-sm font-medium leading-snug text-[var(--color-m-text)]">{item.label}</span>
+                  <span className="text-sm font-medium leading-snug text-[var(--color-m-text)]">
+                    {item.label}
+                  </span>
                 </motion.div>
               ))}
             </div>

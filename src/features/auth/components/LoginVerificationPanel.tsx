@@ -93,7 +93,7 @@ export function LoginVerificationPanel({ channel, payload, onVerified, onBack, b
       <button
         type="button"
         onClick={onBack}
-        className="mb-4 text-[15px] font-semibold text-[var(--color-m-primary)] hover:text-[var(--color-m-primary-light)]"
+        className="mb-4 text-[15px] font-semibold text-[var(--color-m-primary-text)] hover:text-[var(--color-m-primary-light)]"
       >
         ← {backLabel ?? tr.backToLogin}
       </button>
@@ -127,7 +127,7 @@ export function LoginVerificationPanel({ channel, payload, onVerified, onBack, b
           type="button"
           disabled={timeLeft > 0 || isResending}
           onClick={handleResend}
-          className="font-bold text-[var(--color-m-primary)] disabled:text-[var(--color-m-text-muted)]"
+          className="font-bold text-[var(--color-m-primary-text)] disabled:text-[var(--color-m-text-muted)]"
         >
           {timeLeft > 0 ? i18n.t('verifyResendIn', { seconds: timeLeft }) : tr.verifyResendNow}
         </button>

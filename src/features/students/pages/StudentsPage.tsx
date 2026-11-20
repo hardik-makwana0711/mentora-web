@@ -231,7 +231,7 @@ export default function StudentsPage() {
                       className="size-14 shrink-0 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-primary)]/20 text-lg font-bold text-[var(--color-brand-primary)]">
+                    <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-primary)]/20 text-lg font-bold text-[var(--color-m-primary-text)]">
                       {initials(student.name)}
                     </div>
                   )}

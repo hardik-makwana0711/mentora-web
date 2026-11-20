@@ -73,12 +73,14 @@ export function LessonJoinButton({
       <Button
         type="button"
         size={size}
+        variant={disabled ? 'secondary' : 'accent'}
         disabled={disabled || checkingConsent}
         isLoading={checkingConsent && !consentOpen}
         onClick={() => void handleClick()}
         className={cn(
-          variant === 'primary' && !disabled && 'bg-[var(--color-m-surface-elevated)] text-[var(--color-m-primary)] hover:bg-[var(--color-m-hover-overlay)]',
-          className,
+          // On the navy hero card a closed join window reads as a quiet glass chip
+          variant === 'primary' && disabled && 'border-transparent bg-white/15 text-white',
+          className
         )}
       >
         <Play className="size-4" aria-hidden />

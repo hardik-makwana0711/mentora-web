@@ -1,11 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  CalendarDays,
-  MessageSquare,
-  Users,
-  Wallet,
-  type LucideIcon,
-} from 'lucide-react';
+import { CalendarDays, MessageSquare, Users, Wallet, type LucideIcon } from 'lucide-react';
 import { useStrings } from '@/constants/strings';
 import { cn } from '@/lib/utils';
 
@@ -92,7 +86,7 @@ export function ParentOverviewStats({
               <Icon className="size-5" aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-[var(--color-m-text-muted)]">
+              <p className="line-clamp-2 text-xs font-medium text-[var(--color-m-text-muted)]">
                 {card.label}
               </p>
               <p className="mt-0.5 truncate text-xl font-semibold tabular-nums text-[var(--color-m-text)]">

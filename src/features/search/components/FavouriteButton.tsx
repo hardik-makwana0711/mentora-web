@@ -30,20 +30,19 @@ export function FavouriteButton({
           e.stopPropagation();
           void toggleFavourite().catch(() => undefined);
         }}
-        className="rounded-full p-2 text-[var(--color-m-text-muted)] transition hover:bg-[var(--color-m-hover-overlay)] hover:text-[#FF6B8A] disabled:opacity-50"
+        className="rounded-full p-2 text-[var(--color-m-text-muted)] transition hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-error)] disabled:opacity-50"
       >
         <Heart
           style={{ width: size, height: size }}
-          className={cn(isFavourited && 'fill-[#FF6B8A] text-[#FF6B8A]')}
+          className={cn(isFavourited && 'fill-[var(--color-m-error)] text-[var(--color-m-error)]')}
           aria-hidden
         />
       </button>
       {error ? (
-        <span className="mt-1 max-w-[120px] text-center text-[10px] text-[var(--color-m-error)]">
+        <span className="mt-1 max-w-[120px] text-center text-xs text-[var(--color-m-error)]">
           {tr.favouriteUpdateError}
         </span>
       ) : null}
     </div>
   );
 }
-

@@ -41,7 +41,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           {children}
         </select>
       </div>
-      {error ? <p className="mt-1 pl-1 text-[11px] text-[var(--color-m-error)]">{error}</p> : null}
+      {error ? <p className="mt-1 pl-1 text-xs text-[var(--color-m-error)]">{error}</p> : null}
     </div>
   );
 });

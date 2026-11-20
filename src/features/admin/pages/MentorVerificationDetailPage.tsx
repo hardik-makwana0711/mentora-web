@@ -67,7 +67,9 @@ export default function MentorVerificationDetailPage() {
   }
 
   if (query.isError || !query.data) {
-    return <ErrorState title={tr.adminVerificationLoadError} onRetry={() => void query.refetch()} />;
+    return (
+      <ErrorState title={tr.adminVerificationLoadError} onRetry={() => void query.refetch()} />
+    );
   }
 
   const { mentor, verification, documents } = query.data;
@@ -88,23 +90,38 @@ export default function MentorVerificationDetailPage() {
             </div>
             <div>
               <dt className="text-[var(--color-text-muted)]">{tr.adminColSubmitted}</dt>
-              <dd className="text-[var(--color-m-text)]">{format(new Date(mentor.created_at), 'PPpp')}</dd>
+              <dd className="text-[var(--color-m-text)]">
+                {format(new Date(mentor.created_at), 'PPpp')}
+              </dd>
             </div>
           </dl>
         </Card>
 
         <Card className="p-5">
-          <h2 className="text-lg font-semibold text-[var(--color-m-text)]">{tr.verificationStatus}</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-m-text)]">
+            {tr.verificationStatus}
+          </h2>
           <div className="mt-4 flex flex-wrap gap-2">
-            <ModerationStatusBadge status={ver.student_verification_status ?? 'pending'} kind="account" />
-            <ModerationStatusBadge status={ver.identity_verification_status ?? 'not_started'} kind="account" />
-            <ModerationStatusBadge status={ver.mentor_access_status ?? 'restricted'} kind="account" />
+            <ModerationStatusBadge
+              status={ver.student_verification_status ?? 'pending'}
+              kind="account"
+            />
+            <ModerationStatusBadge
+              status={ver.identity_verification_status ?? 'not_started'}
+              kind="account"
+            />
+            <ModerationStatusBadge
+              status={ver.mentor_access_status ?? 'restricted'}
+              kind="account"
+            />
           </div>
         </Card>
       </div>
 
       <Card className="mt-6 p-5">
-        <h2 className="text-lg font-semibold text-[var(--color-m-text)]">{tr.adminUploadedDocuments}</h2>
+        <h2 className="text-lg font-semibold text-[var(--color-m-text)]">
+          {tr.adminUploadedDocuments}
+        </h2>
         {documents.length === 0 ? (
           <p className="mt-3 text-sm text-[var(--color-text-muted)]">{tr.adminNoDocuments}</p>
         ) : (
@@ -124,7 +141,7 @@ export default function MentorVerificationDetailPage() {
                   href={doc.file_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-[var(--color-brand-primary)] hover:underline"
+                  className="text-sm text-[var(--color-m-primary-text)] hover:underline"
                 >
                   {tr.adminViewDocument}
                 </a>
@@ -135,10 +152,19 @@ export default function MentorVerificationDetailPage() {
       </Card>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button type="button" onClick={() => setApproveOpen(true)} disabled={approveMutation.isPending}>
+        <Button
+          type="button"
+          onClick={() => setApproveOpen(true)}
+          disabled={approveMutation.isPending}
+        >
           {tr.adminApprove}
         </Button>
-        <Button type="button" variant="danger" onClick={() => setRejectOpen(true)} disabled={rejectMutation.isPending}>
+        <Button
+          type="button"
+          variant="danger"
+          onClick={() => setRejectOpen(true)}
+          disabled={rejectMutation.isPending}
+        >
           {tr.adminReject}
         </Button>
       </div>

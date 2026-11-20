@@ -78,12 +78,7 @@ export function LessonsSummaryCards({ stats, role, className }: Props) {
       ];
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4',
-        className
-      )}
-    >
+    <div className={cn('grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4', className)}>
       {cards.map((card) => {
         const Icon = card.icon;
         return (
@@ -95,7 +90,9 @@ export function LessonsSummaryCards({ stats, role, className }: Props) {
               <Icon className="size-5" aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-[var(--color-m-text-muted)]">{card.label}</p>
+              <p className="truncate text-xs font-medium text-[var(--color-m-text-muted)]">
+                {card.label}
+              </p>
               <p className="mt-0.5 text-xl font-semibold tabular-nums text-[var(--color-m-text)]">
                 {card.value}
                 {card.key === 'hours' && stats.totalHours != null ? (
@@ -105,7 +102,7 @@ export function LessonsSummaryCards({ stats, role, className }: Props) {
                 ) : null}
               </p>
               {card.hint && (card.key !== 'hours' || stats.totalHours == null) ? (
-                <p className="mt-0.5 text-[11px] text-[var(--color-m-text-muted)]">{card.hint}</p>
+                <p className="mt-0.5 text-xs text-[var(--color-m-text-muted)]">{card.hint}</p>
               ) : null}
             </div>
           </div>

@@ -107,7 +107,7 @@ export default function ResetPasswordPage() {
           </form>
           <p className="mt-6 text-center text-[15px]">
             <Link
-              className="font-semibold text-[var(--color-m-primary)] hover:underline"
+              className="font-semibold text-[var(--color-m-primary-text)] hover:underline"
               to="/login"
             >
               {tr.backToLogin}

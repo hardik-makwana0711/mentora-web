@@ -113,7 +113,7 @@ export default function MentorReferencesPage() {
                           key={i}
                           className={
                             i < (r.rating ?? 0)
-                              ? 'size-3.5 fill-yellow-400 text-yellow-400'
+                              ? 'size-3.5 fill-[var(--color-m-accent)] text-[var(--color-m-accent-text)]'
                               : 'size-3.5 text-[var(--color-m-card-border)]'
                           }
                           aria-hidden

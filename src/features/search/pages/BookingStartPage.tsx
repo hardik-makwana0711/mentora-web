@@ -190,7 +190,7 @@ export default function BookingStartPage() {
                 options={linkedStudents.map((s) => ({ value: s.id, label: s.name }))}
               />
             ) : !profileQ.isPending && linkedStudents.length === 0 ? (
-              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-3 text-sm text-amber-100">
+              <div className="rounded-xl border border-[var(--color-m-warning)]/30 bg-[var(--color-m-warning)]/10 px-3 py-3 text-sm text-[var(--color-m-warning)]">
                 <p>{tr.contactNoLinkedStudents}</p>
                 <TextLink to={`${roleBase}/students`} className="mt-2 inline-block font-medium">
                   {tr.navMyStudents} →

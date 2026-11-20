@@ -95,18 +95,23 @@ export default function StudentMaterialDetailPage() {
               {tr.materialDue}: {format(new Date(material.dueDate), 'd MMM yyyy')}
             </p>
           ) : (
-            <p className="text-sm text-[var(--color-m-text-muted)]">{tr.materialCourseResourceDetailHint}</p>
+            <p className="text-sm text-[var(--color-m-text-muted)]">
+              {tr.materialCourseResourceDetailHint}
+            </p>
           )}
           <PdfActions fileUrl={material.fileUrl} fileName={material.fileName} />
         </Card>
 
         {isAssignment ? (
           <Card className="space-y-4 p-6">
-            <h3 className="text-lg font-semibold text-[var(--color-m-text)]">{tr.materialYourSubmission}</h3>
+            <h3 className="text-lg font-semibold text-[var(--color-m-text)]">
+              {tr.materialYourSubmission}
+            </h3>
             <SubmissionStatusBadge status={submissionStatus} />
             {material.submission?.submittedAt ? (
               <p className="text-sm text-[var(--color-m-text-muted)]">
-                {tr.materialSubmittedAt}: {format(new Date(material.submission.submittedAt), 'd MMM yyyy HH:mm')}
+                {tr.materialSubmittedAt}:{' '}
+                {format(new Date(material.submission.submittedAt), 'd MMM yyyy HH:mm')}
               </p>
             ) : null}
             {material.submission?.submittedFileUrl ? (
@@ -118,18 +123,32 @@ export default function StudentMaterialDetailPage() {
             ) : null}
 
             {isPastDue ? (
-              <div className="flex items-start gap-2 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-200">
+              <div className="flex items-start gap-2 rounded-xl border border-[var(--color-m-accent)]/30 bg-[var(--color-m-accent)]/10 p-3 text-sm text-[var(--color-m-accent-text)]">
                 <AlertCircle className="mt-0.5 size-4 shrink-0" />
                 <span>{tr.materialPastDueWarning}</span>
               </div>
             ) : null}
 
             <div>
-              <p className="mb-2 text-sm font-medium text-[var(--color-m-text)]">{tr.materialUploadSubmissionHint}</p>
-              <PdfFileInput file={file} onChange={(f) => { setFile(f); setSubmitError(null); }} error={submitError} />
+              <p className="mb-2 text-sm font-medium text-[var(--color-m-text)]">
+                {tr.materialUploadSubmissionHint}
+              </p>
+              <PdfFileInput
+                file={file}
+                onChange={(f) => {
+                  setFile(f);
+                  setSubmitError(null);
+                }}
+                error={submitError}
+              />
             </div>
 
-            <Button type="button" onClick={handleSubmit} isLoading={submitMutation.isPending} disabled={!file}>
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              isLoading={submitMutation.isPending}
+              disabled={!file}
+            >
               {submissionStatus && submissionStatus !== 'not_submitted'
                 ? tr.reuploadSubmission
                 : tr.submitAssignment}
@@ -137,7 +156,9 @@ export default function StudentMaterialDetailPage() {
           </Card>
         ) : (
           <Card className="p-6">
-            <p className="text-sm text-[var(--color-m-text-secondary)]">{tr.materialCourseResourceDetailHint}</p>
+            <p className="text-sm text-[var(--color-m-text-secondary)]">
+              {tr.materialCourseResourceDetailHint}
+            </p>
           </Card>
         )}
       </div>

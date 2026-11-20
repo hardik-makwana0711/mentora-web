@@ -1,13 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Bookmark,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  Star,
-  User,
-  X,
-} from 'lucide-react';
+import { Bookmark, ChevronLeft, ChevronRight, Heart, Star, User, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -48,12 +40,17 @@ function MentorDetailContent({
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-m-text)]">{mentor.display_name}</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-m-text)]">
+            {mentor.display_name}
+          </h2>
           {mentor.title ? (
             <p className="mt-1 text-base text-[var(--color-m-text-secondary)]">{mentor.title}</p>
           ) : null}
           <p className="mt-2 flex items-center gap-2 text-sm font-medium text-[var(--color-m-text)]">
-            <Star className="size-4 fill-amber-400 text-amber-400" aria-hidden />
+            <Star
+              className="size-4 fill-[var(--color-m-warning)] text-[var(--color-m-warning)]"
+              aria-hidden
+            />
             {mentor.rating_average != null ? mentor.rating_average.toFixed(1) : '—'}
             <span className="font-normal text-[var(--color-m-text-muted)]">
               · {mentor.review_count} {tr.reviews}
@@ -65,8 +62,8 @@ function MentorDetailContent({
           className={cn(
             'shrink-0 rounded-xl p-2.5 transition',
             mentor.is_saved
-              ? 'bg-amber-500/15 text-amber-400 ring-1 ring-amber-400/30'
-              : 'bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text-muted)] hover:text-amber-400'
+              ? 'bg-[var(--color-m-warning)]/15 text-[var(--color-m-warning)] ring-1 ring-[var(--color-m-warning)]/30'
+              : 'bg-[var(--color-m-hover-overlay)] text-[var(--color-m-text-muted)] hover:text-[var(--color-m-warning)]'
           )}
           onClick={() => onSaveToggle(mentor.mentor_id, !mentor.is_saved)}
           aria-label={`${mentor.is_saved ? tr.unsaveMentor : tr.saveMentor} ${mentor.display_name}`}
@@ -130,11 +127,11 @@ function MentorDetailContent({
           </div>
         ) : null}
         {mentor.highlighted_success_story ? (
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400/80">
+          <div className="rounded-xl border border-[var(--color-m-success)]/20 bg-[var(--color-m-success)]/10 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-success)]/80">
               {tr.successStory}
             </p>
-            <p className="mt-2 text-sm font-medium text-emerald-300">
+            <p className="mt-2 text-sm font-medium text-[var(--color-m-success)]">
               {mentor.highlighted_success_story.title}
               {mentor.highlighted_success_story.year
                 ? ` · ${mentor.highlighted_success_story.year}`
@@ -316,10 +313,18 @@ export function DiscoveryMentorPanel({
                 size="sm"
                 onClick={() => void onSaveToggle(current.mentor_id, !current.is_saved)}
               >
-                <Bookmark className={cn('size-4', current.is_saved && 'fill-current')} aria-hidden />
+                <Bookmark
+                  className={cn('size-4', current.is_saved && 'fill-current')}
+                  aria-hidden
+                />
                 {tr.discoverySaveForLater}
               </Button>
-              <Button type="button" variant="secondary" size="sm" onClick={() => onViewProfile(current.mentor_id)}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => onViewProfile(current.mentor_id)}
+              >
                 <User className="size-4" aria-hidden />
                 {tr.discoveryViewProfile}
               </Button>

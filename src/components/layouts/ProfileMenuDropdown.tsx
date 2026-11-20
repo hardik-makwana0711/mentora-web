@@ -116,6 +116,7 @@ export function ProfileMenuDropdown({
         type="button"
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-label={displayName}
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-full border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] py-1 pl-1 pr-2 transition hover:bg-[var(--color-m-hover-overlay)] md:pr-3"
       >

@@ -6,7 +6,12 @@ import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { UniversityAutocomplete } from '@/features/education/components/UniversityAutocomplete';
 import { useStrings } from '@/constants/strings';
 import { qk } from '@/constants/query-keys';
-import { EDUCATION_LEVELS, EXAM_TRACKS, GRADES_BY_EDUCATION_LEVEL, gradeDisplayName } from '@/constants/education-levels';
+import {
+  EDUCATION_LEVELS,
+  EXAM_TRACKS,
+  GRADES_BY_EDUCATION_LEVEL,
+  gradeDisplayName,
+} from '@/constants/education-levels';
 import { educationService } from '@/services/education.service';
 import { choicePillClass } from '@/lib/button-styles';
 import type { EducationLevel, ExamTrack, UniversitySummary } from '@/types/education';
@@ -29,8 +34,10 @@ function FilterSection({
   return (
     <section className={cn('space-y-2', className)}>
       <div className="flex items-center gap-2">
-        {icon ? <span className="text-[var(--color-m-primary)]">{icon}</span> : null}
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-secondary)]">{title}</h3>
+        {icon ? <span className="text-[var(--color-m-primary-text)]">{icon}</span> : null}
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-secondary)]">
+          {title}
+        </h3>
       </div>
       {children}
     </section>
@@ -92,13 +99,16 @@ export function DiscoveryStructuredFilters({
     subjectsQuery.data?.items.map((s) => ({ value: s.id, label: s.display_name })) ?? [];
 
   const examQuery = useQuery({
-    queryKey: examTrack ? qk.educationExamSubjects(examTrack) : ['education', 'exam-subjects', 'none'],
+    queryKey: examTrack
+      ? qk.educationExamSubjects(examTrack)
+      : ['education', 'exam-subjects', 'none'],
     queryFn: () => educationService.getExamSubjects(examTrack as ExamTrack),
     enabled: Boolean(examTrack),
     staleTime: 60_000,
   });
 
-  const examOptions = examQuery.data?.items.map((s) => ({ value: s.id, label: s.display_name })) ?? [];
+  const examOptions =
+    examQuery.data?.items.map((s) => ({ value: s.id, label: s.display_name })) ?? [];
 
   function applyUniversity(u: UniversitySummary | null) {
     setFilterUniversity(u);
@@ -134,7 +144,7 @@ export function DiscoveryStructuredFilters({
     <div className="overflow-hidden rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] shadow-[var(--shadow-m-card)] ring-1 ring-[var(--color-m-ring-subtle)]">
       <div className="border-b border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] px-4 py-3">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="size-4 text-[var(--color-m-primary)]" aria-hidden />
+          <SlidersHorizontal className="size-4 text-[var(--color-m-primary-text)]" aria-hidden />
           <div>
             <h2 className="text-sm font-semibold text-[var(--color-m-text)]">{tr.searchFilters}</h2>
             <p className="text-xs text-[var(--color-m-text-muted)]">{tr.searchFiltersHint}</p>
@@ -154,8 +164,11 @@ export function DiscoveryStructuredFilters({
         </FilterSection>
 
         <div className="border-t border-[var(--color-m-card-border)] pt-4">
-          <FilterSection icon={<GraduationCap className="size-3.5" aria-hidden />} title={`${tr.filterSubject} / ${tr.filterExactGrade}`}>
-            <div className="grid gap-2 sm:grid-cols-2">
+          <FilterSection
+            icon={<GraduationCap className="size-3.5" aria-hidden />}
+            title={`${tr.filterSubject} / ${tr.filterExactGrade}`}
+          >
+            <div className="grid gap-2">
               <DropdownSelect
                 label={tr.filterEducationLevel}
                 labelVariant="compact"
@@ -194,7 +207,12 @@ export function DiscoveryStructuredFilters({
               ) : subjectsQuery.isError ? (
                 <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[var(--color-m-error)]/30 bg-[var(--color-m-error)]/5 px-3 py-2.5 text-sm text-[var(--color-m-error)]">
                   {tr.subjectsLoadError}
-                  <Button type="button" variant="secondary" size="sm" onClick={() => void subjectsQuery.refetch()}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => void subjectsQuery.refetch()}
+                  >
                     {tr.retry}
                   </Button>
                 </div>
@@ -209,7 +227,12 @@ export function DiscoveryStructuredFilters({
                     options={subjectOptions}
                     className="mb-0"
                   />
-                  <Button type="button" size="sm" disabled={!localSubjectId} onClick={applyGradeSubject}>
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={!localSubjectId}
+                    onClick={applyGradeSubject}
+                  >
                     {tr.addProficiency}
                   </Button>
                 </div>
@@ -220,7 +243,7 @@ export function DiscoveryStructuredFilters({
 
         <div className="border-t border-[var(--color-m-card-border)] pt-4">
           <FilterSection title={tr.filterExamPrep}>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2">
               <DropdownSelect
                 label={tr.selectExamTrack}
                 labelVariant="compact"
@@ -242,7 +265,12 @@ export function DiscoveryStructuredFilters({
                 ) : examQuery.isError ? (
                   <div className="flex flex-wrap items-center gap-2 self-end pb-1 text-sm text-[var(--color-m-error)]">
                     {tr.examSubjectsLoadError}
-                    <Button type="button" variant="secondary" size="sm" onClick={() => void examQuery.refetch()}>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => void examQuery.refetch()}
+                    >
                       {tr.retry}
                     </Button>
                   </div>
@@ -263,7 +291,12 @@ export function DiscoveryStructuredFilters({
             </div>
             {examTrack && !examQuery.isLoading && !examQuery.isError ? (
               <div className="flex justify-end">
-                <Button type="button" size="sm" disabled={!localExamSubjectId} onClick={applyExamSubject}>
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={!localExamSubjectId}
+                  onClick={applyExamSubject}
+                >
                   {tr.addExamSubject}
                 </Button>
               </div>
@@ -272,7 +305,10 @@ export function DiscoveryStructuredFilters({
         </div>
 
         <div className="border-t border-[var(--color-m-card-border)] pt-4">
-          <FilterSection icon={<Star className="size-3.5" aria-hidden />} title={tr.filterMinRating}>
+          <FilterSection
+            icon={<Star className="size-3.5" aria-hidden />}
+            title={tr.filterMinRating}
+          >
             <div className="flex flex-wrap gap-1.5">
               {[null, 3, 4, 5].map((r) => {
                 const active = (filters.rating ?? null) === r;
