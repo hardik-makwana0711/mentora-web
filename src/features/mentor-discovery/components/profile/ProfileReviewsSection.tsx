@@ -58,7 +58,7 @@ export function ProfileReviewsSection({
                       key={i}
                       className={
                         review.rating != null && i < Math.round(review.rating)
-                          ? 'size-4 fill-yellow-400 text-yellow-400'
+                          ? 'size-4 fill-[var(--color-m-accent)] text-[var(--color-m-accent-text)]'
                           : 'size-4 text-[var(--color-m-card-border)]'
                       }
                       aria-hidden

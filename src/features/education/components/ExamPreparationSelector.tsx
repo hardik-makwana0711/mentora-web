@@ -133,7 +133,7 @@ export function ExamPreparationSelector({
           ))}
         </div>
       )}
-      {error ? <p className="mt-2 pl-1 text-[11px] text-[var(--color-m-error)]">{error}</p> : null}
+      {error ? <p className="mt-2 pl-1 text-xs text-[var(--color-m-error)]">{error}</p> : null}
     </div>
   );
 }

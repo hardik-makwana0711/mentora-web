@@ -220,7 +220,7 @@ export default function LessonReportPage() {
       ) : null}
 
       {reportMeta.summaryProcessing && !reportMeta.planned ? (
-        <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+        <div className="mb-6 rounded-xl border border-[var(--color-m-warning)]/30 bg-[var(--color-m-warning)]/10 px-4 py-3">
           <p className="text-sm font-semibold text-[var(--color-m-text)]">
             {tr.reportProcessingBannerTitle}
           </p>

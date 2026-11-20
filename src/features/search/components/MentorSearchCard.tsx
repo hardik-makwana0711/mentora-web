@@ -4,11 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PresignedAvatar } from '@/features/profile/components/PresignedAvatar';
 import { FavouriteButton } from '@/features/search/components/FavouriteButton';
-import {
-  formatGradeLevels,
-  formatSubjects,
-  isVerified,
-} from '@/features/search/lib/format-labels';
+import { formatGradeLevels, formatSubjects, isVerified } from '@/features/search/lib/format-labels';
 import {
   formatExamSubjectsForDisplay,
   formatStructuredSubjectsForCard,
@@ -50,7 +46,9 @@ export function MentorSearchCard({
     <Card
       className={cn(
         'p-5 shadow-[var(--shadow-m-card)] ring-1 ring-[var(--color-m-ring-subtle)] transition',
-        unavailable ? 'opacity-70' : 'cursor-pointer hover:border-[var(--color-m-primary)]/45 hover:shadow-[var(--shadow-m-glow)]',
+        unavailable
+          ? 'opacity-70'
+          : 'cursor-pointer hover:border-[var(--color-m-primary)]/45 hover:shadow-[var(--shadow-m-glow)]',
         layout === 'list' && 'mb-4',
         layout === 'grid' && 'mb-0 flex h-full flex-col'
       )}
@@ -60,24 +58,32 @@ export function MentorSearchCard({
         <p className="mb-3 text-sm text-[var(--color-m-text-muted)]">{tr.savedMentorUnavailable}</p>
       ) : null}
       <div className="flex gap-3">
-        <PresignedAvatar storedUrl={item.avatar_url} name={item.mentor_name} className="size-16 shrink-0" />
+        <PresignedAvatar
+          storedUrl={item.avatar_url}
+          name={item.mentor_name}
+          className="size-16 shrink-0"
+        />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 className="truncate text-lg font-bold text-[var(--color-m-text)]">{item.mentor_name}</h3>
+              <h3 className="truncate text-lg font-bold text-[var(--color-m-text)]">
+                {item.mentor_name}
+              </h3>
               {isVerified(item.verification_status) ? (
-                <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-m-primary)]">
+                <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-[var(--color-m-primary-text)]">
                   <BadgeCheck className="size-3.5" aria-hidden />
                   {tr.verifiedMentor}
                 </span>
               ) : null}
               <p className="mt-1 line-clamp-1 text-sm italic text-[var(--color-m-text-secondary)]">
-                {item.short_bio ||
-                  i18n.t('expertIn', { subjects: formatSubjects(item.subjects) })}
+                {item.short_bio || i18n.t('expertIn', { subjects: formatSubjects(item.subjects) })}
               </p>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className="flex items-center gap-1 text-xs font-medium text-yellow-400">
-                  <Star className="size-3 fill-yellow-400 text-yellow-400" aria-hidden />
+                <span className="flex items-center gap-1 text-xs font-medium text-[var(--color-m-accent-text)]">
+                  <Star
+                    className="size-3 fill-[var(--color-m-accent)] text-[var(--color-m-accent-text)]"
+                    aria-hidden
+                  />
                   {item.rating != null && Number.isFinite(item.rating)
                     ? (item.rating as number).toFixed(1)
                     : '—'}
@@ -115,7 +121,9 @@ export function MentorSearchCard({
           <>
             <p className="text-[var(--color-m-text-muted)]">
               <span className="font-semibold">{tr.gradeLabel}:</span>{' '}
-              <span className="text-[var(--color-m-text)]">{formatGradeLevels(item.grade_levels)}</span>
+              <span className="text-[var(--color-m-text)]">
+                {formatGradeLevels(item.grade_levels)}
+              </span>
             </p>
             <p className="mt-1 text-[var(--color-m-text-muted)]">
               <span className="font-semibold">{tr.servicesLabel}:</span>{' '}
@@ -151,7 +159,9 @@ export function MentorSearchCard({
               <span className="text-xs font-medium text-[var(--color-m-text-muted)]">/saat</span>
             </p>
           ) : (
-            <p className="text-xs italic text-[var(--color-m-text-muted)]">{tr.priceDuringBooking}</p>
+            <p className="text-xs italic text-[var(--color-m-text-muted)]">
+              {tr.priceDuringBooking}
+            </p>
           )}
         </div>
         <Button

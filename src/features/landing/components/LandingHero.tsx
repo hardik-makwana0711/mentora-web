@@ -136,7 +136,7 @@ export function LandingHero({ onStartLearning, onApplyMentor }: LandingHeroProps
                     <span className="text-sm text-[var(--color-m-text-muted)]">
                       {t('hero.todayLesson')}
                     </span>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-m-secondary)] to-emerald-500 px-3 py-1 text-xs font-semibold text-white">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-m-secondary)] to-[var(--color-m-success)] px-3 py-1 text-xs font-semibold text-white">
                       <span className="size-2 animate-ping rounded-full bg-white" />
                       {t('hero.live')}
                     </span>

@@ -70,7 +70,7 @@ export function MentorMediaGallery() {
                 className="size-full object-cover"
               />
               {photo.is_primary ? (
-                <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-[var(--color-m-primary)] px-2 py-0.5 text-[10px] font-semibold text-white">
+                <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-[var(--color-m-primary)] px-2 py-0.5 text-xs font-semibold text-white">
                   <Star className="size-3 fill-current" aria-hidden />
                   {tr.mentorMediaPrimaryBadge}
                 </span>

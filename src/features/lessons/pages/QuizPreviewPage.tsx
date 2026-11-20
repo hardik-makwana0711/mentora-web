@@ -66,12 +66,15 @@ export default function QuizPreviewPage() {
         <p className="text-base font-medium text-[var(--color-m-text)]">{q.questionText}</p>
         <ul className="mt-4 space-y-2">
           {q.choices.map((choice, i) => (
-            <li key={i} className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-bg)] px-4 py-3 text-sm text-[var(--color-text-secondary)]">
+            <li
+              key={i}
+              className="rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-bg)] px-4 py-3 text-sm text-[var(--color-text-secondary)]"
+            >
               {choiceLabel(i)}. {choice}
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-sm text-emerald-400">
+        <p className="mt-4 text-sm text-[var(--color-m-success)]">
           {tr.correctLabel}: {choiceLabel(q.correctChoiceIndex)}. {q.choices[q.correctChoiceIndex]}
         </p>
         {q.explanation ? (

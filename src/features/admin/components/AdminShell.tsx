@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { AppLogo } from '@/components/layouts/AppLogo';
 import { Drawer } from '@/components/ui/Drawer';
 import { AppChromeControls } from '@/components/ui/AppChromeControls';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { LogoutConfirmModal } from '@/features/profile/components/LogoutConfirmModal';
 import { enabledAdminNav } from '@/features/admin/lib/admin-nav';
 import { useAuthStore } from '@/app/store/authStore';
@@ -86,10 +87,13 @@ export default function AdminShell() {
               </button>
               <AppLogo compact />
             </div>
-            <p className="hidden text-sm font-medium text-[var(--color-m-text)] md:block">{tr.adminPanelTitle}</p>
-            <div className="ml-auto flex items-center gap-3">
-              <AppChromeControls />
-              <span className="max-w-[200px] truncate text-[13px] text-[var(--color-m-text-secondary)]">
+            <p className="hidden text-sm font-medium text-[var(--color-m-text)] md:block">
+              {tr.adminPanelTitle}
+            </p>
+            <div className="ml-auto flex min-w-0 items-center gap-3">
+              {/* Phones: language moves into the menu drawer and the email is hidden so the header fits 375 px */}
+              <AppChromeControls hideLanguageOnMobile />
+              <span className="hidden max-w-[200px] truncate text-[13px] text-[var(--color-m-text-secondary)] sm:inline">
                 {displayName}
               </span>
             </div>
@@ -107,7 +111,15 @@ export default function AdminShell() {
       </div>
 
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} title={tr.adminPanelTitle}>
-        <div className="flex flex-col px-2 py-4">{sidebar}</div>
+        <div className="flex flex-col px-2 py-4">
+          {sidebar}
+          <div className="mt-6 flex items-center justify-between gap-3 border-t border-[var(--color-m-card-border)] px-3 pt-4 sm:hidden">
+            <span className="text-sm font-semibold text-[var(--color-m-text-secondary)]">
+              {tr.languageSwitcherAria}
+            </span>
+            <LanguageSwitcher />
+          </div>
+        </div>
       </Drawer>
 
       <LogoutConfirmModal

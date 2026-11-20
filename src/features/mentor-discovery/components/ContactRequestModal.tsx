@@ -322,12 +322,12 @@ export function ContactRequestModal({
                   {tr.loading}
                 </div>
               ) : linkedStudents.length === 0 ? (
-                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-3 text-sm text-amber-100">
+                <div className="rounded-xl border border-[var(--color-m-warning)]/30 bg-[var(--color-m-warning)]/10 px-3 py-3 text-sm text-[var(--color-m-warning)]">
                   <p>{tr.contactNoLinkedStudents}</p>
 
                   <Link
                     to={`${roleBase}/students`}
-                    className="mt-2 inline-block font-medium text-[var(--color-brand-primary)] hover:underline"
+                    className="mt-2 inline-block font-medium text-[var(--color-m-primary-text)] hover:underline"
                     onClick={onClose}
                   >
                     {tr.navMyStudents} →
@@ -358,7 +358,7 @@ export function ContactRequestModal({
               )}
 
               {form.formState.errors.student_id ? (
-                <p className="mt-1 text-xs text-rose-400">
+                <p className="mt-1 text-xs text-[var(--color-m-error)]">
                   {form.formState.errors.student_id.message}
                 </p>
               ) : null}
@@ -373,7 +373,7 @@ export function ContactRequestModal({
             <Input {...form.register('subject')} />
 
             {form.formState.errors.subject ? (
-              <p className="mt-1 text-xs text-rose-400">{tr.fieldRequired}</p>
+              <p className="mt-1 text-xs text-[var(--color-m-error)]">{tr.fieldRequired}</p>
             ) : null}
           </div>
 
@@ -393,7 +393,7 @@ export function ContactRequestModal({
             <Input {...form.register('grade_level')} />
 
             {form.formState.errors.grade_level ? (
-              <p className="mt-1 text-xs text-rose-400">{tr.fieldRequired}</p>
+              <p className="mt-1 text-xs text-[var(--color-m-error)]">{tr.fieldRequired}</p>
             ) : null}
           </div>
 

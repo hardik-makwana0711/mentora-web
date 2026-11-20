@@ -141,7 +141,7 @@ export default function BookingCheckoutPage() {
             ) : null}
             <div className="flex justify-between gap-4">
               <dt className="text-[var(--color-m-text-muted)]">{tr.bookingCreditsUsed}</dt>
-              <dd className="font-semibold text-[var(--color-brand-primary)]">
+              <dd className="font-semibold text-[var(--color-m-primary-text)]">
                 {confirmed.used_credits} {tr.creditsUnit}
               </dd>
             </div>

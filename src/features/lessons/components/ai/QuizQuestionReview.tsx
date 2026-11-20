@@ -34,20 +34,30 @@ export function QuizQuestionReview({
             <div className="mt-3 space-y-1 text-sm text-[var(--color-text-secondary)]">
               <p>
                 {tr.answerLabel}:{' '}
-                <span className="text-[var(--color-m-text)]">{answerText(q.choices, q.selectedChoiceIndex)}</span>
+                <span className="text-[var(--color-m-text)]">
+                  {answerText(q.choices, q.selectedChoiceIndex)}
+                </span>
               </p>
               <p>
                 {tr.correctLabel}:{' '}
-                <span className="text-[var(--color-m-text)]">{answerText(q.choices, q.correctChoiceIndex)}</span>
+                <span className="text-[var(--color-m-text)]">
+                  {answerText(q.choices, q.correctChoiceIndex)}
+                </span>
               </p>
               {q.isCorrect != null ? (
-                <p className={q.isCorrect ? 'text-emerald-400' : 'text-red-400'}>
+                <p
+                  className={
+                    q.isCorrect ? 'text-[var(--color-m-success)]' : 'text-[var(--color-m-error)]'
+                  }
+                >
                   {q.isCorrect ? tr.correctLabel : tr.incorrectLabel}
                 </p>
               ) : null}
               {q.explanation ? (
                 <p className="mt-2 text-[var(--color-text-muted)]">
-                  <span className="font-medium text-[var(--color-text-secondary)]">{tr.answerLabel}: </span>
+                  <span className="font-medium text-[var(--color-text-secondary)]">
+                    {tr.answerLabel}:{' '}
+                  </span>
                   {q.explanation}
                 </p>
               ) : null}

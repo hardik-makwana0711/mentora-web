@@ -113,12 +113,22 @@ export function UniversityAutocomplete({
           'z-[9999] max-h-60 overflow-auto rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-elevated)] py-1 shadow-lg ring-1 ring-black/20',
           absolute ? 'absolute mt-1 w-full' : 'fixed'
         )}
-        style={absolute ? undefined : { top: panelStyle.top, left: panelStyle.left, width: Math.max(panelStyle.width, 200) }}
+        style={
+          absolute
+            ? undefined
+            : { top: panelStyle.top, left: panelStyle.left, width: Math.max(panelStyle.width, 200) }
+        }
       >
         {searchQuery.isError ? (
           <li className="px-4 py-3 text-sm text-[var(--color-m-error)]">
             {tr.universitySearchError}{' '}
-            <Button type="button" variant="secondary" size="sm" className="ml-2" onClick={() => void searchQuery.refetch()}>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="ml-2"
+              onClick={() => void searchQuery.refetch()}
+            >
               {tr.retry}
             </Button>
           </li>
@@ -128,7 +138,9 @@ export function UniversityAutocomplete({
             {tr.loading}
           </li>
         ) : items.length === 0 ? (
-          <li className="px-4 py-3 text-sm text-[var(--color-m-text-muted)]">{tr.universitySearchEmpty}</li>
+          <li className="px-4 py-3 text-sm text-[var(--color-m-text-muted)]">
+            {tr.universitySearchEmpty}
+          </li>
         ) : (
           items.map((u) => (
             <li key={u.id} role="presentation">
@@ -143,11 +155,18 @@ export function UniversityAutocomplete({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => selectUniversity(u)}
               >
-                <Building2 className="mt-0.5 size-4 shrink-0 text-[var(--color-m-text-muted)]" aria-hidden />
+                <Building2
+                  className="mt-0.5 size-4 shrink-0 text-[var(--color-m-text-muted)]"
+                  aria-hidden
+                />
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-[var(--color-m-text)]">{u.name}</span>
+                  <span className="block truncate text-sm font-medium text-[var(--color-m-text)]">
+                    {u.name}
+                  </span>
                   {u.city ? (
-                    <span className="block truncate text-xs text-[var(--color-m-text-muted)]">{u.city}</span>
+                    <span className="block truncate text-xs text-[var(--color-m-text-muted)]">
+                      {u.city}
+                    </span>
                   ) : null}
                 </span>
               </button>
@@ -204,7 +223,10 @@ export function UniversityAutocomplete({
             onBlur={() => setFocused(false)}
           />
           {searchQuery.isFetching ? (
-            <Loader2 className="size-4 shrink-0 animate-spin text-[var(--color-m-text-muted)]" aria-hidden />
+            <Loader2
+              className="size-4 shrink-0 animate-spin text-[var(--color-m-text-muted)]"
+              aria-hidden
+            />
           ) : query ? (
             <button
               type="button"
@@ -217,7 +239,7 @@ export function UniversityAutocomplete({
             </button>
           ) : null}
         </div>
-        {error ? <p className="mt-1 text-[11px] text-[var(--color-m-error)]">{error}</p> : null}
+        {error ? <p className="mt-1 text-xs text-[var(--color-m-error)]">{error}</p> : null}
         {renderDropdown()}
       </div>
     );
@@ -240,7 +262,11 @@ export function UniversityAutocomplete({
           onFocus={() => setOpen(true)}
         />
         <div className="pointer-events-none absolute right-3 top-[38px] flex items-center gap-1 text-[var(--color-m-text-muted)]">
-          {searchQuery.isFetching ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Search className="size-4" aria-hidden />}
+          {searchQuery.isFetching ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden />
+          ) : (
+            <Search className="size-4" aria-hidden />
+          )}
         </div>
       </div>
 

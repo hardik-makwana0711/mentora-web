@@ -87,7 +87,7 @@ export function LessonsCalendar({ sessionDates, selectedDate, onSelectDate }: Pr
         {weekdays.map((d) => (
           <span
             key={d}
-            className="pb-1 text-center text-[11px] font-semibold uppercase tracking-wide text-[var(--color-m-text-muted)]"
+            className="pb-1 text-center text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-muted)]"
           >
             {d}
           </span>
@@ -106,7 +106,7 @@ export function LessonsCalendar({ sessionDates, selectedDate, onSelectDate }: Pr
               onClick={() => onSelectDate(key)}
               className={cn(
                 'relative flex h-10 w-full items-center justify-center rounded-xl text-sm font-medium transition',
-                !inMonth && 'text-[var(--color-m-text-disabled)]',
+                !inMonth && 'text-[var(--color-m-text-muted)] opacity-80',
                 inMonth &&
                   !isSelected &&
                   'text-[var(--color-m-text)] hover:bg-[var(--color-m-surface-light)]',

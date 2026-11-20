@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { getDateFnsLocale } from '@/lib/date-locale';
-import { Badge } from '@/components/ui/Badge';
 import { LessonJoinButton } from '@/features/lessons/components/LessonJoinButton';
 import { MeetingStatusSection } from '@/features/lessons/components/MeetingStatusSection';
 import { formatSubject } from '@/features/search/lib/format-labels';
@@ -26,17 +25,23 @@ export function MentorScheduleRow({ item, onViewPress }: MentorScheduleRowProps)
   const joinSession = toJoinable(item);
 
   return (
-    <li className="rounded-xl border border-[var(--color-surface-border)] bg-[var(--color-surface-bg)]/40 p-3">
+    <li className="rounded-[var(--radius-m-card)] border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] p-3">
       <button
         type="button"
         onClick={onViewPress}
-        className="flex w-full flex-wrap items-center justify-between gap-2 text-left"
+        className="flex w-full items-center gap-3 text-left"
       >
-        <span className="font-medium text-[var(--color-m-text)]">
-          {formatSubject(item.subject)}
+        <span className="min-w-[64px] rounded-[var(--radius-m-button)] bg-[var(--color-m-primary-soft)] px-2 py-2.5 text-center text-sm font-extrabold text-[var(--color-m-primary-text)]">
+          {format(new Date(item.start_time), 'HH:mm', { locale: getDateFnsLocale() })}
         </span>
-        <span className="text-sm text-[var(--color-text-secondary)]">{item.student_name}</span>
-        <Badge>{format(new Date(item.start_time), 'HH:mm', { locale: getDateFnsLocale() })}</Badge>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-bold text-[var(--color-m-text)]">
+            {formatSubject(item.subject)}
+          </span>
+          <span className="block truncate text-sm text-[var(--color-m-text-muted)]">
+            {item.student_name}
+          </span>
+        </span>
       </button>
       <MeetingStatusSection session={joinSession} className="mt-2 px-0.5" />
       <div className="mt-2">

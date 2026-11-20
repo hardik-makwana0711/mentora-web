@@ -17,7 +17,7 @@ export default function PasswordResetSuccessPage() {
       card={
         <AuthCard>
           <div className="flex flex-col items-center text-center">
-            <CheckCircle2 className="mb-4 size-14 text-[var(--color-m-primary)]" aria-hidden />
+            <CheckCircle2 className="mb-4 size-14 text-[var(--color-m-primary-text)]" aria-hidden />
             <h2 className="mb-1 text-[24px] font-bold text-[var(--color-m-text)]">
               {tr.resetPasswordSuccessTitle}
             </h2>

@@ -18,9 +18,15 @@ import { PayoutRequestsList } from '@/features/mentor-wallet/components/PayoutRe
 import { WalletTransactionsList } from '@/features/mentor-wallet/components/WalletTransactionsList';
 import { PayoutRequestModal } from '@/features/mentor-wallet/components/PayoutRequestModal';
 import { WalletBackButton } from '@/features/mentor-wallet/components/WalletBackButton';
-import type { MentorPayoutMethod, MentorPayoutRequest, MentorWalletTransaction } from '@/types/mentor-wallet';
+import type {
+  MentorPayoutMethod,
+  MentorPayoutRequest,
+  MentorWalletTransaction,
+} from '@/types/mentor-wallet';
 
-function unwrapMethods(data: { items: MentorPayoutMethod[] } | MentorPayoutMethod[] | undefined): MentorPayoutMethod[] {
+function unwrapMethods(
+  data: { items: MentorPayoutMethod[] } | MentorPayoutMethod[] | undefined
+): MentorPayoutMethod[] {
   if (!data) return [];
   return Array.isArray(data) ? data : data.items || [];
 }
@@ -44,7 +50,8 @@ export default function MentorWalletPage() {
 
   const payoutRequestsQuery = useInfiniteQuery({
     queryKey: qk.mentorWalletPayoutRequests({ limit: 10 }),
-    queryFn: ({ pageParam }) => fetchMentorWalletPayoutRequests({ page: pageParam as number, limit: 10 }),
+    queryFn: ({ pageParam }) =>
+      fetchMentorWalletPayoutRequests({ page: pageParam as number, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (last) => {
       const { page, limit, total } = last.pagination;
@@ -54,7 +61,8 @@ export default function MentorWalletPage() {
 
   const transactionsQuery = useInfiniteQuery({
     queryKey: qk.mentorWalletTransactions({ limit: 10 }),
-    queryFn: ({ pageParam }) => fetchMentorWalletTransactions({ page: pageParam as number, limit: 10 }),
+    queryFn: ({ pageParam }) =>
+      fetchMentorWalletTransactions({ page: pageParam as number, limit: 10 }),
     initialPageParam: 1,
     getNextPageParam: (last) => {
       const { page, limit, total } = last.pagination;
@@ -89,7 +97,10 @@ export default function MentorWalletPage() {
 
   const wallet = walletQuery.data?.wallet;
   const payoutMethods = unwrapMethods(payoutMethodsQuery.data);
-  const activeMethods = useMemo(() => payoutMethods.filter((m) => m.status === 'ACTIVE'), [payoutMethods]);
+  const activeMethods = useMemo(
+    () => payoutMethods.filter((m) => m.status === 'ACTIVE'),
+    [payoutMethods]
+  );
 
   const payoutRequests: MentorPayoutRequest[] =
     payoutRequestsQuery.data?.pages.flatMap((p) => p.items) ?? [];
@@ -97,7 +108,9 @@ export default function MentorWalletPage() {
     transactionsQuery.data?.pages.flatMap((p) => p.items) ?? [];
 
   const canRequestPayout = Boolean(activeMethods.length > 0);
-  const requestDisabledReason = !canRequestPayout ? tr.mentorWalletNoPayoutMethodBlocker : undefined;
+  const requestDisabledReason = !canRequestPayout
+    ? tr.mentorWalletNoPayoutMethodBlocker
+    : undefined;
 
   return (
     <PageContainer width="content">
@@ -150,13 +163,17 @@ export default function MentorWalletPage() {
         <div className="mt-6">
           {/* Reuse global error component */}
           <div className="rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-5">
-            <p className="text-base font-semibold text-[var(--color-m-text)]">{tr.mentorWalletLoadErrorTitle}</p>
-            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">{tr.mentorWalletLoadErrorBody}</p>
+            <p className="text-base font-semibold text-[var(--color-m-text)]">
+              {tr.mentorWalletLoadErrorTitle}
+            </p>
+            <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">
+              {tr.mentorWalletLoadErrorBody}
+            </p>
             <div className="mt-4">
               <button
                 type="button"
                 onClick={() => void walletQuery.refetch()}
-                className="rounded-xl bg-[var(--color-m-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-m-text)]"
+                className="rounded-xl bg-[var(--color-m-primary)] px-4 py-2 text-sm font-semibold text-white"
               >
                 {tr.retry}
               </button>
@@ -185,4 +202,3 @@ export default function MentorWalletPage() {
     </PageContainer>
   );
 }
-

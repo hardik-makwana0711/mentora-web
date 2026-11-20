@@ -10,7 +10,7 @@ const STEP_THEMES = [
     glow: 'shadow-[var(--shadow-m-glow)]',
   },
   {
-    gradient: 'from-[var(--color-m-secondary)] to-emerald-400',
+    gradient: 'from-[var(--color-m-secondary)] to-[var(--color-m-success)]',
     glow: 'shadow-[0_12px_32px_rgba(67,184,156,0.3)]',
   },
   {
@@ -23,7 +23,7 @@ const STEP_THEMES = [
   },
   {
     gradient: 'from-[var(--color-m-accent)] to-[var(--color-m-gradient-end)]',
-    glow: 'shadow-[0_12px_32px_rgba(255,101,132,0.25)]',
+    glow: 'shadow-[0_12px_32px_rgba(255,178,30,0.28)]',
   },
 ] as const;
 
@@ -79,7 +79,9 @@ function StepCard({
       <h3 className="mb-2 min-h-[3.25rem] text-base font-semibold leading-snug text-[var(--color-m-text)] sm:text-[17px]">
         {step.title}
       </h3>
-      <p className="text-sm leading-relaxed text-[var(--color-m-text-secondary)]">{step.description}</p>
+      <p className="text-sm leading-relaxed text-[var(--color-m-text-secondary)]">
+        {step.description}
+      </p>
     </motion.article>
   );
 }
@@ -88,15 +90,28 @@ export function LandingHowItWorks() {
   const { t } = useLandingLanguage();
 
   const steps = [
-    { icon: UserCheck, number: '01', title: t('how.step1.title'), description: t('how.step1.desc') },
+    {
+      icon: UserCheck,
+      number: '01',
+      title: t('how.step1.title'),
+      description: t('how.step1.desc'),
+    },
     { icon: Search, number: '02', title: t('how.step2.title'), description: t('how.step2.desc') },
     { icon: Video, number: '03', title: t('how.step3.title'), description: t('how.step3.desc') },
     { icon: FileText, number: '04', title: t('how.step4.title'), description: t('how.step4.desc') },
-    { icon: BarChart3, number: '05', title: t('how.step5.title'), description: t('how.step5.desc') },
+    {
+      icon: BarChart3,
+      number: '05',
+      title: t('how.step5.title'),
+      description: t('how.step5.desc'),
+    },
   ];
 
   return (
-    <section id="nasil-calisir" className={`${landing.section} relative scroll-mt-24 overflow-hidden`}>
+    <section
+      id="nasil-calisir"
+      className={`${landing.section} relative scroll-mt-24 overflow-hidden`}
+    >
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-m-bg)] via-[var(--color-m-surface)]/20 to-[var(--color-m-bg)]" />
 
       <div className={`${landing.container} relative`}>
@@ -157,7 +172,9 @@ export function LandingHowItWorks() {
                 <span className="mb-2 inline-block text-xs font-bold text-[var(--color-m-primary-light)]">
                   {step.number}
                 </span>
-                <h3 className="mb-1.5 text-base font-semibold text-[var(--color-m-text)]">{step.title}</h3>
+                <h3 className="mb-1.5 text-base font-semibold text-[var(--color-m-text)]">
+                  {step.title}
+                </h3>
                 <p className="text-sm leading-relaxed text-[var(--color-m-text-secondary)]">
                   {step.description}
                 </p>

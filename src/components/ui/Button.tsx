@@ -2,9 +2,10 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 /**
- * Button variants (portal mockups):
- * - primary: solid purple gradient pill — main CTAs
- * - secondary: dark surface + white text — cancel, back, refresh
+ * Button variants · Trusted Navy:
+ * - primary: navy with a soft top sheen and navy glow — main CTAs
+ * - accent: amber with dark text — money and time-critical actions (Join, Add credits)
+ * - secondary: neutral surface + border — cancel, back, refresh
  * - outline: alias of secondary (legacy)
  * - ghost: minimal text control — toolbars, modal dismiss labels
  * - danger: destructive confirm
@@ -17,7 +18,9 @@ const variants = {
     'border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] text-[var(--color-m-text)] hover:bg-[var(--color-m-surface-elevated)]',
   ghost:
     'border border-transparent bg-transparent text-[var(--color-m-nav-inactive)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]',
-  danger: 'bg-[var(--color-m-error)] text-[var(--color-m-text)] hover:opacity-90',
+  accent:
+    'bg-[var(--color-m-accent)] text-[var(--color-m-on-accent)] shadow-[0_10px_22px_-12px_var(--color-m-accent)] hover:brightness-105',
+  danger: 'bg-[var(--color-m-error)] text-white hover:opacity-90',
 } as const;
 
 const sizes = {
@@ -38,7 +41,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const pillBase =
-  'inline-flex items-center justify-center rounded-full font-semibold tracking-[0.2px] transition-[background-color,opacity,transform] active:scale-[0.98]';
+  'inline-flex items-center justify-center rounded-[var(--radius-m-button)] font-bold tracking-[0.2px] transition-[background-color,opacity,transform,filter] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--color-m-primary)_28%,transparent)]';
 
 export function Button({
   className,
@@ -62,7 +65,7 @@ export function Button({
           sizes[size],
           fullWidth && 'w-full',
           isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
-          'bg-gradient-to-r from-[var(--color-m-primary)] to-[var(--color-m-gradient-end)] text-white shadow-[var(--shadow-m-glow)]',
+          'bg-[linear-gradient(180deg,var(--color-m-primary-gradient-top),var(--color-m-primary))] text-white shadow-[var(--shadow-m-glow),inset_0_1px_0_rgba(255,255,255,0.22)] hover:brightness-110',
           className
         )}
         disabled={isDisabled}
@@ -95,7 +98,9 @@ export function Button({
         <span
           className={cn(
             'size-5 animate-spin rounded-full border-2 border-t-transparent',
-            variant === 'ghost' ? 'border-white/35 border-t-white' : 'border-white/35 border-t-white'
+            variant === 'ghost'
+              ? 'border-white/35 border-t-white'
+              : 'border-white/35 border-t-white'
           )}
         />
       ) : (

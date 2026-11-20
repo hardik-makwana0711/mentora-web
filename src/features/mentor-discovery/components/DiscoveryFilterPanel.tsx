@@ -42,7 +42,7 @@ function FilterSection({
   return (
     <section className="space-y-2.5">
       <div className="flex items-center gap-2">
-        {icon ? <span className="text-[var(--color-m-primary)]">{icon}</span> : null}
+        {icon ? <span className="text-[var(--color-m-primary-text)]">{icon}</span> : null}
         <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-secondary)]">
           {title}
         </h3>
@@ -253,7 +253,7 @@ export function DiscoveryFilterSidebar({
     <div className="hidden overflow-hidden rounded-2xl border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] shadow-[var(--shadow-m-card)] ring-1 ring-[var(--color-m-ring-subtle)] lg:block">
       <div className="border-b border-[var(--color-m-card-border)] bg-[var(--color-m-hover-overlay)] px-4 py-3">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="size-4 text-[var(--color-m-primary)]" aria-hidden />
+          <SlidersHorizontal className="size-4 text-[var(--color-m-primary-text)]" aria-hidden />
           <div>
             <h2 className="text-sm font-semibold text-[var(--color-m-text)]">{tr.filters}</h2>
             <p className="text-xs text-[var(--color-m-text-muted)]">{tr.searchFiltersHint}</p>
@@ -319,7 +319,7 @@ export function DiscoveryFilterPanel({
         <SlidersHorizontal className="size-4" aria-hidden />
         <span className="hidden sm:inline">{tr.filters}</span>
         {activeCount > 0 ? (
-          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[var(--color-m-primary)] text-[10px] font-bold text-[var(--color-m-text)]">
+          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-[var(--color-m-primary)] text-xs font-bold text-white">
             {activeCount}
           </span>
         ) : null}
@@ -388,7 +388,7 @@ export function ActiveDiscoveryFilterChips({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-xs font-medium text-[var(--color-m-primary)] hover:underline"
+          className="text-xs font-medium text-[var(--color-m-primary-text)] hover:underline"
         >
           {tr.clearAllFilters}
         </button>

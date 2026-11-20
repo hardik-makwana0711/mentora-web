@@ -54,8 +54,8 @@ export function MentorEvaluationCard({ detail }: { detail: SessionDetail }) {
       ) : null}
 
       {detail.knowledge_gap ? (
-        <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-400">
+        <div className="mt-4 rounded-xl border border-[var(--color-m-warning)]/30 bg-[var(--color-m-warning)]/10 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-warning)]">
             {tr.knowledgeGapLabel}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-[var(--color-m-text-secondary)]">
@@ -64,7 +64,13 @@ export function MentorEvaluationCard({ detail }: { detail: SessionDetail }) {
         </div>
       ) : null}
 
-      <div className={hasMetrics || detail.knowledge_gap ? 'mt-4 border-t border-[var(--color-m-card-border)] pt-4' : ''}>
+      <div
+        className={
+          hasMetrics || detail.knowledge_gap
+            ? 'mt-4 border-t border-[var(--color-m-card-border)] pt-4'
+            : ''
+        }
+      >
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-muted)]">
           {tr.mentorNote}
         </p>

@@ -92,7 +92,7 @@ export function AssignedStudentsPicker({
                     className={cn(
                       'flex size-5 shrink-0 items-center justify-center rounded border text-xs',
                       selected
-                        ? 'border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)] text-[var(--color-m-text)]'
+                        ? 'border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)] text-white'
                         : 'border-[var(--color-m-card-border)]'
                     )}
                   >

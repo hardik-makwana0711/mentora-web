@@ -27,7 +27,7 @@ function Linkify({ text }: { text: string }) {
               href={part}
               target="_blank"
               rel="noreferrer"
-              className="text-[var(--color-m-primary)] underline underline-offset-2 hover:text-[var(--color-m-primary-light)]"
+              className="text-[var(--color-m-primary-text)] underline underline-offset-2 hover:text-[var(--color-m-primary-light)]"
             >
               {part}
             </a>
@@ -38,7 +38,7 @@ function Linkify({ text }: { text: string }) {
             <a
               key={i}
               href={`mailto:${part}`}
-              className="text-[var(--color-m-primary)] underline underline-offset-2 hover:text-[var(--color-m-primary-light)]"
+              className="text-[var(--color-m-primary-text)] underline underline-offset-2 hover:text-[var(--color-m-primary-light)]"
             >
               {part}
             </a>
@@ -105,7 +105,7 @@ export function LegalPageLayout({
       <main className="mx-auto max-w-3xl px-4 py-10">
         <Link
           to="/"
-          className="text-sm text-[var(--color-m-text-muted)] transition-colors hover:text-[var(--color-m-primary)]"
+          className="text-sm text-[var(--color-m-text-muted)] transition-colors hover:text-[var(--color-m-primary-text)]"
         >
           {tr.legalBackToHome}
         </Link>

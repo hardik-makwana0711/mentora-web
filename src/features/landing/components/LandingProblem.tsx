@@ -27,7 +27,7 @@ export function LandingProblem() {
       icon: FileQuestion,
       title: t('problem.card3.title'),
       description: t('problem.card3.desc'),
-      iconColor: 'text-[var(--color-m-accent)]',
+      iconColor: 'text-[var(--color-m-accent-text)]',
       bar: 'from-[var(--color-m-accent)]/60 to-[var(--color-m-error)]/30',
       bg: 'from-[var(--color-m-accent)]/15 to-[var(--color-m-error)]/10',
     },
@@ -44,7 +44,9 @@ export function LandingProblem() {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className={`${landing.sectionTitle} mx-auto max-w-3xl text-balance`}>{t('problem.title')}</h2>
+          <h2 className={`${landing.sectionTitle} mx-auto max-w-3xl text-balance`}>
+            {t('problem.title')}
+          </h2>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
@@ -56,7 +58,9 @@ export function LandingProblem() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
             >
-              <div className={`${landing.card} ${landing.cardHover} group relative h-full overflow-hidden`}>
+              <div
+                className={`${landing.card} ${landing.cardHover} group relative h-full overflow-hidden`}
+              >
                 <div
                   className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${problem.bar} opacity-0 transition-opacity group-hover:opacity-100`}
                 />
@@ -69,7 +73,9 @@ export function LandingProblem() {
                   <h3 className="mb-3 text-xl font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)]">
                     {problem.title}
                   </h3>
-                  <p className="leading-relaxed text-[var(--color-m-text-secondary)]">{problem.description}</p>
+                  <p className="leading-relaxed text-[var(--color-m-text-secondary)]">
+                    {problem.description}
+                  </p>
                 </div>
               </div>
             </motion.div>

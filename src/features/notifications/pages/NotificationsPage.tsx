@@ -198,12 +198,12 @@ export default function NotificationsPage() {
                       <div className="flex items-start gap-3">
                         {isMessage && (
                           <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-primary)]/20">
-                            <MessageSquare className="size-4 text-[var(--color-brand-primary)]" />
+                            <MessageSquare className="size-4 text-[var(--color-m-primary-text)]" />
                           </div>
                         )}
                         {isAssignment && (
-                          <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-orange-500/20">
-                            <BookOpen className="size-4 text-orange-400" />
+                          <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-m-warning)]/20">
+                            <BookOpen className="size-4 text-[var(--color-m-warning)]" />
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
@@ -222,12 +222,12 @@ export default function NotificationsPage() {
                             </p>
                           ) : null}
                           {isMessage && threadId && (
-                            <p className="mt-1 text-xs text-[var(--color-brand-primary)]">
+                            <p className="mt-1 text-xs text-[var(--color-m-primary-text)]">
                               {tr.notificationOpenThread}
                             </p>
                           )}
                           {isAssignment && (
-                            <p className="mt-1 text-xs text-[var(--color-brand-primary)]">
+                            <p className="mt-1 text-xs text-[var(--color-m-primary-text)]">
                               {tr.notificationOpenAssignment}
                             </p>
                           )}

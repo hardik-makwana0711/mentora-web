@@ -82,7 +82,7 @@ export default function IdentityVerificationPage() {
 
       <Card className="p-6">
         <div className="flex flex-col items-center text-center">
-          <ShieldCheck className="mb-3 size-12 text-[var(--color-m-primary)]" aria-hidden />
+          <ShieldCheck className="mb-3 size-12 text-[var(--color-m-primary-text)]" aria-hidden />
           <h1 className="text-xl font-bold text-[var(--color-m-text)]">
             {tr.identityVerificationTitle}
           </h1>

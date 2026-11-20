@@ -237,7 +237,10 @@ export default function LessonDetailPage() {
 
         {showRecordingNotice ? (
           <div className="mt-4 flex items-start gap-3 rounded-xl border border-[var(--color-brand-primary)]/30 bg-[var(--color-brand-primary)]/10 p-3">
-            <Mic className="mt-0.5 size-4 shrink-0 text-[var(--color-brand-primary)]" aria-hidden />
+            <Mic
+              className="mt-0.5 size-4 shrink-0 text-[var(--color-m-primary-text)]"
+              aria-hidden
+            />
 
             <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
               {tr.recordingNotice}

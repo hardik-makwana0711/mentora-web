@@ -13,7 +13,10 @@ type ActiveFilterChip = {
   label: string;
 };
 
-function buildActiveChips(filters: SearchFilters, labels: StructuredFilterLabels): ActiveFilterChip[] {
+function buildActiveChips(
+  filters: SearchFilters,
+  labels: StructuredFilterLabels
+): ActiveFilterChip[] {
   const chips: ActiveFilterChip[] = [];
   if (filters.university_id && labels.university_name) {
     chips.push({ key: 'university_id', label: labels.university_name });
@@ -87,14 +90,17 @@ export function ActiveFilterChips({
         <button
           type="button"
           onClick={onClearAll}
-          className="text-xs font-medium text-[var(--color-m-primary)] hover:underline"
+          className="text-xs font-medium text-[var(--color-m-primary-text)] hover:underline"
         >
           {tr.clearAllFilters}
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
         {chips.map((chip) => (
-          <span key={chip.key} className={`${choicePillClass(true)} inline-flex items-center gap-1`}>
+          <span
+            key={chip.key}
+            className={`${choicePillClass(true)} inline-flex items-center gap-1`}
+          >
             {chip.label}
             <button
               type="button"

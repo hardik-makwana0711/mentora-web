@@ -56,7 +56,7 @@ export function ProfileVideoSection({
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-[var(--color-m-surface-light)]">
-            <Play className="size-12 text-[var(--color-m-primary)]" />
+            <Play className="size-12 text-[var(--color-m-primary-text)]" />
           </div>
         )}
         <span className="absolute inset-0 flex items-center justify-center">

@@ -30,13 +30,15 @@ export function FavouriteListingButton({
         void toggleFavourite().catch(() => undefined);
       }}
       className={cn(
-        'rounded-full p-2 text-[var(--color-m-text-muted)] transition hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-primary)] disabled:opacity-50',
+        'rounded-full p-2 text-[var(--color-m-text-muted)] transition hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-primary-text)] disabled:opacity-50',
         className
       )}
     >
       <Bookmark
         style={{ width: size, height: size }}
-        className={cn(isFavourited && 'fill-[var(--color-m-primary)] text-[var(--color-m-primary)]')}
+        className={cn(
+          isFavourited && 'fill-[var(--color-m-primary)] text-[var(--color-m-primary-text)]'
+        )}
         aria-hidden
       />
     </button>

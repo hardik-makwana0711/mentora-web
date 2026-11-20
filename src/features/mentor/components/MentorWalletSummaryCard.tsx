@@ -17,7 +17,7 @@ export function MentorWalletSummaryCard({ wallet }: { wallet: MentorWalletSummar
   const currency = wallet.currency || 'TRY';
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--color-m-primary)] to-[var(--color-m-gradient-end)] p-6 text-white shadow-[var(--shadow-m-glow)] ring-1 ring-[var(--color-m-ring-subtle)]">
+    <div className="overflow-hidden rounded-2xl bg-[linear-gradient(135deg,var(--color-m-primary),var(--color-m-primary-dark))] [[data-theme=dark]_&]:bg-[linear-gradient(135deg,var(--color-m-primary-dark),var(--color-m-primary-soft))] p-6 text-white shadow-[var(--shadow-m-glow)] ring-1 ring-[var(--color-m-ring-subtle)]">
       <div className="mb-6 flex items-start justify-between gap-3">
         <div className="text-center sm:text-left">
           <p className="text-sm text-white/80">{tr.earningsAvailablePayout}</p>
@@ -29,15 +29,33 @@ export function MentorWalletSummaryCard({ wallet }: { wallet: MentorWalletSummar
       </div>
 
       <div className="grid grid-cols-2 gap-4 border-t border-white/20 pt-5 sm:grid-cols-4">
-        <StatCell label={tr.earningsPending} value={formatWalletMoney(wallet.pendingBalance, currency)} />
-        <StatCell label={tr.earningsTotalEarned} value={formatWalletMoney(wallet.totalEarned, currency)} />
-        <StatCell label={tr.earningsTotalPaidOut} value={formatWalletMoney(wallet.totalPaidOut, currency)} />
-        <StatCell label={tr.earningsTotalBalance} value={formatWalletMoney(wallet.totalBalance, currency)} />
+        <StatCell
+          label={tr.earningsPending}
+          value={formatWalletMoney(wallet.pendingBalance, currency)}
+        />
+        <StatCell
+          label={tr.earningsTotalEarned}
+          value={formatWalletMoney(wallet.totalEarned, currency)}
+        />
+        <StatCell
+          label={tr.earningsTotalPaidOut}
+          value={formatWalletMoney(wallet.totalPaidOut, currency)}
+        />
+        <StatCell
+          label={tr.earningsTotalBalance}
+          value={formatWalletMoney(wallet.totalBalance, currency)}
+        />
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-4 border-t border-white/20 pt-4">
-        <StatCell label={tr.earningsTotalBonuses} value={formatWalletMoney(wallet.totalBonuses, currency)} />
-        <StatCell label={tr.earningsTotalReversed} value={formatWalletMoney(wallet.totalReversed, currency)} />
+        <StatCell
+          label={tr.earningsTotalBonuses}
+          value={formatWalletMoney(wallet.totalBonuses, currency)}
+        />
+        <StatCell
+          label={tr.earningsTotalReversed}
+          value={formatWalletMoney(wallet.totalReversed, currency)}
+        />
       </div>
     </div>
   );

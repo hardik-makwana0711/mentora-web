@@ -34,7 +34,7 @@ export function ProfileQuickHighlights({ profile }: { profile: DiscoveryFullProf
           key={key}
           className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-3 py-1.5 text-sm text-[var(--color-m-text-secondary)]"
         >
-          <Icon className="size-4 text-[var(--color-m-primary)]" aria-hidden />
+          <Icon className="size-4 text-[var(--color-m-primary-text)]" aria-hidden />
           {label}
         </span>
       ))}

@@ -152,7 +152,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={resetVerificationFlow}
-          className="mb-4 text-[15px] font-semibold text-[var(--color-m-primary)] hover:text-[var(--color-m-primary-light)]"
+          className="mb-4 text-[15px] font-semibold text-[var(--color-m-primary-text)] hover:text-[var(--color-m-primary-light)]"
         >
           ← {tr.backToLogin}
         </button>
@@ -188,7 +188,7 @@ export default function LoginPage() {
           />
           <div className="mb-6 text-right">
             <Link
-              className="text-[15px] font-semibold text-[var(--color-m-primary)] hover:text-[var(--color-m-primary-light)]"
+              className="text-[15px] font-semibold text-[var(--color-m-primary-text)] hover:text-[var(--color-m-primary-light)]"
               to="/forgot-password"
             >
               {tr.forgotPassword}
@@ -200,7 +200,10 @@ export default function LoginPage() {
         </form>
         <p className="mt-6 text-center text-[15px] text-[var(--color-m-text-secondary)]">
           {tr.noAccountPrompt}{' '}
-          <Link className="font-bold text-[var(--color-m-primary)] hover:underline" to="/register">
+          <Link
+            className="font-bold text-[var(--color-m-primary-text)] hover:underline"
+            to="/register"
+          >
             {tr.signUpLink}
           </Link>
         </p>

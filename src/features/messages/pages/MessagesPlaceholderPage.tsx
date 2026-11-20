@@ -293,7 +293,7 @@ export default function MessagesPlaceholderPage() {
                         )}
                       >
                         <p className="whitespace-pre-wrap break-words">{m.encrypted_payload}</p>
-                        <p className="mt-1 text-[10px] text-[var(--color-text-muted)]">
+                        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
                           {format(new Date(m.sent_at), 'd MMM HH:mm', { locale: dateLocale })}
                         </p>
                       </div>

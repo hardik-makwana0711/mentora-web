@@ -222,7 +222,7 @@ export default function RegisterPage() {
                 to="/privacy-policy"
                 target="_blank"
                 rel="noreferrer"
-                className="underline underline-offset-2 hover:text-[var(--color-m-primary)]"
+                className="underline underline-offset-2 hover:text-[var(--color-m-primary-text)]"
               >
                 {tr.privacyPolicy}
               </Link>{' '}
@@ -231,7 +231,7 @@ export default function RegisterPage() {
                 to="/terms-and-conditions"
                 target="_blank"
                 rel="noreferrer"
-                className="underline underline-offset-2 hover:text-[var(--color-m-primary)]"
+                className="underline underline-offset-2 hover:text-[var(--color-m-primary-text)]"
               >
                 {tr.termsAndConditions}
               </Link>
@@ -241,7 +241,7 @@ export default function RegisterPage() {
               {...register('terms_accepted', { setValueAs: (v) => v === true })}
             />
             {errors.terms_accepted?.message ? (
-              <span className="mb-4 block text-[11px] text-[var(--color-m-error)]">
+              <span className="mb-4 block text-xs text-[var(--color-m-error)]">
                 {errors.terms_accepted.message}
               </span>
             ) : null}
@@ -251,7 +251,7 @@ export default function RegisterPage() {
           </form>
           <p className="mt-6 text-center text-[15px]">
             <Link
-              className="font-semibold text-[var(--color-m-primary)] hover:underline"
+              className="font-semibold text-[var(--color-m-primary-text)] hover:underline"
               to="/login"
             >
               {tr.backToLogin}

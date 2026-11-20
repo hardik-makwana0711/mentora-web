@@ -10,9 +10,9 @@ export function LandingValueByUser() {
     {
       icon: BookOpen,
       title: t('value.students'),
-      bar: 'from-blue-500 to-cyan-500',
-      iconBox: 'from-blue-500 to-cyan-500',
-      checkBg: 'from-blue-500/15 to-cyan-500/10',
+      bar: 'from-[var(--color-m-info)] to-[var(--color-m-info)]',
+      iconBox: 'from-[var(--color-m-info)] to-[var(--color-m-info)]',
+      checkBg: 'from-[var(--color-m-info)]/15 to-[var(--color-m-info)]/10',
       benefits: [t('value.students.1'), t('value.students.2'), t('value.students.3')],
     },
     {
@@ -56,10 +56,14 @@ export function LandingValueByUser() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
             >
-              <div className={`${landing.card} ${landing.cardHover} group relative h-full overflow-hidden`}>
+              <div
+                className={`${landing.card} ${landing.cardHover} group relative h-full overflow-hidden`}
+              >
                 <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${user.bar}`} />
                 <div className="p-6 sm:p-8">
-                  <div className={`mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br ${user.iconBox} shadow-lg`}>
+                  <div
+                    className={`mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br ${user.iconBox} shadow-lg`}
+                  >
                     <user.icon className="size-8 text-[var(--color-m-text)]" />
                   </div>
                   <h3 className="mb-4 text-xl font-bold text-[var(--color-m-text)] transition-colors group-hover:text-[var(--color-m-primary-light)]">

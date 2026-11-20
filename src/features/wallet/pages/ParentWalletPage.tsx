@@ -62,9 +62,18 @@ function formatTxDate(iso: string): string {
 }
 
 const DIR_STYLE = {
-  positive: { text: '#22C55E', bg: 'rgba(34,197,94,0.094)' },
-  negative: { text: '#EF4444', bg: 'rgba(239,68,68,0.094)' },
-  hold: { text: '#F59E0B', bg: 'rgba(245,158,11,0.094)' },
+  positive: {
+    text: 'var(--color-m-success)',
+    bg: 'color-mix(in srgb, var(--color-m-success) 10%, transparent)',
+  },
+  negative: {
+    text: 'var(--color-m-error)',
+    bg: 'color-mix(in srgb, var(--color-m-error) 10%, transparent)',
+  },
+  hold: {
+    text: 'var(--color-m-warning)',
+    bg: 'color-mix(in srgb, var(--color-m-warning) 10%, transparent)',
+  },
 };
 const DIR_SIGNS = { positive: '+', negative: '−', hold: '⏸' } as const;
 
@@ -92,7 +101,7 @@ function TransactionItem({ item }: { item: ParentWalletTransaction }) {
             {item.description}
           </p>
         ) : null}
-        <p className="mt-1 text-[11px] text-[var(--color-m-text-muted)]">{date}</p>
+        <p className="mt-1 text-xs text-[var(--color-m-text-muted)]">{date}</p>
       </div>
 
       <div className="flex flex-col items-end gap-1">
@@ -101,7 +110,7 @@ function TransactionItem({ item }: { item: ParentWalletTransaction }) {
         </p>
         {showStatus ? (
           <span
-            className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+            className="rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide"
             style={{ backgroundColor: style.bg, color: style.text }}
           >
             {item.status.toLowerCase()}
@@ -161,7 +170,7 @@ function CreditTopUpForm({
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4 rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-surface-bg)] p-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-m-primary)]/15">
-          <Wallet className="size-6 text-[var(--color-m-primary)]" />
+          <Wallet className="size-6 text-[var(--color-m-primary-text)]" />
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-m-text-muted)]">
@@ -174,13 +183,15 @@ function CreditTopUpForm({
       </div>
 
       <div className="flex flex-col items-center gap-3">
-        <p className="text-base font-bold text-[var(--color-m-text)]">{tr.parentWalletEnterAmount}</p>
+        <p className="text-base font-bold text-[var(--color-m-text)]">
+          {tr.parentWalletEnterAmount}
+        </p>
         <div
           className={cn(
             'flex h-20 w-full cursor-text items-center justify-center gap-2 rounded-xl border-2 bg-[var(--color-m-card)] px-6',
             validationError
               ? 'border-[var(--color-m-error)]'
-              : 'border-[var(--color-m-card-border)] focus-within:border-[var(--color-brand-primary)]',
+              : 'border-[var(--color-m-card-border)] focus-within:border-[var(--color-brand-primary)]'
           )}
           onClick={() => inputRef.current?.focus()}
         >
@@ -191,6 +202,7 @@ function CreditTopUpForm({
             value={value}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="0"
+            aria-label={tr.parentWalletEnterAmount}
             maxLength={4}
             autoFocus
             className="min-w-0 flex-1 bg-transparent text-center text-4xl font-bold text-[var(--color-m-text)] outline-none placeholder:text-[var(--color-m-text-muted)]"
@@ -222,7 +234,12 @@ function CreditTopUpForm({
         >
           {tr.cancel}
         </Button>
-        <Button type="button" onClick={handleSubmit} isLoading={mutation.isPending} className="flex-[2]">
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          isLoading={mutation.isPending}
+          className="flex-[2]"
+        >
           <PlusCircle className="mr-2 size-4" />
           {tr.dashboardAddCredits}
         </Button>
@@ -285,7 +302,7 @@ export default function ParentWalletPage() {
               <p className="text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-m-text-muted)]">
                 {tr.parentWalletAvailableCredits}
               </p>
-              <p className="mt-2 text-[56px] font-extrabold leading-tight text-[var(--color-m-primary)]">
+              <p className="mt-2 text-[56px] font-extrabold leading-tight text-[var(--color-m-primary-text)]">
                 {availableCredits}
               </p>
               <p className="mt-1 text-xs text-[var(--color-m-text-muted)]">
@@ -298,8 +315,12 @@ export default function ParentWalletPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-m-text-muted)]">
                   {tr.parentWalletHeld}
                 </p>
-                <p className="text-2xl font-bold text-yellow-400">{heldCredits}</p>
-                <p className="text-[10px] text-[var(--color-m-text-muted)]">{tr.parentWalletForBookings}</p>
+                <p className="text-2xl font-bold text-[var(--color-m-accent-text)]">
+                  {heldCredits}
+                </p>
+                <p className="text-xs text-[var(--color-m-text-muted)]">
+                  {tr.parentWalletForBookings}
+                </p>
               </div>
               <div className="w-px bg-[var(--color-m-card-border)]" />
               <div className="flex flex-1 flex-col items-center gap-0.5">
@@ -307,7 +328,7 @@ export default function ParentWalletPage() {
                   {tr.parentWalletTotal}
                 </p>
                 <p className="text-2xl font-bold text-[var(--color-m-text)]">{totalCredits}</p>
-                <p className="text-[10px] text-[var(--color-m-text-muted)]">
+                <p className="text-xs text-[var(--color-m-text-muted)]">
                   {tr.parentWalletAvailablePlusHeld}
                 </p>
               </div>
@@ -316,7 +337,7 @@ export default function ParentWalletPage() {
             <div className="grid grid-cols-4 rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-surface-bg)] py-3">
               {summaryStats.map(({ label, value }) => (
                 <div key={label} className="flex flex-col items-center gap-1">
-                  <p className="text-center text-[10px] font-bold uppercase tracking-[0.04em] text-[var(--color-m-text-muted)]">
+                  <p className="text-center text-xs font-bold uppercase tracking-[0.04em] text-[var(--color-m-text-muted)]">
                     {label}
                   </p>
                   <p className="text-sm font-bold text-[var(--color-m-text)]">{value}</p>
@@ -327,7 +348,9 @@ export default function ParentWalletPage() {
 
           <div className="mb-6 flex items-center gap-4 rounded-xl border border-[var(--color-m-card-border)] bg-[var(--color-m-card)] p-4">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-[var(--color-m-text)]">{tr.dashboardAddCredits}</p>
+              <p className="text-sm font-bold text-[var(--color-m-text)]">
+                {tr.dashboardAddCredits}
+              </p>
               <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-m-text-secondary)]">
                 {tr.parentWalletAddCreditsCta}
               </p>
@@ -346,7 +369,7 @@ export default function ParentWalletPage() {
               <button
                 type="button"
                 onClick={() => void txQ.refetch()}
-                className="text-xs text-[var(--color-brand-primary)] hover:underline"
+                className="text-xs text-[var(--color-m-primary-text)] hover:underline"
               >
                 {tr.refreshList}
               </button>

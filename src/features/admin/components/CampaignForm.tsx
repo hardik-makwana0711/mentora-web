@@ -127,7 +127,8 @@ export function CampaignForm({
       title: values.title || tr.marketingPreviewTitlePlaceholder,
       subtitle: values.subtitle || null,
       description: values.description || null,
-      imageUrl: values.imageUrl || 'https://images.unsplash.com/photo-1509228468518-180dd4862104?w=400',
+      imageUrl:
+        values.imageUrl || 'https://images.unsplash.com/photo-1509228468518-180dd4862104?w=400',
       ctaText: values.ctaText || tr.marketingDefaultCta,
       ctaUrl: values.ctaUrl || '#',
       sponsorLabel: values.sponsorLabel || null,
@@ -192,7 +193,9 @@ export function CampaignForm({
             rows={4}
             disabled={isSubmitting}
           />
-          <p className="-mt-2 text-xs text-[var(--color-m-text-muted)]">{tr.marketingFieldDescriptionHint}</p>
+          <p className="-mt-2 text-xs text-[var(--color-m-text-muted)]">
+            {tr.marketingFieldDescriptionHint}
+          </p>
           <Input
             label={tr.marketingFieldImageUrl}
             {...form.register('imageUrl')}
@@ -238,7 +241,9 @@ export function CampaignForm({
                     { value: 'en', label: tr.marketingLanguageEn },
                   ]}
                 />
-                <p className="text-xs text-[var(--color-m-text-muted)]">{tr.marketingFieldLanguageHint}</p>
+                <p className="text-xs text-[var(--color-m-text-muted)]">
+                  {tr.marketingFieldLanguageHint}
+                </p>
               </div>
             )}
           />
@@ -440,8 +445,8 @@ export function CampaignForm({
         </section>
 
         {warnings.length > 0 ? (
-          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
-            <div className="flex gap-2 text-amber-200">
+          <div className="rounded-xl border border-[var(--color-m-warning)]/30 bg-[var(--color-m-warning)]/10 p-4">
+            <div className="flex gap-2 text-[var(--color-m-warning)]">
               <AlertTriangle className="size-5 shrink-0" aria-hidden />
               <ul className="space-y-1 text-sm">
                 {warnings.map((w) => (
@@ -456,7 +461,11 @@ export function CampaignForm({
           <Button type="button" variant="secondary" onClick={onCancel} disabled={isSubmitting}>
             {tr.cancel}
           </Button>
-          <Button type="submit" disabled={!form.formState.isValid || isSubmitting} isLoading={isSubmitting}>
+          <Button
+            type="submit"
+            disabled={!form.formState.isValid || isSubmitting}
+            isLoading={isSubmitting}
+          >
             {submitLabel}
           </Button>
         </FormActions>

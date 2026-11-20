@@ -53,7 +53,7 @@ export function MentorQuizActions({
             </Button>
           </>
         ) : (
-          <p className="text-sm text-emerald-400">{tr.quizPublished}</p>
+          <p className="text-sm text-[var(--color-m-success)]">{tr.quizPublished}</p>
         )}
       </div>
     </div>

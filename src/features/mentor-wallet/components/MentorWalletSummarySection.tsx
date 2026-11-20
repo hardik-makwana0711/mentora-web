@@ -16,7 +16,7 @@ export function MentorWalletSummarySection({ wallet }: { wallet: MentorWalletSum
   const tr = useStrings();
   const currency = wallet.currency || 'TRY';
   return (
-    <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--color-m-primary)]/70 to-[var(--color-m-gradient-end)]/60 p-6 text-white shadow-[var(--shadow-m-glow)] ring-1 ring-[var(--color-m-ring-subtle)]">
+    <div className="overflow-hidden rounded-2xl bg-[linear-gradient(135deg,var(--color-m-primary),var(--color-m-primary-dark))] [[data-theme=dark]_&]:bg-[linear-gradient(135deg,var(--color-m-primary-dark),var(--color-m-primary-soft))] p-6 text-white shadow-[var(--shadow-m-glow)] ring-1 ring-[var(--color-m-ring-subtle)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm text-white/80">{tr.earningsAvailablePayout}</p>
@@ -31,14 +31,31 @@ export function MentorWalletSummarySection({ wallet }: { wallet: MentorWalletSum
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Stat label={tr.earningsTotalBalance} value={formatWalletMoney(wallet.totalBalance, currency)} />
-        <Stat label={tr.earningsTotalEarned} value={formatWalletMoney(wallet.totalEarned, currency)} />
-        <Stat label={tr.earningsTotalPaidOut} value={formatWalletMoney(wallet.totalPaidOut, currency)} />
-        <Stat label={tr.earningsTotalReversed} value={formatWalletMoney(wallet.totalReversed, currency)} />
-        <Stat label={tr.earningsTotalBonuses} value={formatWalletMoney(wallet.totalBonuses, currency)} />
-        <Stat label={tr.earningsPending} value={formatWalletMoney(wallet.pendingBalance, currency)} />
+        <Stat
+          label={tr.earningsTotalBalance}
+          value={formatWalletMoney(wallet.totalBalance, currency)}
+        />
+        <Stat
+          label={tr.earningsTotalEarned}
+          value={formatWalletMoney(wallet.totalEarned, currency)}
+        />
+        <Stat
+          label={tr.earningsTotalPaidOut}
+          value={formatWalletMoney(wallet.totalPaidOut, currency)}
+        />
+        <Stat
+          label={tr.earningsTotalReversed}
+          value={formatWalletMoney(wallet.totalReversed, currency)}
+        />
+        <Stat
+          label={tr.earningsTotalBonuses}
+          value={formatWalletMoney(wallet.totalBonuses, currency)}
+        />
+        <Stat
+          label={tr.earningsPending}
+          value={formatWalletMoney(wallet.pendingBalance, currency)}
+        />
       </div>
     </div>
   );
 }
-

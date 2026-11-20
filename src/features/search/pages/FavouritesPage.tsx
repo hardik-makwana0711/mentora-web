@@ -242,7 +242,7 @@ function TabButton({
       className={cn(
         'flex-1 rounded-lg px-3 py-2 text-sm font-medium transition',
         active
-          ? 'bg-[var(--color-m-primary)] text-[var(--color-m-text)]'
+          ? 'bg-[var(--color-m-primary)] text-white'
           : 'text-[var(--color-m-text-muted)] hover:text-[var(--color-m-text)]'
       )}
     >
@@ -272,7 +272,7 @@ function FavouriteListingCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <Bookmark className="size-4 shrink-0 text-[var(--color-m-primary)]" aria-hidden />
+            <Bookmark className="size-4 shrink-0 text-[var(--color-m-primary-text)]" aria-hidden />
             <h3 className="truncate font-semibold text-[var(--color-m-text)]">{displaySubject}</h3>
           </div>
           <p className="mt-1 text-sm text-[var(--color-m-text-muted)]">

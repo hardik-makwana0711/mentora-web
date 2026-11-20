@@ -11,6 +11,7 @@ import { useAuthStore } from '@/app/store/authStore';
 import { Drawer } from '@/components/ui/Drawer';
 import { AppLogo } from '@/components/layouts/AppLogo';
 import { AppChromeControls } from '@/components/ui/AppChromeControls';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { ProfileMenuDropdown } from '@/components/layouts/ProfileMenuDropdown';
 import { getDateFnsLocale } from '@/lib/date-locale';
 import { cn } from '@/lib/utils';
@@ -56,7 +57,7 @@ function SidebarNavLink({
         />
       ) : showBadge ? (
         <span
-          className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-m-primary)] text-[10px] font-bold text-[var(--color-m-text)]"
+          className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-m-primary)] text-xs font-bold text-white"
           aria-label={unreadBadgeAria(unreadTotal)}
         >
           {formatUnreadBadge(unreadTotal)}
@@ -174,7 +175,8 @@ export function RoleShell({
               }).format(new Date())}
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <AppChromeControls />
+              {/* Language moves into the menu drawer on phones so the header fits 375 px */}
+              <AppChromeControls hideLanguageOnMobile />
               <button
                 type="button"
                 className="relative rounded-full p-2 text-[var(--color-m-text-muted)] hover:bg-[var(--color-m-hover-overlay)] hover:text-[var(--color-m-text)]"
@@ -206,11 +208,11 @@ export function RoleShell({
       </div>
 
       <nav
-        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden"
+        className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 md:hidden"
         aria-label={tr.mobileTabMenuAria}
       >
         <div
-          className="pointer-events-auto flex w-full max-w-md flex-row items-end justify-around border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-3 py-2 shadow-[var(--shadow-m-tab)]"
+          className="pointer-events-auto flex w-full max-w-md flex-row items-end justify-around border border-[var(--color-m-card-border)] bg-[var(--color-m-surface-light)] px-1.5 py-2 shadow-[var(--shadow-m-tab)]"
           style={{ borderRadius: 28 }}
         >
           {mobileNavItems.slice(0, 5).map((item) => (
@@ -230,13 +232,13 @@ export function RoleShell({
                     <item.icon
                       className={cn(
                         'size-[22px] shrink-0',
-                        isActive ? 'text-[var(--color-m-text)]' : 'text-[var(--color-m-text-muted)]'
+                        isActive ? 'text-white' : 'text-[var(--color-m-text-muted)]'
                       )}
                       aria-hidden
                     />
                     {item.labelKey === 'navMessages' && unreadTotal > 0 ? (
                       <span
-                        className="absolute -right-0.5 -top-0.5 flex min-w-[18px] items-center justify-center rounded-full bg-[var(--color-m-error)] px-1 text-[9px] font-bold text-[var(--color-m-text)]"
+                        className="absolute -right-0.5 -top-0.5 flex min-w-[18px] items-center justify-center rounded-full bg-[var(--color-m-error)] px-1 text-xs font-bold text-white"
                         aria-label={unreadBadgeAria(unreadTotal)}
                       >
                         {formatUnreadBadge(unreadTotal)}
@@ -245,7 +247,8 @@ export function RoleShell({
                   </span>
                   <span
                     className={cn(
-                      'mt-1 line-clamp-1 max-w-full px-0.5 text-center text-[10px] tracking-[0.3px]',
+                      // Two short lines instead of "Dashboar…" / "My…" on 375 px phones
+                      'mt-1 line-clamp-2 max-w-full text-center text-xs leading-[1.15] tracking-tight [overflow-wrap:normal]',
                       isActive
                         ? 'font-bold text-[var(--color-m-primary-light)]'
                         : 'font-medium text-[var(--color-m-text-muted)]'
@@ -274,6 +277,12 @@ export function RoleShell({
               lockedAria={tr.navLockedAria}
             />
           ))}
+          <div className="mt-6 flex items-center justify-between gap-3 border-t border-[var(--color-m-card-border)] px-3 pt-4 sm:hidden">
+            <span className="text-sm font-semibold text-[var(--color-m-text-secondary)]">
+              {tr.languageSwitcherAria}
+            </span>
+            <LanguageSwitcher />
+          </div>
           <button
             type="button"
             onClick={() => setLogoutOpen(true)}

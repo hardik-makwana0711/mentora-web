@@ -12,7 +12,14 @@ export function TodayScheduleList({ items, onSessionPress }: TodayScheduleListPr
   const tr = useStrings();
   return (
     <DashboardPanelCard>
-      <p className="text-sm text-[var(--color-text-muted)]">{tr.todaySchedule}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-base font-extrabold tracking-[-0.3px] text-[var(--color-m-text)]">
+          {tr.todaySchedule}
+        </p>
+        <span className="min-w-[26px] rounded-full bg-[var(--color-m-primary-soft)] px-2 py-0.5 text-center text-xs font-bold text-[var(--color-m-primary-text)]">
+          {items.length}
+        </span>
+      </div>
       <ul className="mt-3 space-y-2">
         {items.map((s) => (
           <MentorScheduleRow

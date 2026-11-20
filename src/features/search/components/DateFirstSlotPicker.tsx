@@ -16,7 +16,10 @@ interface DateGroup {
   slots: AvailabilityWindow[];
 }
 
-function groupSlotsByDate(slots: AvailabilityWindow[], dateLocale: ReturnType<typeof getDateFnsLocale>): DateGroup[] {
+function groupSlotsByDate(
+  slots: AvailabilityWindow[],
+  dateLocale: ReturnType<typeof getDateFnsLocale>
+): DateGroup[] {
   const map = new Map<string, AvailabilityWindow[]>();
   for (const slot of slots) {
     const key = slot.start.slice(0, 10);
@@ -113,7 +116,7 @@ export function DateFirstSlotPicker({
                   {format(group.date, 'EEE', { locale: dateLocale })}
                 </span>
                 {hasSelected && (
-                  <span className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-[var(--color-brand-primary)] text-[9px] font-bold text-[var(--color-m-text)]">
+                  <span className="absolute -right-1 -top-1 flex size-3.5 items-center justify-center rounded-full bg-[var(--color-brand-primary)] text-xs font-bold text-white">
                     {group.slots.filter((sl) => selectedKeys.has(sl.start)).length}
                   </span>
                 )}

@@ -76,9 +76,7 @@ export default function PublicListingDetailPage() {
     if (isHttpNotFound(listingQuery.error)) {
       return <EmptyState title={tr.listingUnavailable} />;
     }
-    return (
-      <ErrorState title={tr.listingLoadError} onRetry={() => void listingQuery.refetch()} />
-    );
+    return <ErrorState title={tr.listingLoadError} onRetry={() => void listingQuery.refetch()} />;
   }
 
   const { listing, mentor } = listingQuery.data;
@@ -114,14 +112,18 @@ export default function PublicListingDetailPage() {
       <PageHeader title={tr.listingDetail} />
 
       <Card className="mt-4 flex gap-3 p-4">
-        <PresignedAvatar storedUrl={mentor.avatar_url} name={mentor.name} className="size-14 shrink-0" />
+        <PresignedAvatar
+          storedUrl={mentor.avatar_url}
+          name={mentor.name}
+          className="size-14 shrink-0"
+        />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
               <p className="flex items-center gap-1 font-semibold text-[var(--color-m-text)]">
                 {mentor.name}
                 {isVerified(mentor.verification_status) ? (
-                  <BadgeCheck className="size-4 text-[var(--color-m-primary)]" aria-hidden />
+                  <BadgeCheck className="size-4 text-[var(--color-m-primary-text)]" aria-hidden />
                 ) : null}
               </p>
               {universityDisplay ? (
@@ -142,7 +144,10 @@ export default function PublicListingDetailPage() {
           <Badge>{formatLessonFormat(listing.lesson_format)}</Badge>
           {!structured?.exam_display_name ? <Badge>{gradeBadge}</Badge> : null}
           {structured?.exam_display_name ? <Badge>{structured.exam_display_name}</Badge> : null}
-          <FavouriteListingButton listingId={listing.id} initialIsFavourited={listing.is_favourited} />
+          <FavouriteListingButton
+            listingId={listing.id}
+            initialIsFavourited={listing.is_favourited}
+          />
         </div>
         {listing.price != null ? (
           <p className="mt-3 text-lg font-bold text-[var(--color-m-text)]">
@@ -170,7 +175,9 @@ export default function PublicListingDetailPage() {
               initialIsFavourited={mentor.is_favourited ?? false}
               size={28}
             />
-            <p className="text-center text-sm text-[var(--color-m-text-muted)]">{tr.studentBookingNote}</p>
+            <p className="text-center text-sm text-[var(--color-m-text-muted)]">
+              {tr.studentBookingNote}
+            </p>
           </div>
         )}
       </div>
