@@ -1502,6 +1502,24 @@ export const en = {
   legalLastUpdated: 'Last updated',
   registerLegalAgreementPrefix: 'By registering, you agree to our',
   registerLegalAgreementJoiner: 'and',
+  orDivider: 'or',
+  googleSignInRolesNote:
+    'Google sign-in is for parents and mentors. Students sign in with their own account details.',
+  googleSignInUnavailable:
+    'Google sign-in is not available right now. Please use your email and password.',
+  googleSignInNotAllowed: 'This account cannot use Google sign-in.',
+  googleSignInFailed: 'Google sign-in failed. Please try again.',
+  googleSignInExpired: 'Your Google session expired. Please press "Continue with Google" again.',
+  googleSignInLoadFailed:
+    'Could not load Google sign-in. Check your connection or use your email and password.',
+  googleFinishTitle: 'Finish creating your account',
+  googleFinishBody:
+    'This is your first time signing in with Google. Choose how you will use Mentora.',
+  googleFinishRoleLabel: 'Account type',
+  googleRoleParentHint: 'Book lessons for your children and follow their progress.',
+  googleRoleMentorHint: 'Teach students, set your availability and get paid.',
+  googleFinishTermsPrefix: 'I accept the',
+  googleFinishCta: 'Create account',
   registerSuccess:
     'Registration received. Use the mobile app for verification steps, or try signing in.',
   registerFailed: 'Registration failed',
@@ -1568,6 +1586,7 @@ export const en = {
     'Credits are added to your account immediately. Use them to book lessons with any mentor.',
   parentWalletCreditsAdded: 'Credits added successfully.',
   parentWalletCreditsAddFailed: 'Failed to add credits. Please try again.',
+  parentWalletTopupUnavailable: 'Adding credits is not available yet. Please check back soon.',
   paginationPrevious: 'Previous',
   paginationNext: 'Next',
   txDummyTopup: 'Credits added',

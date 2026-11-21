@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly VITE_APP_NAME: string;
   readonly VITE_SOCKET_URL: string;
   readonly VITE_SENTRY_DSN: string;
+  /** Google OAuth web client ID; the Google button is hidden when empty. */
+  readonly VITE_GOOGLE_CLIENT_ID?: string;
 }
 
 interface ImportMeta {

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Wallet, PlusCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -125,10 +126,12 @@ function CreditTopUpForm({
   availableCredits,
   onSuccess,
   onCancel,
+  onUnavailable,
 }: {
   availableCredits: number;
   onSuccess: () => void;
   onCancel: () => void;
+  onUnavailable: () => void;
 }) {
   const tr = useStrings();
   const qc = useQueryClient();
@@ -143,7 +146,15 @@ function CreditTopUpForm({
       await qc.invalidateQueries({ queryKey: ['parent-wallet'] });
       onSuccess();
     },
-    onError: () => setValidationError(tr.parentWalletCreditsAddFailed),
+    onError: (e) => {
+      // 404 = top-up is turned off on the server: say so instead of "try again"
+      if (isAxiosError(e) && e.response?.status === 404) {
+        toast.info(tr.parentWalletTopupUnavailable);
+        onUnavailable();
+        return;
+      }
+      setValidationError(tr.parentWalletCreditsAddFailed);
+    },
   });
 
   function handleChange(raw: string) {
@@ -251,6 +262,7 @@ function CreditTopUpForm({
 export default function ParentWalletPage() {
   const tr = useStrings();
   const [topupOpen, setTopupOpen] = useState(false);
+  const [topupOff, setTopupOff] = useState(false);
   const [page, setPage] = useState(1);
 
   const walletQ = useQuery({
@@ -264,6 +276,7 @@ export default function ParentWalletPage() {
   });
 
   const summary = walletQ.data;
+  const topupAvailable = summary?.topupEnabled !== false && !topupOff;
   const availableCredits =
     summary?.availableCredits ?? summary?.credit_balance ?? summary?.balance ?? 0;
   const heldCredits = summary?.heldCredits ?? 0;
@@ -352,13 +365,15 @@ export default function ParentWalletPage() {
                 {tr.dashboardAddCredits}
               </p>
               <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-m-text-secondary)]">
-                {tr.parentWalletAddCreditsCta}
+                {topupAvailable ? tr.parentWalletAddCreditsCta : tr.parentWalletTopupUnavailable}
               </p>
             </div>
-            <Button type="button" size="sm" onClick={() => setTopupOpen(true)}>
-              <PlusCircle className="mr-1.5 size-4" />
-              {tr.dashboardAddCredits}
-            </Button>
+            {topupAvailable ? (
+              <Button type="button" size="sm" onClick={() => setTopupOpen(true)}>
+                <PlusCircle className="mr-1.5 size-4" />
+                {tr.dashboardAddCredits}
+              </Button>
+            ) : null}
           </div>
 
           <section>
@@ -430,6 +445,10 @@ export default function ParentWalletPage() {
           availableCredits={availableCredits}
           onSuccess={() => setTopupOpen(false)}
           onCancel={() => setTopupOpen(false)}
+          onUnavailable={() => {
+            setTopupOpen(false);
+            setTopupOff(true);
+          }}
         />
       </Modal>
     </div>

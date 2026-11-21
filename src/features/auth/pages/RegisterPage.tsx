@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/Input';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { GoogleAuthSection } from '@/features/auth/components/GoogleAuthSection';
 import { createRegisterSchema, type RegisterForm } from '@/validations/auth.schemas';
 import {
   AuthCard,
@@ -249,6 +250,7 @@ export default function RegisterPage() {
               {tr.register}
             </Button>
           </form>
+          <GoogleAuthSection mode="register" />
           <p className="mt-6 text-center text-[15px]">
             <Link
               className="font-semibold text-[var(--color-m-primary-text)] hover:underline"
