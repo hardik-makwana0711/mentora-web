@@ -1510,6 +1510,22 @@ export const tr: { [K in keyof Strings]: string } = {
     'Google ile giriş şu anda kullanılamıyor. Lütfen e-posta ve şifrenizi kullanın.',
   googleSignInNotAllowed: 'Bu hesap Google ile giriş yapamaz.',
   googleSignInFailed: 'Google ile giriş başarısız oldu. Lütfen tekrar deneyin.',
+  googleCalendarTitle: 'Google Takvim ve Meet',
+  googleCalendarConnectedAs:
+    '{{email}} olarak bağlı. Yeni dersler takviminize eklenir ve Google Meet toplantısını siz yönetirsiniz.',
+  googleCalendarNotConnected:
+    'Yeni derslerin takviminizde görünmesi ve Google Meet toplantısını sizin yönetmeniz için Google Takviminizi bağlayın.',
+  googleCalendarUsingPlatform: 'Bağlayana kadar ders Meet bağlantılarını Mentora oluşturur.',
+  googleCalendarNeedsReconnect:
+    'Google erişimi kaldırıldı. Derslerin takviminize eklenmeye devam etmesi için tekrar bağlayın.',
+  googleCalendarConnect: 'Google Takvimi bağla',
+  googleCalendarReconnect: 'Tekrar bağla',
+  googleCalendarDisconnect: 'Bağlantıyı kes',
+  googleCalendarConnectedToast: 'Google Takvim bağlandı',
+  googleCalendarDisconnectedToast: 'Google Takvim bağlantısı kesildi',
+  googleCalendarFailedToast: 'Google Takvim bağlanamadı',
+  googleCalendarPrivacyNote:
+    'Mentora yalnızca ders etkinliklerini ekler ve günceller. Öğrenciler ve veliler e-postayla davet edilir ve birbirlerinin adreslerini göremez.',
   googleSignInExpired:
     'Google oturumunuzun süresi doldu. Lütfen "Google ile devam et" düğmesine tekrar basın.',
   googleSignInLoadFailed:
