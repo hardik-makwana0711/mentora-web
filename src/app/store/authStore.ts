@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { authService } from '@/services/auth.service';
+import { authService, type GoogleLoginInput } from '@/services/auth.service';
 import { tokenStorage } from '@/lib/token-storage';
 import { setAuthHeader } from '@/api/client';
 import { queryClient } from '@/app/query-client';
@@ -13,6 +13,7 @@ interface AuthState {
   user: User | null;
   role: UserRole | null;
   login: (identifier: string, password: string) => Promise<void>;
+  loginWithGoogle: (input: GoogleLoginInput) => Promise<void>;
   logout: () => Promise<void>;
   bootstrap: () => Promise<void>;
   setUser: (user: User | null) => void;
@@ -49,6 +50,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (login_identifier, password) => {
     const { tokens, user } = await authService.login({ login_identifier, password });
     if (!tokens?.access_token) throw new Error('Doğrulanmamış hesap veya eksik oturum.');
+    queryClient.removeQueries({ queryKey: qk.profileScope });
+    tokenStorage.setTokens(tokens.access_token, tokens.refresh_token ?? '');
+    setAuthHeader(tokens.access_token);
+    set({ user, role: user.role, status: 'ready' });
+  },
+
+  loginWithGoogle: async (input) => {
+    const { tokens, user } = await authService.loginWithGoogle(input);
+    if (!tokens?.access_token) throw new Error('Missing session');
     queryClient.removeQueries({ queryKey: qk.profileScope });
     tokenStorage.setTokens(tokens.access_token, tokens.refresh_token ?? '');
     setAuthHeader(tokens.access_token);

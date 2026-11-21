@@ -1503,6 +1503,25 @@ export const tr: { [K in keyof Strings]: string } = {
   legalLastUpdated: 'Son güncelleme',
   registerLegalAgreementPrefix: 'Kayıt olarak',
   registerLegalAgreementJoiner: 've',
+  orDivider: 'veya',
+  googleSignInRolesNote:
+    'Google ile giriş veliler ve mentorlar içindir. Öğrenciler kendi hesap bilgileriyle giriş yapar.',
+  googleSignInUnavailable:
+    'Google ile giriş şu anda kullanılamıyor. Lütfen e-posta ve şifrenizi kullanın.',
+  googleSignInNotAllowed: 'Bu hesap Google ile giriş yapamaz.',
+  googleSignInFailed: 'Google ile giriş başarısız oldu. Lütfen tekrar deneyin.',
+  googleSignInExpired:
+    'Google oturumunuzun süresi doldu. Lütfen "Google ile devam et" düğmesine tekrar basın.',
+  googleSignInLoadFailed:
+    'Google ile giriş yüklenemedi. Bağlantınızı kontrol edin veya e-posta ve şifrenizi kullanın.',
+  googleFinishTitle: 'Hesabınızı oluşturmayı tamamlayın',
+  googleFinishBody:
+    "Google ile ilk kez giriş yapıyorsunuz. Mentora'yı nasıl kullanacağınızı seçin.",
+  googleFinishRoleLabel: 'Hesap türü',
+  googleRoleParentHint: 'Çocuklarınız için ders ayırtın ve gelişimlerini takip edin.',
+  googleRoleMentorHint: 'Öğrencilere ders verin, müsaitliğinizi ayarlayın ve ödeme alın.',
+  googleFinishTermsPrefix: 'Şunları kabul ediyorum:',
+  googleFinishCta: 'Hesap oluştur',
   registerSuccess:
     'Kayıt alındı. Doğrulama adımları için mobil uygulamayı kullanın veya giriş yapmayı deneyin.',
   registerFailed: 'Kayıt başarısız',
@@ -1570,6 +1589,8 @@ export const tr: { [K in keyof Strings]: string } = {
     'Krediler hesabınıza anında eklenir. Herhangi bir mentorla ders rezervasyonu yapmak için kullanın.',
   parentWalletCreditsAdded: 'Krediler başarıyla eklendi.',
   parentWalletCreditsAddFailed: 'Kredi eklenemedi. Lütfen tekrar deneyin.',
+  parentWalletTopupUnavailable:
+    'Kredi ekleme henüz kullanılamıyor. Lütfen daha sonra tekrar deneyin.',
   paginationPrevious: 'Önceki',
   paginationNext: 'Sonraki',
   txDummyTopup: 'Krediler eklendi',

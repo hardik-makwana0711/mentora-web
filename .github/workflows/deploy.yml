@@ -43,6 +43,7 @@ jobs:
             VITE_APP_NAME=Mentora
             VITE_SOCKET_URL=https://api.mentoratr.com
             VITE_SENTRY_DSN=
+            VITE_GOOGLE_CLIENT_ID=${{ vars.VITE_GOOGLE_CLIENT_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

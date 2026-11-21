@@ -36,6 +36,9 @@ export interface ProfileResponse {
   email: string;
   phone_number?: string | null;
   account_status?: string;
+  /** Stored first / last name (newer backends). Used so names with spaces are not re-split on edit. */
+  first_name?: string;
+  last_name?: string;
   common_profile: ProfileCommon;
   sections?: Record<string, boolean>;
   student_profile?: {
@@ -97,6 +100,8 @@ export interface ProfileResponse {
 
 /** PATCH `/api/v1/profile/me` — only keys accepted by backend `updateProfileSchema`. */
 export type ProfilePatchPayload = Partial<{
+  first_name: string;
+  last_name: string;
   profile_photo_url: string;
   full_name: string;
   country: string;

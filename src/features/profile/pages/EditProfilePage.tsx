@@ -21,11 +21,7 @@ import { qk } from '@/constants/query-keys';
 import { profileService } from '@/services/profile.service';
 import { useAuthStore } from '@/app/store/authStore';
 import type { ProfileResponse } from '@/types/profile';
-import {
-  joinFullName,
-  splitFullName,
-  toDateInputValue,
-} from '@/features/profile/lib/profile-utils';
+import { joinFullName, nameParts, toDateInputValue } from '@/features/profile/lib/profile-utils';
 import { mapMentorProfileSaveError } from '@/features/profile/lib/mentor-profile-errors';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { ProfilePhotoPicker } from '@/features/profile/components/ProfilePhotoPicker';
@@ -89,7 +85,7 @@ function ParentFields({
     resolver: zodResolver(parentSchema),
     mode: 'onChange',
     defaultValues: {
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, user),
       phone: profile.phone_number ?? '',
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
     },
@@ -97,7 +93,7 @@ function ParentFields({
 
   useEffect(() => {
     form.reset({
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, useAuthStore.getState().user),
       phone: profile.phone_number ?? '',
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
     });
@@ -125,10 +121,10 @@ function ParentFields({
 
   const mutation = useMutation({
     mutationFn: profileService.patchMe,
-    onSuccess: async (data) => {
+    onSuccess: async (data, sent) => {
       if (user?.id) qc.setQueryData(qk.profile(user.id), data);
       if (user) {
-        const { firstName, lastName } = splitFullName(data.common_profile.full_name);
+        const { firstName, lastName } = nameParts(data.common_profile.full_name, data, sent);
         setUser({
           ...user,
           name: data.common_profile.full_name,
@@ -140,7 +136,7 @@ function ParentFields({
       toast.success(tr.profileUpdated);
       skipLeaveGuardRef.current = true;
       form.reset({
-        ...splitFullName(data.common_profile.full_name),
+        ...nameParts(data.common_profile.full_name, data, sent),
         phone: data.phone_number ?? '',
         dateOfBirth: toDateInputValue(data.common_profile.date_of_birth),
       });
@@ -153,6 +149,8 @@ function ParentFields({
   const submit = form.handleSubmit((vals) => {
     const payload: Parameters<typeof profileService.patchMe>[0] = {
       full_name: joinFullName(vals.firstName, vals.lastName),
+      first_name: vals.firstName.trim(),
+      last_name: vals.lastName.trim(),
     };
     if (vals.phone?.trim()) payload.phone_number = vals.phone.trim();
     if (vals.dateOfBirth?.trim()) payload.date_of_birth = vals.dateOfBirth.trim();
@@ -347,7 +345,7 @@ function MentorFields({
     resolver: zodResolver(mentorSchema),
     mode: 'onChange',
     defaultValues: {
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, user),
       bio: profile.common_profile.short_bio ?? '',
       phone: profile.phone_number ?? '',
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
@@ -381,7 +379,7 @@ function MentorFields({
     setTeachingStyleTags(profile.mentor_profile?.teaching_style_tags ?? []);
     setTeachingFormats(profile.mentor_profile?.teaching_formats ?? []);
     form.reset({
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, useAuthStore.getState().user),
       bio: profile.common_profile.short_bio ?? '',
       phone: profile.phone_number ?? '',
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
@@ -424,10 +422,10 @@ function MentorFields({
 
   const mutation = useMutation({
     mutationFn: profileService.patchMe,
-    onSuccess: async (data) => {
+    onSuccess: async (data, sent) => {
       if (user?.id) qc.setQueryData(qk.profile(user.id), data);
       if (user) {
-        const { firstName, lastName } = splitFullName(data.common_profile.full_name);
+        const { firstName, lastName } = nameParts(data.common_profile.full_name, data, sent);
         setUser({
           ...user,
           name: data.common_profile.full_name,
@@ -439,7 +437,7 @@ function MentorFields({
       toast.success(tr.profileUpdated);
       skipLeaveGuardRef.current = true;
       form.reset({
-        ...splitFullName(data.common_profile.full_name),
+        ...nameParts(data.common_profile.full_name, data, sent),
         bio: data.common_profile.short_bio ?? '',
         phone: data.phone_number ?? '',
         dateOfBirth: toDateInputValue(data.common_profile.date_of_birth),
@@ -474,6 +472,8 @@ function MentorFields({
 
     const payload: Parameters<typeof profileService.patchMe>[0] = {
       full_name: joinFullName(vals.firstName, vals.lastName),
+      first_name: vals.firstName.trim(),
+      last_name: vals.lastName.trim(),
     };
     if (vals.bio?.trim()) payload.short_bio = vals.bio.trim();
     if (vals.phone?.trim()) payload.phone_number = vals.phone.trim();
@@ -814,7 +814,7 @@ function StudentFields({
     resolver: zodResolver(studentSchema),
     mode: 'onChange',
     defaultValues: {
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, user),
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
       school_name: profile.student_profile?.school_name ?? '',
       grade_level: profile.student_profile?.grade_level ?? '',
@@ -823,7 +823,7 @@ function StudentFields({
 
   useEffect(() => {
     form.reset({
-      ...splitFullName(profile.common_profile.full_name),
+      ...nameParts(profile.common_profile.full_name, profile, useAuthStore.getState().user),
       dateOfBirth: toDateInputValue(profile.common_profile.date_of_birth),
       school_name: profile.student_profile?.school_name ?? '',
       grade_level: profile.student_profile?.grade_level ?? '',
@@ -852,10 +852,10 @@ function StudentFields({
 
   const mutation = useMutation({
     mutationFn: profileService.patchMe,
-    onSuccess: async (data) => {
+    onSuccess: async (data, sent) => {
       if (user?.id) qc.setQueryData(qk.profile(user.id), data);
       if (user) {
-        const { firstName, lastName } = splitFullName(data.common_profile.full_name);
+        const { firstName, lastName } = nameParts(data.common_profile.full_name, data, sent);
         setUser({
           ...user,
           name: data.common_profile.full_name,
@@ -867,7 +867,7 @@ function StudentFields({
       toast.success(tr.profileUpdated);
       skipLeaveGuardRef.current = true;
       form.reset({
-        ...splitFullName(data.common_profile.full_name),
+        ...nameParts(data.common_profile.full_name, data, sent),
         dateOfBirth: toDateInputValue(data.common_profile.date_of_birth),
       });
       onSuccessNavigate();
@@ -879,6 +879,8 @@ function StudentFields({
   const submit = form.handleSubmit((vals) => {
     const payload: Parameters<typeof profileService.patchMe>[0] = {
       full_name: joinFullName(vals.firstName, vals.lastName),
+      first_name: vals.firstName.trim(),
+      last_name: vals.lastName.trim(),
     };
     if (vals.dateOfBirth?.trim()) {
       payload.date_of_birth = new Date(vals.dateOfBirth + 'T12:00:00.000Z').toISOString();

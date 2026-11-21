@@ -10,6 +10,27 @@ export function splitFullName(fullName: string): { firstName: string; lastName: 
   return { firstName: t.slice(0, i).trim(), lastName: t.slice(i + 1).trim() };
 }
 
+type NameSource = { first_name?: string | null; last_name?: string | null } | null | undefined;
+
+/**
+ * First / last name for a full name. Uses a stored first + last name when it still matches the full name
+ * (so "Ali Can" + "Yılmaz" stays that way), and only splits on the first space as a last resort.
+ */
+export function nameParts(
+  fullName: string,
+  ...sources: NameSource[]
+): { firstName: string; lastName: string } {
+  const norm = (s: string) => s.trim().replace(/\s+/g, ' ');
+  const target = norm(fullName);
+  for (const src of sources) {
+    const first = src?.first_name?.trim();
+    if (!first) continue;
+    const last = src?.last_name?.trim() ?? '';
+    if (norm(joinFullName(first, last)) === target) return { firstName: first, lastName: last };
+  }
+  return splitFullName(fullName);
+}
+
 export function joinFullName(first: string, last: string): string {
   return [first.trim(), last.trim()].filter(Boolean).join(' ');
 }

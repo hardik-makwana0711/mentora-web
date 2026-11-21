@@ -20,7 +20,7 @@ import type { ProfileResponse } from '@/types/profile';
 import {
   formatOptionalDate,
   mentorVerificationLabel,
-  splitFullName,
+  nameParts,
 } from '@/features/profile/lib/profile-utils';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { LogoutConfirmModal } from '@/features/profile/components/LogoutConfirmModal';
@@ -180,7 +180,7 @@ export default function ProfilePage() {
     );
   }
 
-  const { firstName, lastName } = splitFullName(profile.common_profile.full_name);
+  const { firstName, lastName } = nameParts(profile.common_profile.full_name, profile, authUser);
   const phoneDisplay = profile.phone_number?.trim() ? profile.phone_number : tr.noPhone;
   const emailDisplay = profile.email || tr.notProvided;
   const dob = profile.common_profile.date_of_birth;

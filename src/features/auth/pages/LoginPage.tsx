@@ -16,6 +16,7 @@ import {
   AuthScreenChrome,
 } from '@/features/auth/components/AuthScreenChrome';
 import { LoginVerificationPanel } from '@/features/auth/components/LoginVerificationPanel';
+import { GoogleAuthSection } from '@/features/auth/components/GoogleAuthSection';
 import { isLoginVerificationRequiredError } from '@/lib/auth-errors';
 import type { AccountVerificationPayload, VerificationChannel } from '@/types/auth-verification';
 import {
@@ -198,6 +199,7 @@ export default function LoginPage() {
             {tr.login}
           </Button>
         </form>
+        <GoogleAuthSection mode="login" />
         <p className="mt-6 text-center text-[15px] text-[var(--color-m-text-secondary)]">
           {tr.noAccountPrompt}{' '}
           <Link

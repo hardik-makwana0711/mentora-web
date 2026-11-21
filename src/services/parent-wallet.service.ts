@@ -11,6 +11,8 @@ export interface ParentWalletSummary {
   totalRefundedCredits?: number;
   totalBonusCredits?: number;
   status?: string;
+  /** false when the server has top-up turned off (newer backends send this). */
+  topupEnabled?: boolean;
   // legacy field names
   credit_balance?: number;
   balance?: number;
@@ -42,8 +44,8 @@ export async function fetchParentWalletMe(): Promise<ParentWalletSummary> {
   const { data } = await apiClient.get(endpoints.parentWallet.me);
   // The response interceptor already unwraps { success, data } → data.
   // After unwrap, `data` is { wallet: {...} } — access .wallet one level only.
-  const d = data as { wallet?: ParentWalletSummary } & ParentWalletSummary;
-  return d.wallet ?? d;
+  const d = data as { wallet?: ParentWalletSummary; topupEnabled?: boolean } & ParentWalletSummary;
+  return { ...(d.wallet ?? d), topupEnabled: d.topupEnabled };
 }
 
 export async function fetchParentWalletTransactions(

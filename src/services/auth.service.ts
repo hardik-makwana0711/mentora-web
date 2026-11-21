@@ -20,6 +20,13 @@ export interface LoginInput {
   password: string;
 }
 
+export interface GoogleLoginInput {
+  id_token: string;
+  /** Only needed the first time a Google account signs up. */
+  role?: 'parent' | 'mentor';
+  terms_accepted?: true;
+}
+
 export interface SignupInput {
   first_name: string;
   last_name: string;
@@ -63,6 +70,15 @@ export const authService = {
     }
   },
 
+  /** POST /auth/google — sign in (or sign up) with a Google ID token. */
+  async loginWithGoogle(input: GoogleLoginInput): Promise<{ tokens: SessionTokens; user: User }> {
+    const { data } = await apiClient.post<{ tokens: SessionTokens; user: User }>(
+      endpoints.auth.google,
+      input
+    );
+    return data;
+  },
+
   async verifyAccount(input: VerifyAccountInput): Promise<{ user?: User; message?: string }> {
     const { data } = await apiClient.post<{ user?: User; message?: string }>(
       endpoints.auth.verify,
@@ -79,7 +95,10 @@ export const authService = {
     return data;
   },
 
-  async me(): Promise<{ user: User; verification?: { email_verified: boolean; phone_verified: boolean } }> {
+  async me(): Promise<{
+    user: User;
+    verification?: { email_verified: boolean; phone_verified: boolean };
+  }> {
     const { data } = await apiClient.get<{
       user: User;
       verification?: { email_verified: boolean; phone_verified: boolean };
@@ -104,9 +123,12 @@ export const authService = {
   },
 
   async forgotPassword(recovery_identifier: string): Promise<ForgotPasswordResponseData> {
-    const { data } = await apiClient.post<ForgotPasswordResponseData>(endpoints.auth.forgotPassword, {
-      recovery_identifier,
-    });
+    const { data } = await apiClient.post<ForgotPasswordResponseData>(
+      endpoints.auth.forgotPassword,
+      {
+        recovery_identifier,
+      }
+    );
     return data;
   },
 

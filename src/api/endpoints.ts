@@ -5,6 +5,7 @@
 export const endpoints = {
   auth: {
     login: '/api/v1/auth/login',
+    google: '/api/v1/auth/google',
     signup: '/api/v1/auth/signup',
     verify: '/api/v1/auth/verify',
     resendVerification: '/api/v1/auth/resend-verification',
