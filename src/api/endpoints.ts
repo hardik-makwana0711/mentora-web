@@ -3,6 +3,11 @@
  * Mirrors mobile `apps/mobile/src/api/*` usage under `/api/v1`.
  */
 export const endpoints = {
+  googleCalendar: {
+    status: '/api/v1/google-calendar/status',
+    connect: '/api/v1/google-calendar/connect',
+    connection: '/api/v1/google-calendar/connection',
+  },
   auth: {
     login: '/api/v1/auth/login',
     google: '/api/v1/auth/google',

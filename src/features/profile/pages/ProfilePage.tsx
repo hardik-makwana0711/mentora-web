@@ -24,6 +24,7 @@ import {
 } from '@/features/profile/lib/profile-utils';
 import { useRoleBase } from '@/features/profile/hooks/useRoleBase';
 import { LogoutConfirmModal } from '@/features/profile/components/LogoutConfirmModal';
+import { GoogleCalendarCard } from '@/features/profile/components/GoogleCalendarCard';
 import type { AxiosError } from 'axios';
 import { WalletPreviewCard } from '@/features/mentor-wallet/components/WalletPreviewCard';
 import { fetchMentorWalletMe } from '@/services/mentor-wallet.service';
@@ -293,6 +294,7 @@ export default function ProfilePage() {
         </Card>
 
         <div className="space-y-6">
+          {isMentor ? <GoogleCalendarCard /> : null}
           {isMentor && checklist.length > 0 ? (
             <Card className="p-5">
               <h3 className="text-sm font-semibold text-[var(--color-m-text)]">

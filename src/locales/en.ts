@@ -1509,6 +1509,22 @@ export const en = {
     'Google sign-in is not available right now. Please use your email and password.',
   googleSignInNotAllowed: 'This account cannot use Google sign-in.',
   googleSignInFailed: 'Google sign-in failed. Please try again.',
+  googleCalendarTitle: 'Google Calendar & Meet',
+  googleCalendarConnectedAs:
+    'Connected as {{email}}. New lessons are added to your calendar and you host the Google Meet.',
+  googleCalendarNotConnected:
+    'Connect your Google Calendar so new lessons appear in your calendar and you host the Google Meet.',
+  googleCalendarUsingPlatform: 'Until then, Mentora creates the Meet link for your lessons.',
+  googleCalendarNeedsReconnect:
+    'Google access was removed. Connect again so lessons keep going to your calendar.',
+  googleCalendarConnect: 'Connect Google Calendar',
+  googleCalendarReconnect: 'Connect again',
+  googleCalendarDisconnect: 'Disconnect',
+  googleCalendarConnectedToast: 'Google Calendar connected',
+  googleCalendarDisconnectedToast: 'Google Calendar disconnected',
+  googleCalendarFailedToast: 'Could not connect Google Calendar',
+  googleCalendarPrivacyNote:
+    "Mentora only adds and updates lesson events. Students and parents are invited by email and can't see each other's addresses.",
   googleSignInExpired: 'Your Google session expired. Please press "Continue with Google" again.',
   googleSignInLoadFailed:
     'Could not load Google sign-in. Check your connection or use your email and password.',
