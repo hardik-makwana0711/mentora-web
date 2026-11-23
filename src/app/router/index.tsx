@@ -131,6 +131,7 @@ const AdminContactRequestsPage = lazy(
   () => import('@/features/admin/pages/AdminContactRequestsPage')
 );
 const AdminReportsPage = lazy(() => import('@/features/admin/pages/AdminReportsPage'));
+const AdminLessonIssuesPage = lazy(() => import('@/features/admin/pages/AdminLessonIssuesPage'));
 const AdminMarketingCampaignsPage = lazy(
   () => import('@/features/admin/pages/AdminMarketingCampaignsPage')
 );
@@ -449,6 +450,7 @@ export const router = createBrowserRouter([
               { path: 'users/:userId', element: <AdminUserDetailPage /> },
               { path: 'mentor-contact-requests', element: <AdminContactRequestsPage /> },
               { path: 'reports', element: <AdminReportsPage /> },
+              { path: 'lesson-issues', element: <AdminLessonIssuesPage /> },
               { path: 'marketing', element: <AdminMarketingCampaignsPage /> },
               { path: 'marketing/new', element: <AdminMarketingCampaignCreatePage /> },
               { path: 'marketing/:id', element: <AdminMarketingCampaignDetailPage /> },

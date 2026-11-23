@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import {
   ClipboardList,
+  CalendarX,
   Flag,
   Image,
   Inbox,
@@ -32,10 +33,21 @@ export const ADMIN_NAV: AdminNavItem[] = [
   },
   { to: '/admin/mentor-profiles', labelKey: 'adminNavProfiles', icon: Users, enabled: true },
   { to: '/admin/listings', labelKey: 'adminNavListings', icon: ListChecks, enabled: true },
-  { to: '/admin/mentor-contact-requests', labelKey: 'adminContactRequests', icon: Inbox, enabled: true },
+  {
+    to: '/admin/mentor-contact-requests',
+    labelKey: 'adminContactRequests',
+    icon: Inbox,
+    enabled: true,
+  },
   { to: '/admin/media', labelKey: 'adminNavMedia', icon: Image, enabled: false },
   { to: '/admin/reviews', labelKey: 'adminNavReviews', icon: Star, enabled: false },
-  { to: '/admin/success-stories', labelKey: 'adminNavSuccessStories', icon: Trophy, enabled: false },
+  {
+    to: '/admin/success-stories',
+    labelKey: 'adminNavSuccessStories',
+    icon: Trophy,
+    enabled: false,
+  },
+  { to: '/admin/lesson-issues', labelKey: 'adminNavLessonIssues', icon: CalendarX, enabled: true },
   { to: '/admin/reports', labelKey: 'adminNavReports', icon: Flag, enabled: true },
   { to: '/admin/marketing', labelKey: 'adminNavMarketing', icon: Megaphone, enabled: true },
   { to: '/admin/users', labelKey: 'adminNavUsers', icon: Users, enabled: true },
