@@ -1,6 +1,6 @@
 import type { LegalSection } from '@/features/legal/components/LegalPageLayout';
 
-export const privacyPolicyLastUpdated = 'September 22, 2026';
+export const privacyPolicyLastUpdated = 'November 23, 2026';
 
 export const privacyPolicyIntro = [
   'This Privacy Policy explains how Aurion Ventures LLC ("Aurion Ventures," "Mentora," "we," "us," or "our") collects, uses, stores, and protects information when you use the Mentora mobile application, website, and related services.',
@@ -195,6 +195,46 @@ export const privacyPolicySections: LegalSection[] = [
       {
         type: 'p',
         text: 'These providers may process information only as needed to provide their services to Mentora.',
+      },
+    ],
+  },
+  {
+    title: 'Google User Data',
+    blocks: [
+      {
+        type: 'p',
+        text: 'Mentora offers two optional Google features: signing in with Google, and connecting a Google Calendar so lessons are added to the calendar with a Google Meet link. This section explains what Google data we access and how we use it.',
+      },
+      { type: 'h3', text: 'Data We Access' },
+      {
+        type: 'ul',
+        items: [
+          'Sign in with Google (openid, email): your name, Google account email address, and Google account ID, used only to create your Mentora account and sign you in.',
+          'Google Calendar (calendar.events): permission to create, update, and delete calendar events. Mentora uses it only for lesson events that Mentora itself creates.',
+        ],
+      },
+      { type: 'h3', text: 'How We Use It' },
+      {
+        type: 'ul',
+        items: [
+          'When a lesson is booked, Mentora creates an event for that lesson in the connected calendar, with a Google Meet link, and invites the lesson participants.',
+          'When a lesson is rescheduled, Mentora moves that event to the new time. When a lesson is cancelled, Mentora deletes that event.',
+          'Mentora does not read, list, or change any other events in your calendar.',
+        ],
+      },
+      { type: 'h3', text: 'Storage, Sharing, and Deletion' },
+      {
+        type: 'ul',
+        items: [
+          'We store the connected Google email address and an encrypted access token. The token is encrypted at rest and used only by our servers to manage lesson events.',
+          'We do not sell Google user data, do not use it for advertising, and do not share it with third parties except as needed to provide these features or as required by law.',
+          'People at Mentora do not read Google user data, except with your permission, for security purposes, or as required by law.',
+          'You can disconnect Google Calendar at any time in your Mentora profile. We then revoke Mentora’s access with Google and delete the stored token. You can also remove access at https://myaccount.google.com/permissions, or email info@mentoratr.com to delete your data.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Mentora’s use and transfer of information received from Google APIs to any other app will adhere to the Google API Services User Data Policy (https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.',
       },
     ],
   },
