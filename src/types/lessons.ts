@@ -4,10 +4,7 @@ import type { SessionMeetingStatus } from '@/types/sessions';
 
 export type LessonRole = 'mentor' | 'student' | 'parent';
 
-
-
 export type LessonCalendarSession = {
-
   session_id: string;
 
   lesson_id: string;
@@ -39,13 +36,9 @@ export type LessonCalendarSession = {
   start_time?: string;
 
   end_time?: string;
-
 };
 
-
-
 export type LessonListItem = {
-
   lesson_id: string;
 
   subject_name: string;
@@ -67,23 +60,15 @@ export type LessonListItem = {
   next_session_date: string | null;
 
   created_at?: string;
-
 };
 
-
-
 export type LessonsListResponse = {
-
   pagination: { page: number; limit: number };
 
   lessons: LessonListItem[];
-
 };
 
-
-
 export type MentorLessonCard = {
-
   student_id: string;
 
   student_name: string;
@@ -101,13 +86,9 @@ export type MentorLessonCard = {
   can_join?: boolean;
 
   upcoming_session_count?: number;
-
 };
 
-
-
 export type StudentSubjectCard = {
-
   lesson_id: string;
 
   subject_id?: string;
@@ -123,13 +104,9 @@ export type StudentSubjectCard = {
   upcoming_session_count: number;
 
   next_session_date: string | null;
-
 };
 
-
-
 export type ParentSubjectCard = {
-
   lesson_id: string;
 
   student_id: string;
@@ -145,19 +122,12 @@ export type ParentSubjectCard = {
   upcoming_session_count: number;
 
   next_session_date: string | null;
-
 };
-
-
 
 export type PastGroupCard = MentorLessonCard | StudentSubjectCard | ParentSubjectCard;
 
-
-
 export type LessonsDashboardPayload =
-
   | {
-
       calendar: LessonCalendarSession[];
 
       student_cards: MentorLessonCard[];
@@ -165,11 +135,8 @@ export type LessonsDashboardPayload =
       subject_cards?: never;
 
       linked_students?: never;
-
     }
-
   | {
-
       calendar: LessonCalendarSession[];
 
       subject_cards: StudentSubjectCard[];
@@ -177,11 +144,8 @@ export type LessonsDashboardPayload =
       student_cards?: never;
 
       linked_students?: never;
-
     }
-
   | {
-
       calendar: LessonCalendarSession[];
 
       subject_cards: ParentSubjectCard[];
@@ -191,13 +155,9 @@ export type LessonsDashboardPayload =
       pagination?: { page: number; limit: number };
 
       student_cards?: never;
-
     };
 
-
-
 export type LessonSessionListItem = {
-
   session_id: string;
 
   subject_name: string;
@@ -211,13 +171,9 @@ export type LessonSessionListItem = {
   duration_minutes: number;
 
   badge: string;
-
 };
 
-
-
 export type LessonSessionsResponse = {
-
   lesson_id: string;
 
   subject_name: string;
@@ -235,13 +191,9 @@ export type LessonSessionsResponse = {
   pagination: { page: number; limit: number };
 
   sessions: LessonSessionListItem[];
-
 };
 
-
-
 export type MentorNote = {
-
   note_id: string;
 
   note_content: string;
@@ -251,13 +203,9 @@ export type MentorNote = {
   updated_at: string;
 
   created_by?: string;
-
 };
 
-
-
 export type SessionQuizSummary = {
-
   quiz_id: string;
 
   created_by: string;
@@ -267,7 +215,6 @@ export type SessionQuizSummary = {
   score: number | null;
 
   created_at: string;
-
 };
 
 export type QuizQuestionDetail = {
@@ -292,14 +239,7 @@ export type QuizDetail = {
   questions: QuizQuestionDetail[];
 };
 
-
-
-export type TranscriptStatus =
-  | 'NOT_SCHEDULED'
-  | 'SCHEDULED'
-  | 'IN_PROGRESS'
-  | 'READY'
-  | 'FAILED';
+export type TranscriptStatus = 'NOT_SCHEDULED' | 'SCHEDULED' | 'IN_PROGRESS' | 'READY' | 'FAILED';
 
 export type TranscriptStatusResponse = {
   sessionId: string;
@@ -319,8 +259,36 @@ export type TranscriptResponse = {
   lessonTranscriptStatus?: string | null;
 };
 
-export type SessionDetail = {
+/** What the signed-in user may do with a session right now (from the API). */
+export type SessionActions = {
+  can_cancel: boolean;
+  cancel_is_late: boolean;
+  can_reschedule: boolean;
+  reschedules_left: number;
+  reschedule_blocked_reason: 'not_active' | 'too_late' | 'limit_reached' | null;
+  can_report_no_show: boolean;
+  no_show_report_kind: 'STUDENT_NO_SHOW' | 'MENTOR_NO_SHOW' | null;
+};
 
+export type SessionCancellationKind =
+  | 'PARENT_ON_TIME'
+  | 'PARENT_LATE'
+  | 'MENTOR'
+  | 'STUDENT_NO_SHOW'
+  | 'MENTOR_NO_SHOW'
+  | 'ADMIN';
+
+export type SessionNoShowReport = {
+  report_id: string;
+  kind: 'STUDENT_NO_SHOW' | 'MENTOR_NO_SHOW';
+  status: 'OPEN' | 'CONFIRMED' | 'REJECTED';
+  note: string | null;
+  counterpart_response: 'agreed' | 'disputed' | null;
+  reported_by_me: boolean;
+  can_respond: boolean;
+};
+
+export type SessionDetail = {
   session_id: string;
 
   lesson_id: string;
@@ -355,6 +323,20 @@ export type SessionDetail = {
 
   can_join: boolean;
 
+  reschedule_count?: number;
+
+  cancelled_at?: string | null;
+
+  cancellation_kind?: SessionCancellationKind | null;
+
+  cancellation_reason?: string | null;
+
+  credit_refunded?: boolean;
+
+  actions?: SessionActions;
+
+  no_show_report?: SessionNoShowReport | null;
+
   mentor_note: MentorNote | null;
 
   quizzes: SessionQuizSummary[];
@@ -378,13 +360,9 @@ export type SessionDetail = {
   understanding_score: number | null;
 
   participation_level: string | null;
-
 };
 
-
-
 export type JoinSessionResponse = {
-
   session_id: string;
 
   meeting_url: string | null;
@@ -392,7 +370,4 @@ export type JoinSessionResponse = {
   join_allowed: boolean;
 
   join_reason: string | null;
-
 };
-
-

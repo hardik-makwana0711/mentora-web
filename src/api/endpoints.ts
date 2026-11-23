@@ -52,6 +52,11 @@ export const endpoints = {
     transcript: (sessionId: string) => `/api/v1/sessions/${sessionId}/transcript`,
     transcriptConsent: (sessionId: string) => `/api/v1/sessions/${sessionId}/transcript/consent`,
     complete: (sessionId: string) => `/api/v1/sessions/${sessionId}/complete`,
+    cancel: (sessionId: string) => `/api/v1/sessions/${sessionId}/cancel`,
+    reschedule: (sessionId: string) => `/api/v1/sessions/${sessionId}/reschedule`,
+    noShow: (sessionId: string) => `/api/v1/sessions/${sessionId}/no-show`,
+    noShowRespond: (sessionId: string, reportId: string) =>
+      `/api/v1/sessions/${sessionId}/no-show/${reportId}/respond`,
     aiQuizGenerate: (sessionId: string) => `/api/v1/sessions/${sessionId}/ai-quiz/generate`,
     aiQuizMentor: (sessionId: string) => `/api/v1/sessions/${sessionId}/ai-quiz/mentor`,
     aiQuizStudent: (sessionId: string) => `/api/v1/sessions/${sessionId}/ai-quiz/student`,

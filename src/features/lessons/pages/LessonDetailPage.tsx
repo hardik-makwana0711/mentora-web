@@ -26,6 +26,8 @@ import { LessonJoinButton } from '@/features/lessons/components/LessonJoinButton
 
 import { MeetingStatusSection } from '@/features/lessons/components/MeetingStatusSection';
 
+import { SessionManageSection } from '@/features/lessons/components/SessionManageSection';
+
 import {
   formatLessonDateTime,
   formatLessonServiceName,
@@ -298,6 +300,8 @@ export default function LessonDetailPage() {
             </Button>
           ) : null}
         </div>
+
+        <SessionManageSection session={d} isMentor={isMentor} />
 
         {d.mentor_note?.note_content ? (
           <div className="mt-6 rounded-xl bg-[var(--color-m-bg)] p-4">
