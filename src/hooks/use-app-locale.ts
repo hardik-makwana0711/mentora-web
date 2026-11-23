@@ -17,7 +17,7 @@ function getSnapshot(): AppLocale {
 }
 
 export function useAppLocale() {
-  const locale = useSyncExternalStore(subscribe, getSnapshot, () => 'en' as AppLocale);
+  const locale = useSyncExternalStore(subscribe, getSnapshot, () => 'tr' as AppLocale);
 
   const setLocale = useCallback((next: AppLocale) => {
     if (normalizeAppLocale(next) === getSnapshot()) return;

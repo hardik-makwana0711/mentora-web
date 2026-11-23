@@ -9,7 +9,7 @@ export function getStoredAppLocale(): AppLocale {
   } catch {
     // Ignore storage errors (private browsing, etc.).
   }
-  return 'en';
+  return 'tr';
 }
 
 export function setStoredAppLocale(locale: AppLocale): void {
@@ -21,5 +21,5 @@ export function setStoredAppLocale(locale: AppLocale): void {
 }
 
 export function normalizeAppLocale(value: string | undefined | null): AppLocale {
-  return value === 'tr' ? 'tr' : 'en';
+  return value === 'en' ? 'en' : 'tr';
 }
