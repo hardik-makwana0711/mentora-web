@@ -55,15 +55,21 @@ export async function fetchLessonSessions(
   page = 1,
   limit = 20
 ): Promise<LessonSessionsResponse> {
-  const { data } = await apiClient.get<LessonSessionsResponse>(endpoints.lessons.sessions(lessonId), {
-    ...noCache,
-    params: { tab, page, limit },
-  });
+  const { data } = await apiClient.get<LessonSessionsResponse>(
+    endpoints.lessons.sessions(lessonId),
+    {
+      ...noCache,
+      params: { tab, page, limit },
+    }
+  );
   return data;
 }
 
 export async function fetchSessionDetail(sessionId: string): Promise<SessionDetail> {
-  const { data } = await apiClient.get<SessionDetail>(endpoints.sessions.detail(sessionId), noCache);
+  const { data } = await apiClient.get<SessionDetail>(
+    endpoints.sessions.detail(sessionId),
+    noCache
+  );
   return data;
 }
 
@@ -76,7 +82,10 @@ export async function fetchTranscriptStatus(sessionId: string): Promise<Transcri
 }
 
 export async function fetchTranscript(sessionId: string): Promise<TranscriptResponse> {
-  const { data } = await apiClient.get<TranscriptResponse>(endpoints.sessions.transcript(sessionId), noCache);
+  const { data } = await apiClient.get<TranscriptResponse>(
+    endpoints.sessions.transcript(sessionId),
+    noCache
+  );
   return data;
 }
 
@@ -91,24 +100,75 @@ export async function submitTranscriptConsent(
   return data;
 }
 
-export async function completeSession(sessionId: string): Promise<{ session_id: string; status: string }> {
+export async function completeSession(
+  sessionId: string
+): Promise<{ session_id: string; status: string }> {
   const { data } = await apiClient.post<{ session_id: string; status: string }>(
     endpoints.sessions.complete(sessionId)
   );
   return data;
 }
 
-export async function joinSession(sessionId: string): Promise<JoinSessionResponse> {
-  const { data } = await apiClient.post<JoinSessionResponse>(
-    endpoints.sessions.join(sessionId),
-    { source: 'lessons_module' }
+export async function cancelSession(
+  sessionId: string,
+  reason?: string
+): Promise<{
+  session_id: string;
+  cancellation_kind: string;
+  credit_refunded: boolean;
+  mentor_paid: boolean;
+}> {
+  const { data } = await apiClient.post(
+    endpoints.sessions.cancel(sessionId),
+    reason ? { reason } : {}
   );
+  return data;
+}
+
+export async function rescheduleSession(
+  sessionId: string,
+  newStartIso: string
+): Promise<{ session_id: string; scheduled_at: string; reschedule_count: number }> {
+  const { data } = await apiClient.post(endpoints.sessions.reschedule(sessionId), {
+    new_start: newStartIso,
+  });
+  return data;
+}
+
+export async function reportNoShow(
+  sessionId: string,
+  note?: string
+): Promise<{ report_id: string }> {
+  const { data } = await apiClient.post(endpoints.sessions.noShow(sessionId), note ? { note } : {});
+  return data;
+}
+
+export async function respondToNoShow(
+  sessionId: string,
+  reportId: string,
+  response: 'agree' | 'dispute',
+  note?: string
+): Promise<{ report_id: string; status: string }> {
+  const { data } = await apiClient.post(endpoints.sessions.noShowRespond(sessionId, reportId), {
+    response,
+    ...(note ? { note } : {}),
+  });
+  return data;
+}
+
+export async function joinSession(sessionId: string): Promise<JoinSessionResponse> {
+  const { data } = await apiClient.post<JoinSessionResponse>(endpoints.sessions.join(sessionId), {
+    source: 'lessons_module',
+  });
   return data;
 }
 
 export async function fetchMentorNote(sessionId: string): Promise<MentorNote | null> {
   try {
-    const { data } = await apiClient.get<MentorNote>(endpoints.sessions.mentorNote(sessionId), noCache);
+    const { data } = await apiClient.get<MentorNote>(
+      endpoints.sessions.mentorNote(sessionId),
+      noCache
+    );
     return data;
   } catch (err: unknown) {
     const status = (err as { response?: { status?: number } })?.response?.status;
@@ -117,14 +177,20 @@ export async function fetchMentorNote(sessionId: string): Promise<MentorNote | n
   }
 }
 
-export async function createMentorNote(sessionId: string, noteContent: string): Promise<MentorNote> {
+export async function createMentorNote(
+  sessionId: string,
+  noteContent: string
+): Promise<MentorNote> {
   const { data } = await apiClient.post<MentorNote>(endpoints.sessions.mentorNote(sessionId), {
     note_content: noteContent,
   });
   return data;
 }
 
-export async function updateMentorNote(sessionId: string, noteContent: string): Promise<MentorNote> {
+export async function updateMentorNote(
+  sessionId: string,
+  noteContent: string
+): Promise<MentorNote> {
   const { data } = await apiClient.patch<MentorNote>(endpoints.sessions.mentorNote(sessionId), {
     note_content: noteContent,
   });
