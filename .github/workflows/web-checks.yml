@@ -1,0 +1,159 @@
+name: Web checks
+
+# Runs on every PR to main (type check, lint, build + smoke/auth E2E)
+# and every night (full E2E suite). Deploys are handled by deploy.yml.
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 1 * * *' # 01:00 UTC = 04:00 Türkiye
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Run the full E2E suite'
+        type: boolean
+        default: true
+
+concurrency:
+  group: web-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Type check, lint, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+
+  e2e:
+    name: E2E (${{ github.event_name == 'pull_request' && 'smoke + auth' || 'full' }})
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: mentora
+          POSTGRES_PASSWORD: mentora_ci
+          POSTGRES_DB: mentora_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U mentora"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      # Throwaway CI database, only reachable inside this job.
+      DATABASE_URL: postgresql://mentora:mentora_ci@localhost:5432/mentora_ci
+      BACKEND_TOKEN: ${{ secrets.MENTORA_MAIN_READ_TOKEN }}
+      BACKEND_REF: ${{ vars.BACKEND_REF || 'frontend/main-dev' }}
+      CI: 'true'
+    steps:
+      - name: Check backend access
+        id: access
+        run: |
+          if [ -z "$BACKEND_TOKEN" ]; then
+            echo "::notice::Skipping E2E: add the MENTORA_MAIN_READ_TOKEN secret (read access to Mentora-Education/mentora-main) to enable it."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.access.outputs.ok == 'true'
+
+      - name: Check out backend
+        if: steps.access.outputs.ok == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: Mentora-Education/mentora-main
+          ref: ${{ env.BACKEND_REF }}
+          token: ${{ secrets.MENTORA_MAIN_READ_TOKEN }}
+          path: backend-repo
+          sparse-checkout: apps/backend
+
+      - uses: actions/setup-node@v4
+        if: steps.access.outputs.ok == 'true'
+        with:
+          node-version: 20
+
+      - name: Start backend (migrate, seed, run on :4000)
+        if: steps.access.outputs.ok == 'true'
+        working-directory: backend-repo/apps/backend
+        env:
+          NODE_ENV: development
+          PORT: '4000'
+          CORS_ORIGINS: http://localhost:5180
+          ENABLE_PARENT_WALLET_DUMMY_TOPUP: 'true'
+        run: |
+          # npm install (not ci): the backend lock file is currently out of sync.
+          npm install --no-audit --no-fund
+          npx prisma migrate deploy
+          npx tsx prisma/seed.ts
+          nohup npx tsx src/server.ts > "$RUNNER_TEMP/backend.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:4000/health >/dev/null 2>&1 || curl -fsS http://localhost:4000/api/v1/health >/dev/null 2>&1; then
+              echo "backend up"; exit 0
+            fi
+            sleep 2
+          done
+          echo "backend did not start"; tail -50 "$RUNNER_TEMP/backend.log"; exit 1
+
+      - name: Start web on :5180
+        if: steps.access.outputs.ok == 'true'
+        env:
+          VITE_API_BASE_URL: http://localhost:4000
+        run: |
+          npm ci --no-audit --no-fund
+          nohup npm run dev -- --port 5180 --strictPort > "$RUNNER_TEMP/web.log" 2>&1 &
+          for i in $(seq 1 60); do
+            curl -fsS http://localhost:5180 >/dev/null 2>&1 && { echo "web up"; exit 0; }
+            sleep 2
+          done
+          echo "web did not start"; tail -50 "$RUNNER_TEMP/web.log"; exit 1
+
+      - name: Install Playwright + Chrome
+        if: steps.access.outputs.ok == 'true'
+        working-directory: e2e-playwright
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chrome
+
+      - name: Run E2E
+        if: steps.access.outputs.ok == 'true'
+        working-directory: e2e-playwright
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ inputs.full }}" = "false" ]; then
+            npx playwright test 01-smoke 02-auth --project=light
+          else
+            npx playwright test
+          fi
+
+      - name: Upload report
+        if: always() && steps.access.outputs.ok == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            e2e-playwright/report
+            e2e-playwright/test-results
+          retention-days: 14
+
+      - name: Server logs on failure
+        if: failure() && steps.access.outputs.ok == 'true'
+        run: |
+          echo "--- backend ---"; tail -100 "$RUNNER_TEMP/backend.log" || true
+          echo "--- web ---"; tail -50 "$RUNNER_TEMP/web.log" || true

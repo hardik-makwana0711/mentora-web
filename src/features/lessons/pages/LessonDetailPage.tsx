@@ -133,7 +133,12 @@ export default function LessonDetailPage() {
       navigate(`${roleBase}/lessons`);
     },
 
-    onError: (e) => toast.error(normAxios(e, tr.endLessonFailed)),
+    onError: (e) => {
+      const msg = normAxios(e, tr.endLessonFailed);
+      if (msg.includes('SESSION_NOT_STARTED')) toast.error(tr.endLessonNotStarted);
+      else if (msg.includes('SESSION_CANNOT_BE_COMPLETED')) toast.error(tr.endLessonCancelled);
+      else toast.error(msg);
+    },
   });
 
   const saveNote = useMutation({
