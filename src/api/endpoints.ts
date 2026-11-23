@@ -213,6 +213,13 @@ export const endpoints = {
   },
   admin: {
     dashboard: '/api/v1/admin/dashboard',
+    lessons: {
+      issues: '/api/v1/admin/sessions/issues',
+      resolveIssue: (reportId: string) => `/api/v1/admin/sessions/issues/${reportId}/resolve`,
+      active: '/api/v1/admin/sessions/active',
+      cancellations: '/api/v1/admin/sessions/cancellations',
+      cancel: (sessionId: string) => `/api/v1/admin/sessions/${sessionId}/cancel`,
+    },
     marketing: {
       campaigns: '/api/v1/admin/marketing/campaigns',
       campaign: (id: string) => `/api/v1/admin/marketing/campaigns/${id}`,

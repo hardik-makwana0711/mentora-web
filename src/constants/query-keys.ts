@@ -51,13 +51,16 @@ export const qk = {
   mentorMaterial: (materialId: string) => ['materials', 'mentor', 'detail', materialId] as const,
   studentMaterials: (tab: string) => ['materials', 'student', tab] as const,
   studentMaterial: (materialId: string) => ['materials', 'student', 'detail', materialId] as const,
-  parentMaterials: (studentId: string, tab: string) => ['materials', 'parent', studentId, tab] as const,
+  parentMaterials: (studentId: string, tab: string) =>
+    ['materials', 'parent', studentId, tab] as const,
   parentMaterial: (studentId: string, materialId: string) =>
     ['materials', 'parent', 'detail', studentId, materialId] as const,
   adminDashboard: ['admin', 'dashboard'] as const,
   adminMentorVerifications: ['admin', 'mentor-verifications'] as const,
-  adminMentorVerification: (mentorId: string) => ['admin', 'mentor-verification', mentorId] as const,
-  adminMentorProfiles: (filters: Record<string, unknown>) => ['admin', 'mentor-profiles', filters] as const,
+  adminMentorVerification: (mentorId: string) =>
+    ['admin', 'mentor-verification', mentorId] as const,
+  adminMentorProfiles: (filters: Record<string, unknown>) =>
+    ['admin', 'mentor-profiles', filters] as const,
   adminMentorProfile: (mentorId: string) => ['admin', 'mentor-profile', mentorId] as const,
   adminListings: (filters: Record<string, unknown>) => ['admin', 'listings', filters] as const,
   adminListing: (listingId: string) => ['admin', 'listing', listingId] as const,
@@ -66,16 +69,23 @@ export const qk = {
   discoveryFeed: (filters: Record<string, unknown>) => ['discovery', 'feed', filters] as const,
   discoverySaved: (filters: Record<string, unknown>) => ['discovery', 'saved', filters] as const,
   discoveryProfile: (mentorId: string) => ['discovery', 'profile', mentorId] as const,
-  myContactRequests: (filters: Record<string, unknown>) => ['contact-requests', 'mine', filters] as const,
+  myContactRequests: (filters: Record<string, unknown>) =>
+    ['contact-requests', 'mine', filters] as const,
   mentorContactRequests: (filters: Record<string, unknown>) =>
     ['contact-requests', 'mentor', filters] as const,
   adminContactRequests: (filters: Record<string, unknown>) =>
     ['admin', 'contact-requests', filters] as const,
   adminReports: (filters: Record<string, unknown>) => ['admin', 'reports', filters] as const,
+  adminLessonIssues: (filters: Record<string, unknown>) =>
+    ['admin', 'lesson-issues', filters] as const,
+  adminLessonActive: (filters: Record<string, unknown>) =>
+    ['admin', 'lesson-active', filters] as const,
+  adminLessonCancellations: () => ['admin', 'lesson-cancellations'] as const,
   adminMarketingCampaigns: (filters: Record<string, unknown>) =>
     ['admin', 'marketing', 'campaigns', filters] as const,
   adminMarketingCampaign: (id: string) => ['admin', 'marketing', 'campaign', id] as const,
   adminMarketingCampaignMetrics: (id: string, filters: Record<string, unknown>) =>
     ['admin', 'marketing', 'campaign-metrics', id, filters] as const,
-  sponsoredCard: (query: Record<string, unknown>) => ['marketing', 'sponsored-card', query] as const,
+  sponsoredCard: (query: Record<string, unknown>) =>
+    ['marketing', 'sponsored-card', query] as const,
 };
