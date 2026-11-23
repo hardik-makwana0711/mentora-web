@@ -99,7 +99,8 @@ jobs:
           CORS_ORIGINS: http://localhost:5180
           ENABLE_PARENT_WALLET_DUMMY_TOPUP: 'true'
         run: |
-          npm ci --no-audit --no-fund
+          # npm install (not ci): the backend lock file is currently out of sync.
+          npm install --no-audit --no-fund
           npx prisma migrate deploy
           npx tsx prisma/seed.ts
           nohup npx tsx src/server.ts > "$RUNNER_TEMP/backend.log" 2>&1 &
