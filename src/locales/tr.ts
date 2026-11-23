@@ -583,6 +583,8 @@ export const tr: { [K in keyof Strings]: string } = {
   endLessonSuccess: 'Ders tamamlandı olarak işaretlendi.',
   endLessonSummarySuccess: 'Ders tamamlandı ve yapay zeka özeti oluşturuldu.',
   endLessonFailed: 'Ders bitirilemedi.',
+  endLessonNotStarted: 'Bu dersi ancak başladıktan sonra bitirebilirsiniz.',
+  endLessonCancelled: 'Bu ders iptal edildiği için tamamlandı olarak işaretlenemez.',
   consentSaveFailed: 'Kayıt onayı kaydedilemedi.',
   recordingConsentTitle: 'Ders kaydı',
   recordingConsentBody:

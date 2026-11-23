@@ -576,6 +576,8 @@ export const en = {
   endLessonSuccess: 'Lesson marked as completed.',
   endLessonSummarySuccess: 'Lesson completed and AI summary generated.',
   endLessonFailed: 'Could not end lesson.',
+  endLessonNotStarted: 'You can end this lesson once it has started.',
+  endLessonCancelled: 'This lesson was cancelled, so it cannot be marked as completed.',
   consentSaveFailed: 'Could not save recording consent.',
   recordingConsentTitle: 'Lesson recording',
   recordingConsentBody:
