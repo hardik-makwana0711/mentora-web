@@ -170,6 +170,8 @@ export const tr: { [K in keyof Strings]: string } = {
   meetJoinPendingHint: 'Ders bağlantısı kısa süre içinde hazır olacak.',
   meetJoinFailed: 'Link oluşturulamadı',
   meetJoinFailedHint: 'Lütfen destek ile iletişime geçin.',
+  meetConnectCalendarHint:
+    'Profilinizden Google Takvim’inizi bağlayın, ardından “Bağlantıyı yeniden oluştur”a dokunun.',
   meetJoinNotYet: 'Ders saatinde aktif olacak',
   meetJoinNoLink: 'Ders bağlantısı yok',
   meetProviderGoogle: 'Google Meet',

@@ -197,6 +197,8 @@ export default function LessonDetailPage() {
     can_join: d.can_join,
 
     meeting_provider: d.meeting_provider,
+
+    meeting_error: d.meeting_error,
   };
 
   const showMeetUi = isActiveSessionForMeet(d.status);

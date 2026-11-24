@@ -170,6 +170,8 @@ export const en = {
   meetJoinNoLink: 'No lesson link',
   meetProviderGoogle: 'Google Meet',
   meetRetryLink: 'Retry meeting link',
+  meetConnectCalendarHint:
+    'Connect your Google Calendar in your profile, then tap Retry to create the lesson link.',
   meetRetrySuccess: 'Meeting link is ready',
   meetRetryPending: 'Meeting link is still being prepared',
   meetRetryFailed: 'Could not create meeting link',
