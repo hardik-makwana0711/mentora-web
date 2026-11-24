@@ -11,6 +11,8 @@ export type JoinableSession = {
   meeting_url?: string | null;
   can_join?: boolean;
   meeting_provider?: SessionMeetingProvider | string | null;
+  /** Why link creation failed (only sent with FAILED). */
+  meeting_error?: string | null;
 };
 
 export type UpcomingSession = {

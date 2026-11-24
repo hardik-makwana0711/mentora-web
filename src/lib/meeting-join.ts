@@ -11,10 +11,14 @@ export type JoinButtonState = {
 };
 
 export function getJoinButtonState(
-  session: Pick<JoinableSession, 'meeting_status' | 'can_join' | 'meeting_url'>,
+  session: Pick<JoinableSession, 'meeting_status' | 'can_join' | 'meeting_url'>
 ): JoinButtonState {
-  const status: SessionMeetingStatus = session.meeting_status ?? 'PENDING';
+  const status: SessionMeetingStatus | null = session.meeting_status ?? null;
 
+  // No Meet data on this row (e.g. a calendar row): don't claim the link is being prepared.
+  if (!status) {
+    return { disabled: true, label: i18n.t('meetJoinNotYet') };
+  }
   if (status === 'PENDING') {
     return {
       disabled: true,

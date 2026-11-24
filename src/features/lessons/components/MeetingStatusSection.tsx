@@ -29,13 +29,14 @@ export function MeetingStatusSection({
   const role = useAuthStore((s) => s.user?.role);
   const { hint } = getJoinButtonState(session);
   const provider =
-    session.meeting_provider === 'GOOGLE_MEET'
-      ? i18n.t('meetProviderGoogle', { lng: 'tr' })
-      : null;
-  const showRetry =
-    allowRetry &&
+    session.meeting_provider === 'GOOGLE_MEET' ? i18n.t('meetProviderGoogle', { lng: 'tr' }) : null;
+  // Mentor without a connected calendar: tell them how to fix it instead of "contact support".
+  const needsCalendar =
+    role === 'mentor' &&
     session.meeting_status === 'FAILED' &&
-    (role === 'mentor' || role === 'parent');
+    /calendar/i.test(session.meeting_error ?? '');
+  const showRetry =
+    allowRetry && session.meeting_status === 'FAILED' && (role === 'mentor' || role === 'parent');
 
   const retry = useMutation({
     mutationFn: () => generateMeetingLink(session.session_id),
@@ -64,7 +65,11 @@ export function MeetingStatusSection({
           {provider}
         </p>
       ) : null}
-      {hint ? <p className="mt-1 text-xs text-[var(--color-text-muted)]">{hint}</p> : null}
+      {needsCalendar ? (
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">{tr.meetConnectCalendarHint}</p>
+      ) : hint ? (
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">{hint}</p>
+      ) : null}
       {showRetry ? (
         <Button
           type="button"
