@@ -1508,7 +1508,7 @@ export const en = {
   registerLegalAgreementJoiner: 'and',
   orDivider: 'or',
   googleSignInRolesNote:
-    'Google sign-in is for parents and mentors. Students sign in with their own account details.',
+    'Students can continue with Google using the email their parent added.',
   googleSignInUnavailable:
     'Google sign-in is not available right now. Please use your email and password.',
   googleSignInNotAllowed: 'This account cannot use Google sign-in.',
