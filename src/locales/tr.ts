@@ -1509,7 +1509,7 @@ export const tr: { [K in keyof Strings]: string } = {
   registerLegalAgreementJoiner: 've',
   orDivider: 'veya',
   googleSignInRolesNote:
-    'Google ile giriş veliler ve mentorlar içindir. Öğrenciler kendi hesap bilgileriyle giriş yapar.',
+    'Öğrenciler, velilerinin eklediği e-posta ile Google üzerinden giriş yapabilir.',
   googleSignInUnavailable:
     'Google ile giriş şu anda kullanılamıyor. Lütfen e-posta ve şifrenizi kullanın.',
   googleSignInNotAllowed: 'Bu hesap Google ile giriş yapamaz.',
